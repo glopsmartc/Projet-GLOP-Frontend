@@ -6,7 +6,7 @@ on:
       - develop
   push:
     branches:
-      - feature/*
+      - features/*
 
 jobs:
   build-and-test:
