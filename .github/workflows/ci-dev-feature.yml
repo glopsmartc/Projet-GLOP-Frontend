@@ -1,0 +1,35 @@
+name: Feature DEV CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js for Angular + Cypress frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: .
+        run: npm install
+
+      # Run Cypress tests
+      - name: Run Cypress Tests
+        working-directory: .
+        run: |
+          npm run test  
+          npm run cypress:run  
