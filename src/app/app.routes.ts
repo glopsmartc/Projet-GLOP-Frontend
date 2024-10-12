@@ -5,4 +5,5 @@ import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'forgot-password', component: ForgotPassComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
