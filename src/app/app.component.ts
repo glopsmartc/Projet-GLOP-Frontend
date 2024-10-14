@@ -1,33 +1,23 @@
 
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './user.service';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { NgFor } from '@angular/common'; 
+import { NgFor } from '@angular/common';
+import { HeaderComponent } from "./header/header.component"; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor, RouterOutlet, HttpClientModule],
+  imports: [NgFor, RouterOutlet, HttpClientModule, HeaderComponent, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
 export class AppComponent implements OnInit {
-  title = 'frontend_glop';
+  title = 'MobiSureMoinsDeCO2';
 
-  users: any[] = [];
-
-  constructor(private userService: UserService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe(
-      response => {
-        this.users = response;
-      },
-      error => {
-        console.error('Erreur lors du chargement des utilisateurs', error);
-      }
-    );
   }
 }
