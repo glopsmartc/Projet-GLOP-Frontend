@@ -1,13 +1,23 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet, RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { NgFor } from '@angular/common';
+import { HeaderComponent } from "./header/header.component"; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [NgFor, RouterOutlet, HttpClientModule, HeaderComponent, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'projetglop-front';
+
+export class AppComponent implements OnInit {
+  title = 'MobiSureMoinsDeCO2';
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
 }

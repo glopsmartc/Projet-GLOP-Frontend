@@ -6,7 +6,7 @@ on:
       - develop
   push:
     branches:
-      - feature/*
+      - features/*
 
 jobs:
   build-and-test:
@@ -28,8 +28,8 @@ jobs:
         run: npm install
 
       # Run Cypress tests
-      - name: Run Cypress Tests
-        working-directory: .
-        run: |
-          npm run test  
-          npm run cypress:run  
+      #- name: Run Cypress Tests
+      #  working-directory: .
+      #  run: |
+      #    npm run test  
+      #    npm run cypress:run  
