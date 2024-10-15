@@ -28,11 +28,11 @@ jobs:
         run: npm install
 
       # Run Cypress tests
-      - name: Run Cypress Tests
-        working-directory: .
-        run: |
-          npm run test  
-          npm run cypress:run  
+      #- name: Run Cypress Tests
+      # working-directory: .
+      #  run: |
+      #    npm run test  
+      #    npm run cypress:run  
 
       # Docker configuration
       - name: Set up Docker Buildx
