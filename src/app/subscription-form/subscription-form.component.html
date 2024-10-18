@@ -1,1 +1,16 @@
-<p>subscription-form works!</p>
+<div style="padding: 20px;">
+    <h2>Formulaire d'abonnement</h2>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+      <label>
+        <input type="checkbox" formControlName="agree" />
+        J'accepte les termes et conditions
+      </label>
+      <br />
+      <button type="submit">Soumettre</button>
+    </form>
+  
+    <div *ngIf="myForm.get('agree')?.value">
+      Vous avez accepté les termes et conditions.
+    </div>
+  </div>
+  
