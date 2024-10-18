@@ -7,12 +7,14 @@
           <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
         </div>
         <span>or use your email for registration</span>
-        <input type="text" placeholder="Full Name" />
-        <input type="text" placeholder="Adress" />
-        <input type="text" placeholder="Tel" />
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
-        <input type="password" placeholder="Confirm Password" />
+        <input type="text" placeholder="Last Name" required/>
+        <input type="text" placeholder="First Name" required/>
+        <input type="email" placeholder="Email" required/>
+        <input type="text" placeholder="Adress" required/>
+        <input type="text" placeholder="Tel" required />
+        <input type="date" placeholder="Birth Date" required />
+        <input type="password" placeholder="Password" required/>
+        <input type="password" placeholder="Confirm Password" required/>
         <button type="button" class="mt-2" (click)="signUp()">Sign Up</button>
       </form>
     </div>
