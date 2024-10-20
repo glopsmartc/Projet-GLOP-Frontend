@@ -23,9 +23,9 @@ jobs:
           node-version: '20'
 
       # Install frontend dependencies
-      - name: Install Frontend Dependencies
-        working-directory: .
-        run: npm install
+      #- name: Install Frontend Dependencies
+      #  working-directory: .
+      #  run: npm install
 
       # Run Cypress tests
       #- name: Run Cypress Tests
