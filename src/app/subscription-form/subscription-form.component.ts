@@ -1,13 +1,33 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-subscription-form',
-  standalone: true,
-  imports: [],
   templateUrl: './subscription-form.component.html',
-  styleUrl: './subscription-form.component.css'
+  styleUrls: ['./subscription-form.component.css'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class SubscriptionFormComponent {
+  myForm: FormGroup;
 
+  constructor(private fb: FormBuilder) {
+    this.myForm = this.fb.group({
+      assurerTransport: [false],
+      voiture: [false],
+      trotinette: [false],
+      bicyclette: [false],
+      assurerPersonnes: [false],
+      nombrePersonnes: [''],
+      numeroTelephone: ['', Validators.required],
+      dureeContrat: ['', Validators.required],
+      debutContrat: ['', Validators.required],
+    });
+  }
+
+  onSubmit() {
+    console.log(this.myForm.value);
+  }
 }
