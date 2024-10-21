@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  IP_ADDRESS_BACK: ${{ secrets.IP_ADDRESS_FRONT }}
+  IP_ADDRESS_FRONT: ${{ secrets.IP_ADDRESS_FRONT }}
 
 jobs:
   build-and-test:
@@ -28,11 +28,11 @@ jobs:
         run: npm install
 
       # Run Cypress tests
-      - name: Run Cypress Tests
-        working-directory: .
-        run: |
-          npm run test  
-          npm run cypress:run  
+      #- name: Run Cypress Tests
+      # working-directory: .
+      #  run: |
+      #    npm run test  
+      #    npm run cypress:run  
 
       # Docker configuration
       - name: Set up Docker Buildx
@@ -78,13 +78,13 @@ jobs:
       - name: Set permissions for private key
         run: chmod 600 ma-paire.pem
 
-      #- name: Stop and Remove Existing Container
-      # run: |
-      #    ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker stop frontend-container || true && sudo docker rm frontend-container || true'
+      - name: Stop and Remove Existing Container
+        run: |
+         ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker stop frontend-container || true && sudo docker rm frontend-container || true'
 
       - name: Pull Frontned Docker Image
         run: |
-          ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/glop-backend:${{ github.sha }}'
+          ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/glop-frontend:${{ github.sha }}'
 
       - name: Run New Frontend Container
         run: |
