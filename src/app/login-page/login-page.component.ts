@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import axios, { AxiosError } from 'axios';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login-page',
@@ -24,13 +25,17 @@ export class LoginPageComponent implements OnInit {
   emailSignIn: string = '';
   passwordSignIn: string = '';
 
-  apiUrl: string = 'http://localhost:8081/auth';
+  apiBaseUrl: string = environment.apiBaseUrl;
 
   constructor() {
     axios.defaults.headers.common['Content-Type'] = 'application/json';
   }
 
   ngOnInit(): void { }
+
+  get authApiUrl(): string {
+    return `${this.apiBaseUrl}/auth`; 
+  }
 
   signUp() {
     this.container.nativeElement.classList.add("right-panel-active");
@@ -51,12 +56,12 @@ export class LoginPageComponent implements OnInit {
       email: this.emailSignUp,
       adresse: this.address,
       numTel: this.phoneNumber,
-      motDePasse: this.passwordSignUp,
+      password: this.passwordSignUp,
       dateNaissance: this.birthDate
     };
 
     try {
-      const response = await axios.post(`${this.apiUrl}/signup`, userData);
+      const response = await axios.post(`${this.authApiUrl}/signup`, userData);
       console.log('Signup successful', response.data);
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -71,11 +76,11 @@ export class LoginPageComponent implements OnInit {
   async onSignIn() {
     const credentials = {
       email: this.emailSignIn,
-      motDePasse: this.passwordSignIn
+      password: this.passwordSignIn
     };
 
     try {
-      const response = await axios.post(`${this.apiUrl}/login`, credentials);
+      const response = await axios.post(`${this.authApiUrl}/login`, credentials);
       console.log('Signin successful', response.data);
       localStorage.setItem('token', response.data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;

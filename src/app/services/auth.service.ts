@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { environment } from '../../environments/environment';
 
 export class AuthService {
-  apiUrl = 'http://localhost:8081/auth';
+  apiUrl = `${environment.apiBaseUrl}/auth`;
 
   async signUp(userData: any) {
     const response = await axios.post(`${this.apiUrl}/signup`, userData);
