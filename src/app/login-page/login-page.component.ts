@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import axios, { AxiosError } from 'axios';
 import { environment } from '../../environments/environment';
@@ -7,11 +8,21 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
+
+
 export class LoginPageComponent implements OnInit {
+
+  maxDate: string = new Date().toISOString().split('T')[0];
+  loginErrorMessage: string | null = null;
+  passwordMismatch: boolean = false;
+  phoneNumberInvalid: boolean = false;
+  requiredMessage: string = '';
+  validEmailMessage: string = '';
+
   @ViewChild('container', { static: false }) container!: ElementRef;
 
   lastName: string = '';
@@ -34,7 +45,7 @@ export class LoginPageComponent implements OnInit {
   ngOnInit(): void { }
 
   get authApiUrl(): string {
-    return `${this.apiBaseUrl}/auth`; 
+    return `${this.apiBaseUrl}/auth`;
   }
 
   signUp() {
@@ -45,11 +56,35 @@ export class LoginPageComponent implements OnInit {
     this.container.nativeElement.classList.remove("right-panel-active");
   }
 
-  async onSignUp() {
-    if (this.passwordSignUp !== this.confirmPassword) {
-      alert("Passwords do not match");
+  async onSignUp(signupForm: any) {
+
+    this.passwordMismatch = false;
+    this.phoneNumberInvalid = false;
+    this.requiredMessage = '';
+    this.validEmailMessage = '';
+
+    if (signupForm.invalid) {
+      this.requiredMessage = 'Please complete all required fields.';
       return;
     }
+
+    const phoneNumberRegex = /^\+33\d{9}$/;
+    if (!phoneNumberRegex.test(this.phoneNumber)) {
+      this.phoneNumberInvalid = true;
+      return;
+    }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(this.emailSignUp)) {
+      this.validEmailMessage = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (this.passwordSignUp !== this.confirmPassword) {
+      this.passwordMismatch = true;
+      return;
+    }
+
     const userData = {
       nom: this.lastName,
       prenom: this.firstName,
@@ -68,8 +103,13 @@ export class LoginPageComponent implements OnInit {
       console.error('Error during signup', axiosError);
       if (axiosError.response) {
         console.error('Server responded with:', axiosError.response.data);
+
+        if (axiosError.response.status === 409) {
+          this.requiredMessage = 'A user with this email address already exists.';
+        } else {
+          this.requiredMessage = 'Signup failed. Please check your input and try again.';
+        }
       }
-      alert('Signup failed. Please check your input and try again.');
     }
   }
 
@@ -84,9 +124,11 @@ export class LoginPageComponent implements OnInit {
       console.log('Signin successful', response.data);
       localStorage.setItem('token', response.data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      this.loginErrorMessage = null;
     } catch (error: any) {
       console.error('Error during signin', error);
-      alert(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      this.loginErrorMessage = error.response?.data?.message || 'Login failed. Please check your email and password.';
     }
   }
+
 }
