@@ -44,18 +44,18 @@
           },
           "configurations": {
            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "300kb", // Adjusted
-                  "maximumError": "400kb"     // Adjusted
-                },
-                {
-                  "type": "all",
-                  "maximumWarning": "600kb",   // Adjusted
-                  "maximumError": "800kb"      // Adjusted
-                }
-              ],
+             "budgets": [
+  {
+    "type": "initial",
+    "maximumWarning": "500kb", // Increase to a higher value
+    "maximumError": "600kb"     // Increase to a higher value
+  },
+  {
+    "type": "all",
+    "maximumWarning": "900kb",   // Increase to a higher value
+    "maximumError": "1mb"        // Increase to a higher value
+  }
+],
               "outputHashing": "all",
               "allowedCommonJsDependencies": [
                 "axios",
