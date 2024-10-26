@@ -62,21 +62,7 @@
                 "form-data",
                 "proxy-from-env",
                 "follow-redirects"
-              ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inline": true
-                }
-              },
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false
-            },
+              ]},
             "development": {
               "optimization": false,
               "extractLicenses": false,
