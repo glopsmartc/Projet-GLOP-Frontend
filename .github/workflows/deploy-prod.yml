@@ -33,15 +33,7 @@ jobs:
       #  run: |
       #    npm run test  
       #    npm run cypress:run  
-      
-      - name: Clear Angular cache
-        run: npx ng cache clean 
-     
-      # Build the Angular application in production mode
-      - name: Build Angular Application
-        working-directory: .
-        run: npm run build -- --configuration production
-        
+
       # Docker configuration
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
