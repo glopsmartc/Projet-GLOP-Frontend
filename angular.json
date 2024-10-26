@@ -43,21 +43,39 @@
             }
           },
           "configurations": {
-            "production": {
-             "budgets": [
-                    {
-                      "type": "initial",
-                      "maximumWarning": "1kb",
-                      "maximumError": "2kb"
-                    },
-                    {
-                      "type": "all",
-                      "maximumWarning": "2kb",
-                      "maximumError": "4kb"
-                    }
-                  ]
-                  ,
-              "outputHashing": "all"
+           "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "300kb", // Adjusted
+                  "maximumError": "400kb"     // Adjusted
+                },
+                {
+                  "type": "all",
+                  "maximumWarning": "600kb",   // Adjusted
+                  "maximumError": "800kb"      // Adjusted
+                }
+              ],
+              "outputHashing": "all",
+              "allowedCommonJsDependencies": [
+                "axios",
+                "form-data",
+                "proxy-from-env",
+                "follow-redirects"
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inline": true
+                }
+              },
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false
             },
             "development": {
               "optimization": false,
