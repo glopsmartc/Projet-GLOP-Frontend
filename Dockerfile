@@ -20,7 +20,7 @@ RUN npm install
 COPY . /app
 
 # Build the app in production mode
-RUN ng build --prod --base-href / 
+RUN ng build --configuration production --base-href / 
 
 # Stage 2: Serve the application using nginx
 FROM nginx:alpine
