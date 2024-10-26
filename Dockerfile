@@ -1,4 +1,6 @@
+# Stage 1: Build the Angular application
 FROM node:20.17.0 AS build
+
 # Set working directory
 WORKDIR /app
 
@@ -8,15 +10,26 @@ ENV PATH /app/node_modules/.bin:$PATH
 # Install Angular CLI globally
 RUN npm install -g @angular/cli@16.2.7
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json 
 COPY package.json package-lock.json* /app/
 
 # Install app dependencies
 RUN npm install
 
-
-# Add the rest of the app
+# Copy the rest of the app
 COPY . /app
 
-# Start the app
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
+# Build the app in production mode
+RUN ng build --prod --base-href / 
+
+# Stage 2: Serve the application using nginx
+FROM nginx:alpine
+
+# Copy built files from the build stage to the nginx html folder
+COPY --from=build /app/dist/frontend_glop /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
