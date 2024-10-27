@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import axios, { AxiosError } from 'axios';
-import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-login-page',
@@ -12,7 +12,6 @@ import { environment } from '../../environments/environment';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-
 
 export class LoginPageComponent implements OnInit {
 
@@ -36,13 +35,23 @@ export class LoginPageComponent implements OnInit {
   emailSignIn: string = '';
   passwordSignIn: string = '';
 
-  apiBaseUrl: string = environment.apiBaseUrl;
+  apiBaseUrl: string = '';
+
 
   constructor() {
     axios.defaults.headers.common['Content-Type'] = 'application/json';
   }
 
-  ngOnInit(): void { }
+    ngOnInit(): void { 
+      if (typeof window !== 'undefined') {
+        this.apiBaseUrl = (window as any).config?.apiBaseUrl || 'http://localhost:8081'; // Fallback to localhost if not set
+      } else {
+        this.apiBaseUrl = 'http://localhost:8081'; 
+      }
+      console.log('API Base URL in component:', this.apiBaseUrl);
+    }
+    
+
 
   get authApiUrl(): string {
     return `${this.apiBaseUrl}/auth`;
