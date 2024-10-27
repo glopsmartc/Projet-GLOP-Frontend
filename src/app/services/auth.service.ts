@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { environment } from '../../environments/environment';
+
+declare var config: any; 
 
 export class AuthService {
-  apiUrl = `${environment.apiBaseUrl}/auth`;
+  apiUrl = `${config.apiBaseUrl}/auth`;
 
   async signUp(userData: any) {
     const response = await axios.post(`${this.apiUrl}/signup`, userData);
