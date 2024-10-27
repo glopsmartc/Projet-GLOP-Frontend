@@ -95,7 +95,7 @@ jobs:
         run: |
           ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/glop-frontend:${{ github.sha }}'
 
-          - name: Run New Frontend Container
-          run: |
+      - name: Run New Frontend Container
+        run: |
             ssh -i ma-paire.pem -o StrictHostKeyChecking=no ubuntu@$IP_ADDRESS_FRONT 'sudo docker run -d --name frontend-container -e API_BASE_URL="http://172.28.100.191:80" -p 80:4200 ${{ secrets.DOCKER_USERNAME }}/glop-frontend:${{ github.sha }}'
         
