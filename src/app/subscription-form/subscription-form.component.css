@@ -25,9 +25,9 @@ form {
   justify-content: center;
   flex-direction: column;
   padding: 20px 50px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 600px;
+  border-radius: 5px;
+  width: 800px; /* Largeur fixe pour le formulaire */
+  max-width: 100%; /* Assurer que la largeur ne dépasse pas l'écran */
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.119), 
               0 10px 10px rgba(0,0,0,0.119);
   margin: 0 auto; /*to center the form*/
@@ -143,3 +143,22 @@ label {
     white-space: nowrap; /* Prevent label from wrapping */
     margin-right: 10px;
   }
+
+  input, select {
+    background-color: #FFFFFF; /* Couleur blanche par défaut */
+    border: 1px solid #cccccc; /* Contour gris clair */
+    border-radius: 5px; /* Bordures legerement arrondies */
+    padding: 10px 12px;
+    margin: 8px 0;
+    width: 100%;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  input:focus, select:focus {
+    border: 1px solid #80bdff; /* Contour bleu clair pour le focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Effet de halo bleu clair */
+    outline: none;
+    background-color: #FFFFFF; /* Assure un fond blanc au focus */
+  }
+  
