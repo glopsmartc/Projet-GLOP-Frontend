@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-subscription-form',
@@ -20,14 +21,14 @@ export class SubscriptionFormComponent {
   showDebutContrat = false;
   showDateAllerRetourDestination = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.myForm = this.fb.group({
       assurerTransport: [false],
       voiture: [false],
       trotinette: [false],
       bicyclette: [false],
       assurerPersonnes: [false],
-      nombrePersonnes: [''],
+      nombrePersonnes: ['', [Validators.max(10)]],
       numeroTelephone: ['', Validators.required],
       dureeContrat: ['', Validators.required],
       debutContrat: ['', Validators.required],
@@ -69,8 +70,20 @@ export class SubscriptionFormComponent {
         this.showDateAllerRetourDestination = false;
       }
     }
+
+    //max 10 personnes accompagnante
+    ngOnInit(): void {
+      this.myForm.get('nombrePersonnes')?.valueChanges.subscribe((value) => {
+        if (value > 10) {
+          this.myForm.get('nombrePersonnes')?.setValue(10, { emitEvent: false });
+        }
+      });
+    }
   
-  onSubmit() {
-    console.log(this.myForm.value);
-  }
+    onNextPage() {
+      const nombrePersonnes = this.myForm.get('nombrePersonnes')?.value || 0;
+      this.router.navigate(['/subscription-form-second-page'], {
+        queryParams: { nombrePersonnes }
+      });
+    }
 }
