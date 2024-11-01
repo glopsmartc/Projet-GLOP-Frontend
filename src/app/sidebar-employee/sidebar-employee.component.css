@@ -41,7 +41,7 @@ body {
     min-width: 70px;
     z-index: 1000;
     transition: all .25s ease-in-out;
-    background-color: #0e2238;
+    background-color: #4A803F;
     display: flex;
     flex-direction: column;
 }
@@ -79,12 +79,12 @@ body {
 }
 
 .sidebar-nav {
-    padding: 2rem 0;
+    padding: 1rem 0;
     flex: 1 1 auto;
 }
 
 a.sidebar-link {
-    padding: .625rem 1.625rem;
+    padding: .8rem 1.625rem;
     color: #FFF;
     display: block;
     font-size: 0.9rem;
@@ -99,7 +99,10 @@ a.sidebar-link {
 
 a.sidebar-link:hover {
     background-color: rgba(255, 255, 255, .075);
-    border-left: 3px solid #3b7ddd;
+    border-left: 3px solid #cd7425;
+i {
+    color:  #e8852e;
+}
 }
 
 .sidebar-item {

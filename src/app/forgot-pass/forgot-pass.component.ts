@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf, NgClass } from '@angular/common';
+import { ForgotPassService } from '../services/forgot-pass.service';
 
 @Component({
   selector: 'app-forgot-pass',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, NgIf, NgClass],
   templateUrl: './forgot-pass.component.html',
-  styleUrl: './forgot-pass.component.css'
+  styleUrls: ['./forgot-pass.component.css']
 })
+
+
 export class ForgotPassComponent {
   forgotPasswordForm: FormGroup;
   emailSent: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private forgotPassService: ForgotPassService) {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -22,9 +26,16 @@ export class ForgotPassComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.value.email;
-      //forgot password logic here : sending an email
-      console.log('Email to send reset link:', email);
-      this.emailSent = true;
+      this.forgotPassService.forgotPassword(email).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.emailSent = true;
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to send reset email. Please try again.';
+          console.error('the Error is :', error);
+        }
+      });
     }
   }
 

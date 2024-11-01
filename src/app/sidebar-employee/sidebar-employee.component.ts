@@ -1,13 +1,13 @@
 import { Component, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
-  selector: 'app-sidebar-client',
+  selector: 'app-sidebar-employee',
   standalone: true,
   imports: [],
-  templateUrl: './sidebar-client.component.html',
-  styleUrls: ['./sidebar-client.component.css'] // Correction du champ de style
+  templateUrl: './sidebar-employee.component.html',
+  styleUrls: ['./sidebar-employee.component.css']
 })
-export class SidebarClientComponent {
+export class SidebarEmployeeComponent {
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
