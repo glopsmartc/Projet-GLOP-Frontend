@@ -29,7 +29,6 @@ export class SubscriptionFormComponent {
       bicyclette: [false],
       assurerPersonnes: [false],
       nombrePersonnes: ['', [Validators.max(10)]],
-      numeroTelephone: ['', Validators.required],
       dureeContrat: ['', Validators.required],
       debutContrat: ['', Validators.required],
       dateAller: [''],
@@ -81,9 +80,21 @@ export class SubscriptionFormComponent {
     }
   
     onNextPage() {
-      const nombrePersonnes = this.myForm.get('nombrePersonnes')?.value || 0;
+      const formValues = this.myForm.value;
       this.router.navigate(['/subscription-form-second-page'], {
-        queryParams: { nombrePersonnes }
+        queryParams: {
+          nombrePersonnes: formValues.nombrePersonnes,
+          assurerTransport: formValues.assurerTransport,
+          voiture: formValues.voiture,
+          trotinette: formValues.trotinette,
+          bicyclette: formValues.bicyclette,
+          assurerPersonnes: formValues.assurerPersonnes,
+          dureeContrat: formValues.dureeContrat,
+          debutContrat: formValues.debutContrat,
+          dateAller: formValues.dateAller,
+          dateRetour: formValues.dateRetour,
+          destination: formValues.destination,
+        }
       });
     }
 }

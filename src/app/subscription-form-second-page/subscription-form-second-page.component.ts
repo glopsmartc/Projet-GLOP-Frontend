@@ -1,8 +1,9 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ContratService } from '../services/contrat.service'; 
 
 @Component({
   selector: 'app-subscription-form-second-page',
@@ -11,29 +12,51 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule] 
 })
-export class SubscriptionFormSecondPageComponent implements OnInit{
+export class SubscriptionFormSecondPageComponent implements OnInit {
   detailsForm: FormGroup;
   nombrePersonnes: number = 0;
   accompagnants: FormArray;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private contratService: ContratService) {
+    this.accompagnants = this.fb.array([]); // Initialisation ici
     this.detailsForm = this.fb.group({
-      accompagnants: this.fb.array([]) 
+      accompagnants: this.accompagnants,
+      dateNaissanceSouscripteur: [''],
+      assurerTransport: [''],
+      voiture: [''],
+      trotinette: [''],
+      bicyclette: [''],
+      assurerPersonnes: [''],
+      dureeContrat: [''],
+      debutContrat: [''],
+      dateAller: [''],
+      dateRetour: [''],
+      destination: [''],
+      numeroTelephone: ['']
     });
 
-    // recupere le nombre de personnes depuis les parametres de requete
     this.route.queryParams.subscribe(params => {
       this.nombrePersonnes = +params['nombrePersonnes'] || 0;
       this.initAccompagnants(this.nombrePersonnes);
+
+      // Récupérer les autres champs
+      this.detailsForm.patchValue({
+        assurerTransport: params['assurerTransport'],
+        voiture: params['voiture'],
+        trotinette: params['trotinette'],
+        bicyclette: params['bicyclette'],
+        assurerPersonnes: params['assurerPersonnes'],
+        dureeContrat: params['dureeContrat'],
+        debutContrat: params['debutContrat'],
+        dateAller: params['dateAller'],
+        dateRetour: params['dateRetour'],
+        destination: params['destination'],
+        numeroTelephone: params['numeroTelephone']
+      });
     });
-    this.accompagnants = this.detailsForm.get('accompagnants') as FormArray;
   }
+
   ngOnInit(): void {
-    // recupere les parametres de requete pour nombrePersonnes et initialise les champs
-    this.route.queryParams.subscribe(params => {
-      this.nombrePersonnes = +params['nombrePersonnes'] || 0;
-      this.initAccompagnants(this.nombrePersonnes);
-    });
   }
 
   private initAccompagnants(nombre: number) {
@@ -50,7 +73,17 @@ export class SubscriptionFormSecondPageComponent implements OnInit{
     }
   }
 
-  onSubmit() {
-    console.log(this.detailsForm.value);
+  async onSubmit() {
+    console.log(this.detailsForm.value); // Affiche les valeurs du formulaire
+
+    try {
+      const offreCorrespondante = await this.contratService.getOffreCorrespondante(this.detailsForm.value);
+      console.log('Offre correspondante:', offreCorrespondante);
+      
+      // Rediriger vers l'interface des offres
+      this.router.navigate(['/offres'], { state: { offre: offreCorrespondante } });
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'offre:', error);
+    }
   }
 }
