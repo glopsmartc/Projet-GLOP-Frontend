@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { ForgotPassComponent } from './components/forgot-pass/forgot-pass.component';
 import { SubscriptionFormComponent } from './components/subscription-form/subscription-form.component';
@@ -15,9 +16,9 @@ export const routes: Routes = [
   { path: 'subscription-form', component: SubscriptionFormComponent },
   { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent },
   { path: 'sidebar-test', component: SidebarEmployeeComponent },
-  { path: 'subscription-offers', component: SubscriptionOffersComponent }
+  { path: 'subscription-offers', component: 
+  }
 ];
-
 
 export const appConfig = [
   ReactiveFormsModule
