@@ -1,0 +1,67 @@
+<div class="body">
+  <div class="container" #container>
+
+    <div class="form-container sign-up-container">
+      <form #signupForm="ngForm" (ngSubmit)="onSignUp(signupForm)">
+        <h1>Create Account</h1>
+
+        <span *ngIf="requiredMessage" style="color: red; margin-top: 10px;">{{ requiredMessage }}</span>
+
+        <input type="text" placeholder="Last Name" [(ngModel)]="lastName" name="lastName" required />
+
+        <input type="text" placeholder="First Name" [(ngModel)]="firstName" name="firstName" required />
+
+        <input type="email" placeholder="Email" [(ngModel)]="emailSignUp" name="emailSignUp" required />
+        <span *ngIf="validEmailMessage" style="color: red; margin-top: 10px;">{{ validEmailMessage }}</span>        
+
+        <input type="text" placeholder="Address" [(ngModel)]="address" name="address" required />
+
+        <input type="text" placeholder="Tel (+33)" [(ngModel)]="phoneNumber" name="phoneNumber" required />
+        <span *ngIf="signupForm.submitted && phoneNumberInvalid" style="color: red;">
+          Phone number must start with +33 and be followed by 9 digits.
+        </span>
+
+        <input type="date" placeholder="Birth Date" [(ngModel)]="birthDate" name="birthDate" [max]="maxDate" required />
+
+        <input type="password" placeholder="Password" [(ngModel)]="passwordSignUp" name="passwordSignUp" required />
+
+        <input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword" name="confirmPassword"
+          required />
+        <span *ngIf="signupForm.submitted && passwordMismatch" style="color: red;">
+          Passwords do not match.
+        </span>
+
+        <button type="submit" class="mt-2">Sign Up</button>
+      </form>
+    </div>
+
+
+    <div class="form-container sign-in-container">
+      <form (ngSubmit)="onSignIn()">
+        <h1>Sign in</h1>
+        <span *ngIf="loginErrorMessage" style="color: red; margin-top: 10px; ">{{ loginErrorMessage }}</span>
+
+        <input type="email" placeholder="Email" [(ngModel)]="emailSignIn" name="emailSignIn" />
+        <input type="password" placeholder="Password" [(ngModel)]="passwordSignIn" name="passwordSignIn" />
+        <a routerLink="/forgot-password">Forgot your password?</a>
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
+
+
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>Welcome Back!</h1>
+          <p>To keep connected with us please login with your personal info</p>
+          <button class="ghost" (click)="signIn()">Sign In</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>Hello!</h1>
+          <p>Enter your personal details and start journey with us</p>
+          <button class="ghost" (click)="signUp()">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

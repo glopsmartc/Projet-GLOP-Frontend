@@ -1,0 +1,62 @@
+<h2 class="text-center my-4">Informations du souscripteur et des accompagnants (si y en a)</h2>
+
+<div class="container">
+  <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="p-4 shadow-lg rounded bg-white">
+
+    <div class="form-group row align-items-center">
+      <label class="col-sm-5 col-form-label">Date de naissance du souscripteur :</label>
+      <div class="col-sm-7">
+        <input type="date" formControlName="dateNaissanceSouscripteur" class="form-control" required />
+      </div>
+    </div>
+
+    <div formArrayName="accompagnants" class="my-4">
+      <div *ngFor="let accompagnant of accompagnants.controls; let i = index" [formGroupName]="i" class="border p-3 mb-3 rounded">
+        <h5 class="text-center">Accompagnant {{ i + 1 }}</h5>
+
+        <div class="form-group row align-items-center">
+          <label class="col-sm-5 col-form-label">Nom :</label>
+          <div class="col-sm-7">
+            <input type="text" formControlName="nom" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+          <label class="col-sm-5 col-form-label">Prénom :</label>
+          <div class="col-sm-7">
+            <input type="text" formControlName="prenom" class="form-control" required />
+          </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+          <label class="col-sm-5 col-form-label">Sexe :</label>
+          <div class="col-sm-7">
+            <select formControlName="sexe" class="form-control" required>
+              <option value="male">Masculin</option>
+              <option value="female">Féminin</option>
+              <option value="other">Autre</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+          <label class="col-sm-5 col-form-label">Date de naissance :</label>
+          <div class="col-sm-7">
+            <input type="date" formControlName="dateNaissance" class="form-control" required />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row align-items-center">
+      <label class="col-sm-5 col-form-label">Numéro de téléphone :</label>
+      <div class="col-sm-7">
+        <input type="tel" formControlName="numeroTelephone" class="form-control" required />
+      </div>
+    </div>
+
+    <div class="text-center mt-3">
+      <button type="submit" class="mt-2">Estimer le prix</button>
+    </div>
+  </form>
+</div>
