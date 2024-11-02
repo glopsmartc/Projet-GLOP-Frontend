@@ -1,4 +1,4 @@
-<h2 class="text-center my-4">Informations du souscripteur et des accompagnants</h2>
+<h2 class="text-center my-4">Informations du souscripteur et des accompagnants ( si y en a)</h2>
 
 <div class="container">
   <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="p-4 shadow-lg rounded bg-white">
@@ -45,6 +45,13 @@
             <input type="date" formControlName="dateNaissance" class="form-control" required />
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="form-group row align-items-center">
+      <label class="col-sm-5 col-form-label">Numéro de téléphone :</label>
+      <div class="col-sm-7">
+        <input type="tel" formControlName="numeroTelephone" class="form-control" required />
       </div>
     </div>
 
