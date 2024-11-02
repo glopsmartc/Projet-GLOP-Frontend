@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { NgFor } from '@angular/common';
-import { HeaderComponent } from "./header/header.component"; 
+import { HeaderComponent } from "./components/header/header.component"; 
 
 @Component({
   selector: 'app-root',
