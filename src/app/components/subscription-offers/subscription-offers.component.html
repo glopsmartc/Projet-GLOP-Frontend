@@ -3,37 +3,32 @@
   Review your options below to find the perfect insurance plan for your journey.
 </p>
 
+<div *ngIf="offre" class="pricing">
+  <!-- Option Basic -->
+  <div class="plan standard">
+    <span>Standard Option</span>
+    <h2 class="mt-4">{{ offre.nomOffre }}</h2>
+    <div class="price mb-4">{{ offre.prixMin }}</div>
+    <ul class="features">
+      <li *ngFor="let feature of offre.descriptionMin.split('\\n')">
+        <i class="fas fa-check-circle"></i> {{ feature }}
+      </li>
+    </ul>
+    <button>Select</button>
+  </div>
 
-    <div class="pricing">
+  <div class="p-5"></div>
 
-      <div class="plan standard">
-        <span>Standard Option</span>
-        <h2 class="mt-4">Basic</h2>
-        <div class="price mb-4">$10/month</div>
-        <ul class="features">
-          <li><i class="fas fa-check-circle"></i> ASSISTANCE VOYAGE</li>
-          <li><i class="fas fa-check-circle"></i> ANNULATION POUR TOUTES CAUSES JUSTIFIÉES</li>
-          <li><i class="fas fa-check-circle"></i> FRAIS MÉDICAUX ET D'HÔPITAL</li>
-          <li><i class="fas fa-times-circle"></i> BAGAGES VOLÉS, ENDOMMAGÉS, PERDUS</li>
-          <li><i class="fas fa-times-circle"></i> PROTECTION JURIDIQUE</li>
-        </ul>
-        <button>Select</button>
-      </div>
-      
-<div class="p-5"></div>
-
-      <div class="plan popular">
-        <span>Most Popular</span>
-        <h2 class="mt-4">Pro</h2>
-        <div class="price mb-4">$30/month</div>
-        <ul class="features">
-          <li><i class="fas fa-check-circle"></i> ASSISTANCE VOYAGE</li>
-          <li><i class="fas fa-check-circle"></i> ANNULATION POUR TOUTES CAUSES JUSTIFIÉES</li>
-          <li><i class="fas fa-check-circle"></i> FRAIS MÉDICAUX ET D'HÔPITAL</li>
-          <li><i class="fas fa-check-circle"></i> BAGAGES VOLÉS, ENDOMMAGÉS, PERDUS</li>
-          <li><i class="fas fa-check-circle"></i> PROTECTION JURIDIQUE</li>
-        </ul>
-        <button>Select</button>
-      </div>
-    
-    </div>
+  <!-- Option Pro -->
+  <div class="plan popular">
+    <span>Most Popular</span>
+    <h2 class="mt-4">{{ offre.nomOffre }}</h2>
+    <div class="price mb-4">{{ offre.prixMax }}</div>
+    <ul class="features">
+      <li *ngFor="let feature of offre.descriptionMax.split('\\n')">
+        <i class="fas fa-check-circle"></i> {{ feature }}
+      </li>
+    </ul>
+    <button>Select</button>
+  </div>
+</div>

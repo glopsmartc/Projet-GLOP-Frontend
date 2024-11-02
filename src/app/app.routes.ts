@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'subscription-form', component: SubscriptionFormComponent },
   { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent },
   { path: 'sidebar-test', component: SidebarEmployeeComponent },
-  { path: 'subscription-offers', component: 
+  { path: 'subscription-offers', component: SubscriptionOffersComponent
   }
 ];
 
