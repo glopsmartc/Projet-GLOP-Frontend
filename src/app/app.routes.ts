@@ -9,15 +9,17 @@ import { SidebarEmployeeComponent } from './components/sidebar-employee/sidebar-
 import { ReactiveFormsModule } from '@angular/forms';
 import { SubscriptionOffersComponent } from './components/subscription-offers/subscription-offers.component';
 
+import { authGuard } from './guards/auth.guard';
+
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
+  { path: 'forgot-password', component: ForgotPassComponent, canActivate: [authGuard] },
+  { path: 'subscription-form', component: SubscriptionFormComponent, canActivate: [authGuard] },
+  { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent, canActivate: [authGuard] },
+  { path: 'sidebar-test', component: SidebarEmployeeComponent, canActivate: [authGuard] },
+  { path: 'subscription-offers', component: SubscriptionOffersComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'forgot-password', component: ForgotPassComponent },
-  { path: 'subscription-form', component: SubscriptionFormComponent },
-  { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent },
-  { path: 'sidebar-test', component: SidebarEmployeeComponent },
-  { path: 'subscription-offers', component: SubscriptionOffersComponent
-  }
+  { path: '**', redirectTo: '/login' },
 ];
 
 export const appConfig = [
