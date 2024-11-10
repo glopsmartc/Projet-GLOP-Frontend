@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf, NgClass } from '@angular/common';
-import { ForgotPassService } from '../services/forgot-pass.service';
+import { ForgotPassService } from '../../services/forgot-pass.service';
 
 @Component({
   selector: 'app-forgot-pass',
