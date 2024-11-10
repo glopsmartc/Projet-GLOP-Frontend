@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { ActivatedRoute, Router } from '@angular/router';
-import { ContratService } from '../services/contrat.service'; 
+import { ContratService } from '../../services/contrat.service'; 
 
 @Component({
   selector: 'app-subscription-form-second-page',
