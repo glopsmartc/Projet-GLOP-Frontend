@@ -73,7 +73,7 @@ export class LoginPageComponent implements OnInit {
     this.validEmailMessage = '';
 
     if (signupForm.invalid) {
-      this.requiredMessage = 'Please complete all required fields.';
+      this.requiredMessage = 'Complétez tous les champs obligatoires.';
       return;
     }
 
@@ -114,10 +114,10 @@ export class LoginPageComponent implements OnInit {
         console.error('Server responded with:', axiosError.response.data);
 
         if (axiosError.response.status === 409) {
-          this.requiredMessage = 'A user with this email address already exists.';
+          this.requiredMessage = "Un utilisateur avec cette adresse e-mail existe déjà.";
         } else {
-          this.requiredMessage = 'Signup failed. Please check your input and try again.';
-        }
+          this.requiredMessage = "L'inscription a échoué. Veuillez vérifier vos informations et réessayer.";
+        }        
       }
     }
   }
@@ -137,7 +137,7 @@ export class LoginPageComponent implements OnInit {
       await this.router.navigate(['/subscription-form']);
     } catch (error: any) {
       console.error('Error during signin', error);
-      this.loginErrorMessage = error.response?.data?.message || 'Login failed. Please check your email and password.';
+      this.loginErrorMessage = error.response?.data?.message || 'Échec de la connexion. Veuillez vérifier votre e-mail et votre mot de passe.';
     }
   }
 
