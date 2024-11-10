@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: 'sidebar-test', component: SidebarEmployeeComponent, canActivate: [authGuard] },
   { path: 'subscription-offers', component: SubscriptionOffersComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' },
+  { path: '**', redirectTo: '/null' },
 ];
 
 export const appConfig = [
