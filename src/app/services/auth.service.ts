@@ -39,7 +39,7 @@ export class AuthService {
     return this.isTokenValid(this.getToken());
   }
 
-  private getToken(): string | null {
+  public getToken(): string | null {
     if (this.isBrowser()) {
       return localStorage.getItem('token');
     }

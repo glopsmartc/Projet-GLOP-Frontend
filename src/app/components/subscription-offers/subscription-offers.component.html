@@ -8,7 +8,7 @@
   <div class="plan standard">
     <span>Standard Option</span>
     <h2 class="mt-4">{{ offre.nomOffre }}</h2>
-    <div class="price mb-4">{{ offre.prixMin }}</div>
+    <div class="price mb-4">{{ offre.prixMinTotal }}</div> 
     <ul class="features">
       <li *ngFor="let feature of offre.descriptionMin.split('\\n')">
         <i class="fas fa-check-circle"></i> {{ feature }}
@@ -23,7 +23,7 @@
   <div class="plan popular">
     <span>Most Popular</span>
     <h2 class="mt-4">{{ offre.nomOffre }}</h2>
-    <div class="price mb-4">{{ offre.prixMax }}</div>
+    <div class="price mb-4">{{ offre.prixMaxTotal }}</div>
     <ul class="features">
       <li *ngFor="let feature of offre.descriptionMax.split('\\n')">
         <i class="fas fa-check-circle"></i> {{ feature }}
