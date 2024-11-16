@@ -32,10 +32,12 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
       dateAller: [''],
       dateRetour: [''],
       destination: [''],
-      numeroTelephone: ['']
+      numeroTelephone: [''],
+      nombrePersonnes:['']
     });
 
     this.route.queryParams.subscribe(params => {
+      console.log('Query Params:', params); // Log pour débogage
       this.nombrePersonnes = +params['nombrePersonnes'] || 0;
       this.initAccompagnants(this.nombrePersonnes);
 
@@ -51,7 +53,8 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
         dateAller: params['dateAller'],
         dateRetour: params['dateRetour'],
         destination: params['destination'],
-        numeroTelephone: params['numeroTelephone']
+        numeroTelephone: params['numeroTelephone'],
+        nombrePersonnes: this.nombrePersonnes
       });
     });
   }
