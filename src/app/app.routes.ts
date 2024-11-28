@@ -13,7 +13,7 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
-  { path: 'forgot-password', component: ForgotPassComponent, canActivate: [authGuard] },
+  { path: 'forgot-password', component: ForgotPassComponent },
   { path: 'subscription-form', component: SubscriptionFormComponent, canActivate: [authGuard] },
   { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent, canActivate: [authGuard] },
   { path: 'sidebar-test', component: SidebarEmployeeComponent, canActivate: [authGuard] },
