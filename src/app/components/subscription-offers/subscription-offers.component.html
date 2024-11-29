@@ -1,0 +1,34 @@
+<h1>Select Your Coverage Plan</h1>
+<p>
+  Review your options below to find the perfect insurance plan for your journey.
+</p>
+
+<div *ngIf="offre" class="pricing">
+  <!-- Option Basic -->
+  <div class="plan standard">
+    <span>Standard Option</span>
+    <h2 class="mt-4">{{ offre.nomOffre }}</h2>
+    <div class="price mb-4">{{ offre.prixMinTotal }}</div> 
+    <ul class="features">
+      <li *ngFor="let feature of offre.descriptionMin.split('\\n')">
+        <i class="fas fa-check-circle"></i> {{ feature }}
+      </li>
+    </ul>
+    <button>Select</button>
+  </div>
+
+  <div class="p-5"></div>
+
+  <!-- Option Pro -->
+  <div class="plan popular">
+    <span>Most Popular</span>
+    <h2 class="mt-4">{{ offre.nomOffre }}</h2>
+    <div class="price mb-4">{{ offre.prixMaxTotal }}</div>
+    <ul class="features">
+      <li *ngFor="let feature of offre.descriptionMax.split('\\n')">
+        <i class="fas fa-check-circle"></i> {{ feature }}
+      </li>
+    </ul>
+    <button>Select</button>
+  </div>
+</div>
