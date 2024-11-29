@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-sign-contract',
@@ -12,8 +14,9 @@ import { CommonModule } from '@angular/common';
 export class SignContractComponent implements OnInit {
   formData: any;
   selectedPlan: any;
+  isLoading = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     let state = this.router.getCurrentNavigation()?.extras.state;
@@ -29,13 +32,42 @@ export class SignContractComponent implements OnInit {
       console.log('Données du formulaire:', this.formData);
     } else {
       console.error('State or required data is not available');
-      // You could redirect to an error page or handle this case more gracefully
       // this.router.navigate(['/error-page']);
     }
   }
 
   finalizeContract() {
-    console.log("Contract finalized!");
-    // Implement your contract finalization logic here
+    this.isLoading = true;
+
+    // Simulate API call
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
+
+    setTimeout(() => {
+      this.generatePDF();
+    }, 3000);
+
+  }
+
+  generatePDF() {
+    const doc = new jsPDF.default();
+    doc.text('MobiSureMoinsDeCO2 Assurance', 10, 10);
+    doc.text(`Contract for ${this.selectedPlan.name}`, 10, 20);
+    doc.text(`Price: ${this.selectedPlan.price}`, 10, 30);
+    doc.text('Features:', 10, 40);
+
+    const features = this.selectedPlan.description.split('\n');
+    features.forEach((feature: string, index: number) => {
+      doc.text(`- ${feature}`, 10, 50 + index * 10);
+    });
+
+    doc.text('Client Information:', 10, 70 + features.length * 10);
+    doc.text(`Contract Duration: ${this.formData.dureeContrat}`, 10, 80 + features.length * 10);
+    doc.text(`Start Date: ${this.formData.debutContrat}`, 10, 90 + features.length * 10);
+
+    doc.text('Signature: MobiSureMoinsDeCO2 Assurance', 10, 120 + features.length * 10);
+
+    doc.save('Contract.pdf');
   }
 }
