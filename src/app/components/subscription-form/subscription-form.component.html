@@ -14,7 +14,7 @@
             <option value="6_mois">6 mois</option>
             <option value="1_an">1 an</option>
           </select>
-        </div>
+          </div>
 
         <!-- Insurance Type Selection -->
         <div class="checkbox-group">
@@ -22,80 +22,67 @@
             <input type="checkbox" formControlName="assurerTransport" />
             Assurer mon moyen de transport
           </label>
-          <label *ngIf="showAssurerPersonnes">
+          <label  *ngIf="showAssurerPersonnes">
             <input type="checkbox" formControlName="assurerPersonnes" max="10" />
             Assurer d'autres personnes
           </label>
         </div>
 
         <!-- Vehicle Choices (Visible if 'assurer mon moyen de transport' is selected) -->
-        <div class="transport-person-group">
-          <div class="transport-options" *ngIf="myForm.get('assurerTransport')?.value">
-            <label>
-              <input type="checkbox" formControlName="voiture" /> Voiture
-            </label>
-            <label>
-              <input type="checkbox" formControlName="trotinette" /> Trottinette
-            </label>
-            <label>
-              <input type="checkbox" formControlName="bicyclette" /> Bicyclette
-            </label>
-          </div>
-
-          <!-- Number of people to insure (Visible if 'assurer d'autres personnes' is selected) -->
-          <!-- dans le cas ou assurer mon moyen est selctionné la label et l'input sont a cote des moyen de transport-->
-          <div class="person-input" *ngIf="myForm.get('assurerPersonnes')?.value">
-            <div *ngIf="myForm.get('assurerTransport')?.value">
-              <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
-              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
-            </div>
-          </div>
+    <div class="transport-person-group">
+        <div class="transport-options" *ngIf="myForm.get('assurerTransport')?.value">
+          <label>
+            <input type="checkbox" formControlName="voiture" /> Voiture
+          </label>
+          <label>
+            <input type="checkbox" formControlName="trotinette" /> Trottinette
+          </label>
+          <label>
+            <input type="checkbox" formControlName="bicyclette" /> Bicyclette
+          </label>
         </div>
 
-        <div class="form-group-horizontal">
-          <!-- dans le cas ou assurer mon moyen n'est pas selctionner le div prend la largeur des autres composant-->
-          <div class="form-item" *ngIf="myForm.get('assurerPersonnes')?.value">
-            <div *ngIf="!myForm.get('assurerTransport')?.value">
-              <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
-              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
-            </div>
-          </div>
-          <!-- fin -->
-          <div class="form-item" *ngIf="showDebutContrat">
-            <label class="label-right">Le contrat débute le </label>
-            <input class="form-control" type="date" formControlName="debutContrat" [min]="minDate"/>
-          </div>
+        <!-- Number of people to insure (Visible if 'assurer d'autres personnes' is selected) -->
+        <!-- dans le cas ou assurer mon moyen est selctionné la label et l'input sont a cote des moyen de transport-->
+        <div class="person-input" *ngIf="myForm.get('assurerPersonnes')?.value">
+          <div *ngIf="myForm.get('assurerTransport')?.value">
+          <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
+          <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
+        </div>
+        </div>
+    </div>
 
+    <div class="form-group-horizontal">
+<!-- dans le cas ou assurer mon moyen n'est pas selctionner le div prend la largeur des autres composant-->
+      <div class="form-item" *ngIf="myForm.get('assurerPersonnes')?.value">
+        <div *ngIf="!myForm.get('assurerTransport')?.value">
+        <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
+        <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
+        </div>
+      </div>
+<!-- fin -->
+        <div class="form-item"  *ngIf="showDebutContrat">
+        <label class="label-right">Le contrat débute le </label>
+        <input class="form-control" type="date" formControlName="debutContrat" />
+        </div>
+    
 
-          <div class="form-group-horizontal" *ngIf="showDateAllerRetourDestination">
-            <label class="label-right">Destination :</label>
+    <div class="form-group-horizontal" *ngIf="showDateAllerRetourDestination">
+      <label class="label-right">Destination :</label>
             <select class="form-control" formControlName="destination">
               <option value="">Sélectionner un pays</option>
               <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
             </select>
-            <div class="form-item">
-              <label class="label-right">Date aller :</label>
-              <input
-                class="form-control"
-                type="date"
-                formControlName="dateAller"
-                [min]="minDate" 
-                (change)="onDateAllerChange($event)"
-              />
-            </div>
-            
-            <div class="form-item">
-              <label class="label-right">Date retour :</label>
-              <input
-                class="form-control"
-                type="date"
-                formControlName="dateRetour"
-                [min]="minDateRetour" 
-              />
-            </div>
-            
-          </div>
-        </div>
+      <div class="form-item">
+        <label class="label-right">Date aller :</label>
+        <input class="form-control" type="date" formControlName="dateAller" />
+      </div>
+      <div class="form-item">
+        <label class="label-right">Date retour :</label>
+        <input class="form-control" type="date" formControlName="dateRetour" />
+      </div>
+    </div>
+  </div>
         <button type="button" class="mt-2" (click)="onNextPage()">Suivant</button>
       </form>
     </div>
