@@ -26,14 +26,18 @@ form {
   flex-direction: column;
   padding: 20px 50px;
   border-radius: 5px;
-  width: 800px; /* Largeur fixe pour le formulaire */
-  max-width: 100%; /* Assurer que la largeur ne dépasse pas l'écran */
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.119), 
-              0 10px 10px rgba(0,0,0,0.119);
-  margin: 0 auto; /*to center the form*/
+  width: 800px;
+  /* Largeur fixe pour le formulaire */
+  max-width: 100%;
+  /* Assurer que la largeur ne dépasse pas l'écran */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.119),
+    0 10px 10px rgba(0, 0, 0, 0.119);
+  margin: 0 auto;
+  /*to center the form*/
 }
 
-input, select {
+input,
+select {
   background-color: #e4e3e3;
   border-radius: 10px;
   border: none;
@@ -87,78 +91,95 @@ label {
 }
 
 .container {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto; /*container centered */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  /*container centered */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  /* Add space between transport and persons checkboxes */
+/* Stack voiture, trotinette, and bicyclette vertically */
+.transport-options {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+/* Add space between transport and persons checkboxes */
 .checkbox-group {
-    display: flex;
-    gap: 30px; /* Add space between the checkboxes */
-    margin-bottom: 20px;
-  }
-  
-  /* Stack voiture, trotinette, and bicyclette vertically */
-  .transport-options {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  /* Align "Nombre de personnes" next to transport options */
-  .transport-person-group {
-    display: flex;
-  align-items: flex-start; /* Align checkboxes and input vertically */
+  display: flex;
+  gap: 30px;
+  /* Add space between the checkboxes */
+  margin-bottom: 20px;
+}
+
+.person-input {
+  margin-left: 20px;
+  flex: 1;
+}
+
+/* Align "Nombre de personnes" next to transport options */
+.transport-person-group {
+  display: flex;
+  align-items: flex-start;
+  /* Align checkboxes and input vertically */
   justify-content: space-between;
   width: 100%;
-  }
-  
-  .transport-options {
-    flex: 1; 
-  }
-  
-  .person-input {
-    margin-left: 20px;
-    flex: 1;
-  }
-  .form-group {
-    display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: space-between; /* Create space between the input and label */
-    width: 100%; /* Full width for the group */
-    margin-bottom: 15px; /* Space between form groups */
-  }
-  
-  .form-control {
-    flex: 1; 
-    margin-right: 15px; /* Space between input and label */
-  }
-  
-  .label-right {
-    font-size: 14px; 
-    white-space: nowrap; /* Prevent label from wrapping */
-    margin-right: 10px;
-  }
+}
 
-  input, select {
-    background-color: #FFFFFF; /* Couleur blanche par défaut */
-    border: 1px solid #cccccc; /* Contour gris clair */
-    border-radius: 5px; /* Bordures legerement arrondies */
-    padding: 10px 12px;
-    margin: 8px 0;
-    width: 100%;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  
-  input:focus, select:focus {
-    border: 1px solid #80bdff; /* Contour bleu clair pour le focus */
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Effet de halo bleu clair */
-    outline: none;
-    background-color: #FFFFFF; /* Assure un fond blanc au focus */
-  }
-  
+.transport-options {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  /* Align items vertically */
+  justify-content: space-between;
+  /* Create space between the input and label */
+  width: 100%;
+  /* Full width for the group */
+  margin-bottom: 15px;
+  /* Space between form groups */
+}
+
+.form-control {
+  flex: 1;
+  margin-right: 15px;
+  /* Space between input and label */
+}
+
+.label-right {
+  font-size: 14px;
+  white-space: nowrap;
+  /* Prevent label from wrapping */
+  margin-right: 10px;
+}
+
+input,
+select {
+  background-color: #FFFFFF;
+  /* Couleur blanche par défaut */
+  border: 1px solid #cccccc;
+  /* Contour gris clair */
+  border-radius: 5px;
+  /* Bordures legerement arrondies */
+  padding: 10px 12px;
+  margin: 8px 0;
+  width: 100%;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  border: 1px solid #80bdff;
+  /* Contour bleu clair pour le focus */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  /* Effet de halo bleu clair */
+  outline: none;
+  background-color: #FFFFFF;
+  /* Assure un fond blanc au focus */
+}
