@@ -1,10 +1,10 @@
 <div class="forgot-password-container">
-  <h2>Forgot Your Password?</h2>
-  <p>Please enter your email address to reset your password.</p>
+  <h2>Mot de passe oublié ?</h2>
+  <p>Veuillez entrer votre adresse e-mail pour réinitialiser votre mot de passe.</p>
 
   <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="email">Email</label>
+      <label for="email">E-mail</label>
       <input
         type="email"
         id="email"
@@ -13,16 +13,16 @@
         [ngClass]="{'is-invalid': email?.invalid && email?.touched }"
       />
       <div *ngIf="email?.invalid && email?.touched" class="text-danger">
-        <small *ngIf="email?.errors?.['required']">Email is required.</small>
-        <small *ngIf="email?.errors?.['email']">Enter a valid email address.</small>
+        <small *ngIf="email?.errors?.['required']">L'e-mail est requis.</small>
+        <small *ngIf="email?.errors?.['email']">Entrez une adresse e-mail valide.</small>
       </div>
     </div>
 
-    <button type="submit" class="btn btn-send" [disabled]="forgotPasswordForm.invalid">Send Reset Link</button>
+    <button type="submit" class="btn btn-send" [disabled]="forgotPasswordForm.invalid">Envoyer le lien de réinitialisation</button>
   </form>
 
   <div *ngIf="emailSent" class="alert alert-success mt-3">
-    A reset link has been sent to your email.
+    Un lien de réinitialisation a été envoyé à votre e-mail.
   </div>
   <div *ngIf="errorMessage" class="alert alert-danger mt-3">
     {{ errorMessage }}

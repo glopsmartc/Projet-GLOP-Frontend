@@ -107,6 +107,7 @@ export class LoginPageComponent implements OnInit {
     try {
       const response = await axios.post(`${this.authApiUrl}/signup`, userData);
       console.log('Signup successful', response.data);
+      this.signIn()
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error('Error during signup', axiosError);

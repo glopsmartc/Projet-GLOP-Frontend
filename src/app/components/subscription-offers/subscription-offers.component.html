@@ -1,27 +1,27 @@
-<h1>Select Your Coverage Plan</h1>
+<h1>Sélectionnez Votre Plan de Couverture</h1>
 <p>
-  Review your options below to find the perfect insurance plan for your journey.
+  Examinez vos options ci-dessous pour trouver le plan d'assurance parfait pour votre voyage.
 </p>
 
 <div *ngIf="offre" class="pricing">
-  <!-- Option Basic -->
+  <!-- Option Standard -->
   <div class="plan standard">
-    <span>Standard Option</span>
+    <span>Option Standard</span>
     <h2 class="mt-4">{{ offre.nomOffre }}</h2>
-    <div class="price mb-4">{{ offre.prixMinTotal }}</div> 
+    <div class="price mb-4">{{ offre.prixMinTotal }}</div>
     <ul class="features">
       <li *ngFor="let feature of offre.descriptionMin.split('\\n')">
         <i class="fas fa-check-circle"></i> {{ feature }}
       </li>
     </ul>
-    <button>Select</button>
+    <button (click)="navigateToSignContract('standard')">Signer le Contrat</button>
   </div>
 
   <div class="p-5"></div>
 
-  <!-- Option Pro -->
+  <!-- Option Populaire -->
   <div class="plan popular">
-    <span>Most Popular</span>
+    <span>Le Plus Populaire</span>
     <h2 class="mt-4">{{ offre.nomOffre }}</h2>
     <div class="price mb-4">{{ offre.prixMaxTotal }}</div>
     <ul class="features">
@@ -29,6 +29,6 @@
         <i class="fas fa-check-circle"></i> {{ feature }}
       </li>
     </ul>
-    <button>Select</button>
+    <button (click)="navigateToSignContract('popular')">Signer le Contrat</button>
   </div>
 </div>
