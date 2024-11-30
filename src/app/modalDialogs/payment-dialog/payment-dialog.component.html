@@ -1,0 +1,63 @@
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+<div class="container">
+    <button type="button" class="close-btn" (click)="onCancel()">
+        <i class="fa fa-times"></i>
+    </button>
+    <div id="Checkout" class="inline">
+        <h1>Pay Invoice</h1>
+        <div class="card-row">
+            <span class="visa"></span>
+            <span class="mastercard"></span>
+            <span class="amex"></span>
+            <span class="discover"></span>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="PaymentAmount">Payment amount</label>
+                <div class="amount-placeholder">
+                    <span>{{ selectedPlan.price }}</span>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <label for="NameOnCard">Name on card</label>
+                <input id="NameOnCard" class="form-control" type="text" maxlength="255">
+            </div>
+            <div class="form-group mt-3">
+                <label for="CreditCardNumber">Card number</label>
+                <input id="CreditCardNumber" class="null card-image form-control" type="text">
+            </div>
+            <div class="expiry-date-group form-group mt-3">
+                <label for="ExpiryDate">Expiry date</label>
+                <input id="ExpiryDate" class="form-control" type="text" placeholder="MM / YY" maxlength="7">
+            </div>
+            <div class="security-code-group form-group mt-3">
+                <label for="SecurityCode">Security code</label>
+                <div class="input-container">
+                    <input id="SecurityCode" class="form-control" type="text">
+                    <i id="cvc" class="fa fa-question-circle" (click)="toggleCvcPreview()"></i>
+                </div>
+                <!-- Using ngClass to toggle visibility of the CVC preview -->
+                <div class="cvc-preview-container two-card" [ngClass]="{'hide': !isCvcPreviewVisible}">
+                    <div class="amex-cvc-preview"></div>
+                    <div class="visa-mc-dis-cvc-preview"></div>
+                </div>
+            </div>
+            <div>
+                <button id="PayButton" class="btn btn-block btn-success submit-button mt-3" type="button"
+                    (click)="onPayClick()">
+                    <span class="submit-button-lock"></span>
+                    <span class="align-middle">Pay {{ selectedPlan?.price }}</span>
+                </button>
+            </div>
+        </form>
+
+        <div *ngIf="isLoading" class="text-center mt-3">
+            <p>Processing...</p>
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>

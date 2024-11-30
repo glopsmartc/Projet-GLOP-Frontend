@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import * as jsPDF from 'jspdf';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component'; // <-- Import PaymentDialogComponent
 
 @Component({
   selector: 'app-sign-contract',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './sign-contract.component.html',
   styleUrls: ['./sign-contract.component.css']
 })
 export class SignContractComponent implements OnInit {
   formData: any;
   selectedPlan: any;
-  isLoading = false;
+  @ViewChild(PaymentDialogComponent) paymentDialog: PaymentDialogComponent | undefined;
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     let state = this.router.getCurrentNavigation()?.extras.state;
@@ -37,17 +38,15 @@ export class SignContractComponent implements OnInit {
   }
 
   finalizeContract() {
-    this.isLoading = true;
+    const dialogRef = this.dialog.open(PaymentDialogComponent, {
+      width: '400px',
+      disableClose: true,
+    });
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
-
-    setTimeout(() => {
+    // Listen for the event from the dialog and call generatePDF when the event is triggered
+    dialogRef.componentInstance.paymentConfirmed.subscribe(() => {
       this.generatePDF();
-    }, 3000);
-
+    });
   }
 
   generatePDF() {

@@ -12,6 +12,8 @@ import { SignContractComponent } from './components/sign-contract/sign-contract.
 
 import { authGuard } from './guards/auth.guard';
 
+import { MatDialogModule } from '@angular/material/dialog';
+
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'forgot-password', component: ForgotPassComponent },
@@ -25,5 +27,6 @@ export const routes: Routes = [
 ];
 
 export const appConfig = [
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  MatDialogModule
 ];
