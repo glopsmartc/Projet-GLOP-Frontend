@@ -1,6 +1,5 @@
 <h1 class="text-center my-4">Confirmez Votre Abonnement</h1>
 
-
 <div class="container">
   <h2 class="text-center my-4">Vos Informations</h2>
   <p><strong>Durée du Contrat :</strong> {{ formData.dureeContrat }}</p>
@@ -9,12 +8,12 @@
 
   <p *ngIf="formData.dateAller"><strong>Date Aller :</strong> {{ formData.dateAller }}</p>
   <p *ngIf="formData.dateRetour"><strong>Date Retour :</strong> {{ formData.dateRetour }}</p>
-  
+
   <p><strong>Date de Naissance du Souscripteur :</strong> {{ formData.dateNaissanceSouscripteur }}</p>
   <p><strong>Téléphone :</strong> {{ formData.numeroTelephone }}</p>
 
   <p *ngIf="formData.assurerTransport === 'true'"><strong>Transport Assuré :</strong> {{ formData.assurerTransport === 'true' ? 'Oui' : 'Non' }}</p>
-  
+
   <p *ngIf="formData.voiture === 'true' || formData.trotinette === 'true' || formData.bicyclette === 'true'">
     <strong>Type de Transport :</strong>
     {{ formData.voiture === 'true' ? 'Voiture' : '' }}
@@ -23,14 +22,13 @@
     <span *ngIf="formData.trotinette === 'true' && formData.bicyclette === 'true'"> | </span>
     {{ formData.bicyclette === 'true' ? 'Bicyclette' : '' }}
   </p>
-  
-  <p *ngIf="formData.nombrePersonnes > 0"><strong>Personnes Assurées :</strong> {{ formData.nombrePersonnes }}</p>
 
+  <p *ngIf="formData.nombrePersonnes > 0"><strong>Personnes Assurées :</strong> {{ formData.nombrePersonnes }}</p>
 </div>
 
 <div class="container mt-4">
   <h3 class="text-center">Plan {{ selectedPlan.name }}</h3>
-  <h4 class="text-center"> <strong>Prix :</strong> {{ selectedPlan.price }}</h4>
+  <h4 class="text-center"><strong>Prix :</strong> {{ selectedPlan.price }}</h4>
   <ul class="list-group">
     <li *ngFor="let feature of selectedPlan.description.split('\\n')" class="list-group-item">
       <i class="fas fa-check-circle"></i> {{ feature }}
@@ -38,6 +36,14 @@
   </ul>
 </div>
 
+<!-- case à cocher pour accepter les conditions -->
+<div class="text-center mt-4">
+  <label>
+    <input type="checkbox" [(ngModel)]="acceptTerms" /> J'accepte les 
+    <a href="javascript:void(0);" (click)="openConditions()">conditions générales et la politique de confidentialité </a> et je signe le contrat
+  </label>
+</div>
+
 <div class="text-center mt-3">
-  <button class="mt-2" (click)="finalizeContract()" >Finaliser le Contrat</button>
+  <button class="mt-2" [disabled]="!acceptTerms" (click)="finalizeContract()">Finaliser le Contrat</button>
 </div>
