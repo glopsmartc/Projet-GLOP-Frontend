@@ -1,23 +1,32 @@
 import { Routes } from '@angular/router';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
-import { SubscriptionFormComponent } from './subscription-form/subscription-form.component';
-import { SidebarClientComponent } from './sidebar-client/sidebar-client.component';
 
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { ForgotPassComponent } from './components/forgot-pass/forgot-pass.component';
+import { SubscriptionFormComponent } from './components/subscription-form/subscription-form.component';
+import { SubscriptionFormSecondPageComponent } from './components/subscription-form-second-page/subscription-form-second-page.component';
+import { SidebarEmployeeComponent } from './components/sidebar-employee/sidebar-employee.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient } from '@angular/common/http';
+import { SubscriptionOffersComponent } from './components/subscription-offers/subscription-offers.component';
+import { SignContractComponent } from './components/sign-contract/sign-contract.component';
+
+import { authGuard } from './guards/auth.guard';
+
+import { MatDialogModule } from '@angular/material/dialog';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'forgot-password', component: ForgotPassComponent },
-  { path: 'subscription-form', component: SubscriptionFormComponent },
-  { path: 'sidebar-test', component: SidebarClientComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'subscription-form', component: SubscriptionFormComponent, canActivate: [authGuard] },
+  { path: 'subscription-form-second-page', component: SubscriptionFormSecondPageComponent, canActivate: [authGuard] },
+  { path: 'sidebar-test', component: SidebarEmployeeComponent, canActivate: [authGuard] },
+  { path: 'subscription-offers', component: SubscriptionOffersComponent, canActivate: [authGuard] },
+  { path: 'sign-contract', component: SignContractComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/null' },
 ];
 
-
 export const appConfig = [
-  provideHttpClient(),
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  MatDialogModule
 ];
