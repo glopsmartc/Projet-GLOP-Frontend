@@ -3,7 +3,7 @@ import axios from 'axios';
 import { AuthService } from './auth.service'; // Importer AuthService pour accéder au token
 
 declare var config: any; 
- 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,31 +21,8 @@ export class ContratService {
       },
     };
   }
-  
-  async createContract(request: any): Promise<any> { 
-    try {
-      console.log('Envoi de la requête de création de contrat:', request); // Log de la requête
-      const response = await axios.post(`${this.apiUrl}/create`, request, this.getAuthHeaders());
-      console.log('Réponse de la création du contrat:', response); // Log de la réponse
-      return response.data;
-    } catch (error: unknown) {
-      console.error('Erreur lors de la création du contrat:', error);
-      
-      if (axios.isAxiosError(error) && error.response) {
-        // Vérification si l'erreur provient d'Axios avec une réponse
-        console.error('Détails de l\'erreur:', error.response.data);
-      } else if (error instanceof Error) {
-        // Si l'erreur est une instance de Error standard
-        console.error('Message d\'erreur:', error.message);
-      } else {
-        // Autres types d'erreurs
-        console.error('Erreur inattendue:', error);
-      }
-  
-      throw error; // Relancer l'erreur pour la gestion dans le composant
-    }
-  }  
 
+  // Méthode pour récupérer l'offre correspondante
   async getOffreCorrespondante(request: any): Promise<any> {
     try {
         console.log('Envoi de la requête pour l\'offre correspondante (POST):', request);
@@ -56,8 +33,40 @@ export class ContratService {
         console.error('Erreur lors de la récupération des offres (POST):', error);
         throw error;
     }
-}
+  }
 
+  async createContract(request: any, pdfFile: File) {
+    try {
+      const formData = new FormData();
+      formData.append('request', JSON.stringify(request)); // Add contract data
+      formData.append('file', pdfFile); // Add the PDF file
   
+      console.log('Envoi de la requête pour créer le contrat :', request);
   
-}  
+      // Call the API to create the contract
+      const response = await axios.post(`${this.apiUrl}/create`, formData, {
+        headers: {
+          ...this.getAuthHeaders().headers, // Use Authorization header from getAuthHeaders()
+          // Let FormData handle Content-Type
+        },
+      });
+  
+      console.log('Réponse du backend (contrat créé avec offre) :', response.data);
+      return response.data; // Return the contract data
+    } catch (error) {
+      console.error('Erreur lors de la création du contrat ou de l\'upload du fichier :', error);
+      throw error; // Re-throw the error for further handling
+    }
+  }
+  
+  async getCurrentUserEmail(): Promise<string> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
+      const currentUser = response.data; 
+      return currentUser.email; 
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'utilisateur actuel:', error);
+      throw error;
+    }
+  }
+}
