@@ -46,8 +46,8 @@ export class ContratService {
       // Call the API to create the contract
       const response = await axios.post(`${this.apiUrl}/create`, formData, {
         headers: {
-          ...this.getAuthHeaders().headers, // Use Authorization header from getAuthHeaders()
-          // Let FormData handle Content-Type
+          ...this.getAuthHeaders().headers,
+          Accept: 'application/json', 
         },
       });
   
