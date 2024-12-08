@@ -18,13 +18,14 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-send" [disabled]="forgotPasswordForm.invalid">Envoyer le lien de réinitialisation</button>
+    <button type="submit" class="btn btn-send" [disabled]="forgotPasswordForm.invalid || isLoading">
+      <span *ngIf="isLoading">Envoi en cours...</span>
+      <span *ngIf="!isLoading">Envoyer le lien de réinitialisation</span>
+    </button>
   </form>
 
-  <div *ngIf="emailSent" class="alert alert-success mt-3">
-    Un lien de réinitialisation a été envoyé à votre e-mail.
-  </div>
-  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-    {{ errorMessage }}
-  </div>
+<!-- Affichage du message -->
+<div *ngIf="message" class="alert" [ngClass]="{'alert-success': emailSent, 'alert-danger': !emailSent}">
+  {{ message }}
+</div>
 </div>
