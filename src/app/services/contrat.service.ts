@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { AuthService } from './auth.service'; // Importer AuthService pour accéder au token
-
-declare var config: any; 
+import { environment } from '../../environments/environment'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContratService {
-  apiUrl = `${config.apiBaseUrlContrat}/api/contrat`; 
+  apiUrl = `${environment.apiBaseUrlContrat}/api/contrat`; 
 
   constructor(private authService: AuthService) {} // Injection d'AuthService
 
@@ -60,8 +59,8 @@ export class ContratService {
       // Call the API to create the contract
       const response = await axios.post(`${this.apiUrl}/create`, formData, {
         headers: {
-          ...this.getAuthHeaders().headers, // Use Authorization header from getAuthHeaders()
-          // Let FormData handle Content-Type
+          ...this.getAuthHeaders().headers,
+          Accept: 'application/json', 
         },
       });
   
@@ -83,4 +82,44 @@ export class ContratService {
       throw error;
     }
   }
+
+  // consulter toutes les offres
+  async getAllOffres(): Promise<any[]> {
+    try {
+      console.log('Envoi de la requête pour récupérer toutes les offres');
+      const response = await axios.get(`${this.apiUrl}/allOffers`, this.getAuthHeaders());
+      console.log('Réponse des offres disponibles :', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des offres :', error);
+      throw error;
+    }
+  }
+
+  // consulter un seul contrat
+  async getContratById(id: number): Promise<any> {
+    try {
+      console.log(`Envoi de la requête pour récupérer le contrat avec l'ID ${id}`);
+      const response = await axios.get(`${this.apiUrl}/${id}`, this.getAuthHeaders());
+      console.log('Réponse du contrat récupéré :', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`Erreur lors de la récupération du contrat avec l'ID ${id} :`, error);
+      throw error;
+    }
+  }  
+
+  // consulter tous les contrats
+  async getAllContrats(): Promise<any[]> {
+    try {
+      console.log('Envoi de la requête pour récupérer tous les contrats');
+      const response = await axios.get(this.apiUrl, this.getAuthHeaders());
+      console.log('Réponse des contrats disponibles :', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats :', error);
+      throw error;
+    }
+  }  
+  
 }

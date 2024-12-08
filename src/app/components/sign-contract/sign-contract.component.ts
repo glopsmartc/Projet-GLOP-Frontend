@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule,  MatDialogRef} from '@angular/material/dial
 import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component'; // <-- Import PaymentDialogComponent
 import { ContratService } from '../../services/contrat.service';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sign-contract',
@@ -20,24 +21,21 @@ export class SignContractComponent implements OnInit {
   acceptTerms: boolean = false; 
   @ViewChild(PaymentDialogComponent) paymentDialog: PaymentDialogComponent | undefined;
 
-  constructor(private router: Router, private dialog: MatDialog, private contratService: ContratService) { }
+  constructor(private router: Router, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private contratService: ContratService) { }
 
   ngOnInit(): void {
-    let state = this.router.getCurrentNavigation()?.extras.state;
-    if (!state) {
-      state = history.state; // Fallback to history state if Angular state is not available
-
-    }
-
-    if (state && state['selectedPlan'] && state['formData']) {
-      this.selectedPlan = state['selectedPlan'];
-      this.formData = state['formData'];
-      console.log('Données de l\'offre:', this.selectedPlan);
-      console.log('Données du formulaire:', this.formData);
-    } else {
+       this.activatedRoute.paramMap.subscribe(params => {
+        const state = history.state;
+        if (state && state['selectedPlan'] && state['formData']) {
+          this.selectedPlan = state['selectedPlan'];
+          this.formData = state['formData'];
+          console.log('Données de l\'offre:', this.selectedPlan);
+          console.log('Données du formulaire:', this.formData);
+        } else {
       console.error('State or required data is not available');
-      // this.router.navigate(['/error-page']);
-    }
+      this.router.navigate(['/error-page']);
+      }
+    });
   }
 
   openConditions(): void {
@@ -90,6 +88,12 @@ export class SignContractComponent implements OnInit {
   }
 
   generatePDF(): Blob {
+
+    if (!this.formData || !this.formData.dureeContrat) {
+      console.error('Form data or contract duration is missing');
+      //return new Blob(); 
+    }
+
     const doc = new jsPDF.default();
     doc.text('MobiSureMoinsDeCO2 Assurance', 10, 10);
     doc.text(`Contract for ${this.selectedPlan.name}`, 10, 20);
