@@ -23,7 +23,7 @@ export const routes: Routes = [
   { path: 'subscription-offers', component: SubscriptionOffersComponent, canActivate: [authGuard] },
   { path: 'sign-contract', component: SignContractComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/null' },
+  { path: '**', redirectTo: '/login' },
 ];
 
 export const appConfig = [
