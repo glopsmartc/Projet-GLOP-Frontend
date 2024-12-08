@@ -10,12 +10,12 @@ import { ForgotPassService } from '../../services/forgot-pass.service';
   templateUrl: './forgot-pass.component.html',
   styleUrls: ['./forgot-pass.component.css']
 })
-
-
 export class ForgotPassComponent {
   forgotPasswordForm: FormGroup;
   emailSent: boolean = false;
   errorMessage: string = '';
+  isLoading: boolean = false;  // Variable pour gérer l'état de chargement
+  message: string = '';
 
   constructor(private formBuilder: FormBuilder, private forgotPassService: ForgotPassService) {
     this.forgotPasswordForm = this.formBuilder.group({
@@ -26,14 +26,21 @@ export class ForgotPassComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.value.email;
+      this.isLoading = true;  // Mettre isLoading à true quand le formulaire est soumis
+      this.message = '';
+
       this.forgotPassService.forgotPassword(email).subscribe({
         next: (response) => {
           console.log(response);
           this.emailSent = true;
+          this.message = 'L\'email de réinitialisation a été envoyé avec succès.';  // Message de succès
+          this.isLoading = false;  // Réinitialiser isLoading à false après la réponse
         },
         error: (error) => {
-          this.errorMessage = 'Failed to send reset email. Please try again.';
-          console.error('the Error is :', error);
+          this.errorMessage = 'Échec de l\'envoi de l\'e-mail de réinitialisation. Veuillez réessayer.';
+          this.message = this.errorMessage;
+          console.error('L\'erreur est :', error);
+          this.isLoading = false;  // Réinitialiser isLoading à false en cas d'erreur
         }
       });
     }

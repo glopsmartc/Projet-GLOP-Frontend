@@ -29,7 +29,7 @@ export class LoginPageComponent implements OnInit {
   emailSignUp: string = '';
   address: string = '';
   phoneNumber: string = '';
-  birthDate: string = '';
+  sexe: string = '';
   passwordSignUp: string = '';
   confirmPassword: string = '';
   emailSignIn: string = '';
@@ -101,7 +101,7 @@ export class LoginPageComponent implements OnInit {
       adresse: this.address,
       numTel: this.phoneNumber,
       password: this.passwordSignUp,
-      dateNaissance: this.birthDate
+      sexe: this.sexe
     };
 
     try {
