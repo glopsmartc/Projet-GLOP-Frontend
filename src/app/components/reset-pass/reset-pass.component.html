@@ -1,0 +1,59 @@
+<div class="reset-password-container">
+    <h2>Réinitialisez votre mot de passe</h2>
+    <p>Entrez votre nouveau mot de passe ci-dessous.</p>
+  
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmit()">
+      <!-- Champ Nouveau Mot de Passe -->
+      <div class="form-group">
+        <label for="newPassword">Nouveau mot de passe</label>
+        <input
+          type="password"
+          id="newPassword"
+          class="form-control"
+          formControlName="newPassword"
+          [ngClass]="{ 'is-invalid': newPassword?.invalid && newPassword?.touched }"
+        />
+        <div *ngIf="newPassword?.invalid && newPassword?.touched" class="text-danger">
+          <small *ngIf="newPassword?.errors?.['required']">Le mot de passe est requis.</small>
+          <small *ngIf="newPassword?.errors?.['minlength']">Le mot de passe doit comporter au moins 6 caractères.</small>
+        </div>
+      </div>
+  
+      <!-- Champ Confirmer le Mot de Passe -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmez le mot de passe</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          class="form-control"
+          formControlName="confirmPassword"
+          [ngClass]="{ 'is-invalid': confirmPassword?.invalid && confirmPassword?.touched }"
+        />
+        <div *ngIf="confirmPassword?.invalid && confirmPassword?.touched" class="text-danger">
+          <small>La confirmation du mot de passe est requise.</small>
+        </div>
+        <div *ngIf="newPassword?.value !== confirmPassword?.value && confirmPassword?.touched" class="text-danger">
+          <small>Les mots de passe ne correspondent pas.</small>
+        </div>
+      </div>
+  
+      <!-- Bouton Soumettre -->
+      <button type="submit" class="btn btn-primary" [disabled]="resetPasswordForm.invalid || isLoading">
+        Réinitialiser
+      </button>
+    </form>
+  
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="loading">
+      <p>Chargement...</p>
+    </div>
+  
+    <!-- Messages de succès ou d'erreur -->
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+  </div>
+  

@@ -21,7 +21,17 @@
           Phone number must start with +33 and be followed by 9 digits.
         </span>
 
-        <input type="date" placeholder="Birth Date" [(ngModel)]="birthDate" name="birthDate" [max]="maxDate" required />
+        <!--<input type="date" placeholder="Birth Date" [(ngModel)]="birthDate" name="birthDate" [max]="maxDate" required />-->
+        <div class="form-group row align-items-center">
+          <label class="col-sm-5 col-form-label">Sexe :</label>
+          <div class="col-sm-7">
+            <select name="sexe" class="form-control" required>
+              <option value="male">Masculin</option>
+              <option value="female">Féminin</option>
+              <option value="other">Autre</option>
+            </select>
+          </div>
+        </div>        
 
         <input type="password" placeholder="Mot de passe" [(ngModel)]="passwordSignUp" name="passwordSignUp" required />
 
