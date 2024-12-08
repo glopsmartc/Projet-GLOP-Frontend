@@ -22,6 +22,20 @@ export class ContratService {
     };
   }
 
+   // Méthode pour récupérer les contrats de l'utilisateur connecté
+   async getUserContracts(): Promise<any> {  
+    try {
+      console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
+      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); // Appel de l'API pour récupérer les contrats
+      console.log('Réponse des contrats de l\'utilisateur:', response.data);
+      return response.data;  // Retourne les contrats de l'utilisateur
+    } catch (error: unknown) {
+      console.error('Erreur lors de la récupération des contrats de l\'utilisateur (GET):', error);
+      throw error;  // Re-throw the error for further handling
+    }
+  }
+
+
   // Méthode pour récupérer l'offre correspondante
   async getOffreCorrespondante(request: any): Promise<any> {
     try {
