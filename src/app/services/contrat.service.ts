@@ -59,16 +59,7 @@ export class ContratService {
     }
   }
   
-  // async getCurrentUserEmail(): Promise<string> {
-  //   try {
-  //     const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
-  //     const currentUser = response.data; 
-  //     return currentUser.email; 
-  //   } catch (error) {
-  //     console.error('Erreur lors de la récupération de l\'utilisateur actuel:', error);
-  //     throw error;
-  //   }
-  // }
+  
   async getCurrentUser(): Promise<{ email: string; nom: string }> {
     try {
       const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());

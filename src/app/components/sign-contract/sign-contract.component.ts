@@ -23,23 +23,7 @@ export class SignContractComponent implements OnInit {
 
   constructor(private router: Router, private dialog: MatDialog, private contratService: ContratService) { }
 
-  // ngOnInit(): void {
-  //   let state = this.router.getCurrentNavigation()?.extras.state;
-  //   if (!state) {
-  //     state = history.state; // Fallback to history state if Angular state is not available
-
-  //   }
-
-  //   if (state && state['selectedPlan'] && state['formData']) {
-  //     this.selectedPlan = state['selectedPlan'];
-  //     this.formData = state['formData'];
-  //     console.log('Données de l\'offre:', this.selectedPlan);
-  //     console.log('Données du formulaire:', this.formData);
-  //   } else {
-  //     console.error('State or required data is not available');
-  //     // this.router.navigate(['/error-page']);
-  //   }
-  // }
+  
   ngOnInit(): void {
     // Récupérer le nom de l'utilisateur actuel
     this.contratService.getCurrentUser().then(
@@ -128,97 +112,7 @@ export class SignContractComponent implements OnInit {
     }
   }
 
-//   generatePDF(): Blob {
-//     const doc = new jsPDF.default();
 
-//     // Ajouter un en-tête avec logo et titre
-//     doc.setFontSize(20);
-//     doc.text('MobiSureMoinsDeCO2 Assurance', 105, 20, { align: 'center' });
-//     doc.setFontSize(14);
-//     doc.text('Contrat d\'assurance', 105, 30, { align: 'center' });
-//     doc.line(10, 35, 200, 35); // Ligne séparatrice
-
-//     // Section Détails du contrat
-//     doc.setFontSize(12);
-//     doc.setFont('helvetica', 'bold');
-//     doc.text('Détails du contrat :', 10, 50);
-
-//     doc.setFont('helvetica', 'normal');
-//     doc.text('Offre :', 20, 60);
-//     doc.text(this.selectedPlan.name, 60, 60);
-
-//     doc.text('Prix :', 20, 70);
-//     doc.text(`${this.selectedPlan.price} €`, 60, 70);
-
-//     doc.text('Durée :', 20, 80);
-//     doc.text(this.formData.dureeContrat, 60, 80);
-
-//     doc.text('Date de début :', 20, 90);
-//     doc.text(this.formData.debutContrat || 'Non spécifiée', 60, 90);
-
-//     doc.line(10, 100, 200, 100); // Ligne séparatrice
-
-//     // Section Caractéristiques
-//     doc.setFont('helvetica', 'bold');
-//     doc.text('Caractéristiques :', 10, 110);
-
-//     doc.setFont('helvetica', 'normal');
-//     const features = this.selectedPlan.description.split('\n');
-//     features.forEach((feature: string, index: number) => {
-//         doc.text(`- ${feature}`, 20, 120 + index * 10);
-//     });
-
-//     const lastFeatureY = 120 + features.length * 10;
-
-//     doc.line(10, lastFeatureY + 10, 200, lastFeatureY + 10); // Ligne séparatrice
-
-   
-
-//     // doc.setFont('helvetica', 'normal');
-//     // doc.text(`Nom : ${this.formData.clientName || 'Non spécifié'}`, 20, lastFeatureY + 30);
-//     // doc.text(`Adresse : ${this.formData.clientAddress || 'Non spécifiée'}`, 20, lastFeatureY + 40);
-
-// // Obtenir la date actuelle
-// const currentDate = new Date();
-// const formattedDate = currentDate.toLocaleDateString('fr-FR'); // Format français
-
-// // Position de départ pour le bloc de signature
-// const signatureStartY = lastFeatureY + 40; // Ajusté pour réduire l’espace
-
-// // Dimensions des cadres
-// const frameWidth = 80;
-// const frameHeight = 50; // Augmenter légèrement la hauteur pour inclure la date
-
-// // Chemin ou base64 de l'image de signature
-// const signatureImage = 'assets/img/signature.png'; 
-
-// // Cadre pour la signature de l'entreprise
-// doc.setDrawColor(0);
-// doc.rect(20, signatureStartY, frameWidth, frameHeight); // Rectangle pour l'entreprise
-// doc.setFont('courier', 'bold');
-// doc.text('MobiSureMoinsDeCO2 Assurance', 25, signatureStartY + 10); // Texte dans le rectangle
-// doc.addImage(signatureImage, 'PNG', 25, signatureStartY + 15, 50, 15); // Ajouter l'image de la signature
-// doc.setFont('helvetica', 'italic');
-// doc.text(`Date : ${formattedDate}`, 25, signatureStartY + 40); // Ajouter la date sous l'image
-
-// // Cadre pour la signature du titulaire
-// doc.rect(120, signatureStartY, frameWidth, frameHeight); // Rectangle pour le titulaire
-// doc.setFont('helvetica', 'bold');
-// doc.text('Pour le Titulaire', 125, signatureStartY + 10); // Texte dans le rectangle
-// doc.setFont('helvetica', 'italic');
-// doc.text('Nom :', 125, signatureStartY + 20);
-// doc.setFont('helvetica', 'bold');
-// doc.text(this.formData.clientName || 'Non spécifié', 135, signatureStartY + 20); // Nom du titulaire
-// doc.setFont('helvetica', 'italic');
-// doc.text(`Date : ${formattedDate}`, 125, signatureStartY + 40); // Ajouter la date pour le titulaire
-
-// // Ligne de séparation (facultatif)
-// doc.line(10, signatureStartY + frameHeight + 10, 200, signatureStartY + frameHeight + 10);
-
-
-//     // Convertir en Blob
-//     return doc.output('blob');
-// }
 
 generatePDF(): Blob {
   const doc = new jsPDF.default();
