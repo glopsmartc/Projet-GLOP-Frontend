@@ -1,0 +1,127 @@
+/* Palette de couleurs */
+:root {
+    --main-green: #2e7d32; /* Vert du menu */
+    --light-green: #4caf50; /* Vert clair */
+    --dark-blue: #1976d2; /* Bleu doux */
+    --light-gray: #f5f5f5; /* Gris clair */
+    --dark-gray: #757575; /* Gris foncé */
+    --red: #d32f2f; /* Rouge */
+}
+
+/* Global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    color: var(--dark-gray);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: black;
+    margin-bottom: 30px;
+}
+
+/* Filtres */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.filter-btn {
+    background-color: var(--light-green);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn:hover {
+    background-color: var(--main-green);
+}
+
+/* Liste des contrats */
+.contracts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .contracts {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    .contracts {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.contract-card {
+    background-color: var(--light-gray);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contract-title {
+    font-size: 1.2rem;
+    color: black;
+    font-weight: bold;
+}
+
+/* Actions */
+.contract-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.download-btn {
+    background-color: var(--dark-blue);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #1565c0; /* Bleu légèrement plus foncé */
+}
+
+.cancel-btn {
+    background-color: var(--red);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #b71c1c; /* Rouge légèrement plus foncé */
+}

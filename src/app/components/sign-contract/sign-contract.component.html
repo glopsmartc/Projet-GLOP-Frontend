@@ -30,7 +30,7 @@
   <h3 class="text-center" *ngIf="selectedPlan?.name">Plan {{ selectedPlan.name }}</h3>
   <h4 class="text-center" *ngIf="selectedPlan?.price"><strong>Prix :</strong> {{ selectedPlan.price }}</h4>
   <ul class="list-group">
-    <li *ngFor="let feature of selectedPlan?.description.split('\\n')" class="list-group-item">
+    <li *ngFor="let feature of selectedPlan.description.split('\n')" class="list-group-item">
       <i class="fas fa-check-circle"></i> {{ feature }}
     </li>
   </ul>

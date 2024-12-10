@@ -10,6 +10,7 @@ import { SidebarEmployeeComponent } from './components/sidebar-employee/sidebar-
 import { ReactiveFormsModule } from '@angular/forms';
 import { SubscriptionOffersComponent } from './components/subscription-offers/subscription-offers.component';
 import { SignContractComponent } from './components/sign-contract/sign-contract.component';
+import { MesContratsComponent } from './components/mes-contrats/mes-contrats.component';
 
 import { ErrorPageComponent } from './components/error-page/error-page.component'; 
 
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'subscription-offers', component: SubscriptionOffersComponent, canActivate: [authGuard] },
   { path: 'error-page', component: ErrorPageComponent },
   { path: 'sign-contract', component: SignContractComponent },
+  { path: 'mes-contrats', component: MesContratsComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
 ];

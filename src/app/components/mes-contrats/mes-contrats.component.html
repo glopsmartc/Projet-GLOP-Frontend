@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Contrats</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Liste de Contrats d'Assurance</h1>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <a href="#all-contracts" class="filter-btn">Tous mes contrats</a>
+            <a href="#ongoing-contracts" class="filter-btn active">Contrats en cours</a>
+            <a href="#completed-contracts" class="filter-btn">Contrats terminés</a>
+        </div>
+
+        <!-- Liste des contrats -->
+        <div class="contracts">
+            <div *ngIf="contracts.length === 0" class="no-contracts-message">
+                <p>Aucun contrat trouvé.</p>
+            </div>
+
+            <div *ngFor="let contract of contracts" class="contract-card">
+                <p class="contract-title"> Contrat Assurance {{ contract.id }}</p> 
+                <div class="contract-actions">
+                    <a href="#" class="download-btn">
+                        <i class="fas fa-download"></i> Télécharger
+                    </a>
+                    <button class="cancel-btn" >Résilier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
