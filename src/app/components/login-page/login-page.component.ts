@@ -3,7 +3,7 @@ import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import axios, { AxiosError } from 'axios';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -12,9 +12,7 @@ import axios, { AxiosError } from 'axios';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-
 export class LoginPageComponent implements OnInit {
-
   maxDate: string = new Date().toISOString().split('T')[0];
   loginErrorMessage: string | null = null;
   passwordMismatch: boolean = false;
@@ -37,21 +35,18 @@ export class LoginPageComponent implements OnInit {
 
   apiBaseUrl: string = '';
 
-
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
     axios.defaults.headers.common['Content-Type'] = 'application/json';
   }
 
-    ngOnInit(): void { 
-      if (typeof window !== 'undefined') {
-        this.apiBaseUrl = (window as any).config?.apiBaseUrl || 'http://localhost:8081'; // Fallback to localhost if not set
-      } else {
-        this.apiBaseUrl = 'http://localhost:8081'; 
-      }
-      console.log('API Base URL in component:', this.apiBaseUrl);
+  ngOnInit(): void {
+    if (typeof window !== 'undefined') {
+      this.apiBaseUrl = (window as any).config?.apiBaseUrl || 'http://localhost:8081'; // Fallback to localhost if not set
+    } else {
+      this.apiBaseUrl = 'http://localhost:8081';
     }
-    
-
+    console.log('API Base URL in component:', this.apiBaseUrl);
+  }
 
   get authApiUrl(): string {
     return `${this.apiBaseUrl}/auth`;
@@ -66,7 +61,6 @@ export class LoginPageComponent implements OnInit {
   }
 
   async onSignUp(signupForm: any) {
-
     this.passwordMismatch = false;
     this.phoneNumberInvalid = false;
     this.requiredMessage = '';
@@ -107,7 +101,7 @@ export class LoginPageComponent implements OnInit {
     try {
       const response = await axios.post(`${this.authApiUrl}/signup`, userData);
       console.log('Signup successful', response.data);
-      this.signIn()
+      this.signIn();
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error('Error during signup', axiosError);
@@ -118,7 +112,7 @@ export class LoginPageComponent implements OnInit {
           this.requiredMessage = "Un utilisateur avec cette adresse e-mail existe déjà.";
         } else {
           this.requiredMessage = "L'inscription a échoué. Veuillez vérifier vos informations et réessayer.";
-        }        
+        }
       }
     }
   }
@@ -134,8 +128,23 @@ export class LoginPageComponent implements OnInit {
       console.log('Signin successful', response.data);
       localStorage.setItem('token', response.data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      this.authService.extractRoles(); // Extract roles
+      this.authService.logRole(); // Log roles to console
       this.loginErrorMessage = null;
-      await this.router.navigate(['/subscription-form']);
+
+      // Navigate based on role
+      if (this.authService.hasRole(['ROLE_CLIENT'])) {
+        await this.router.navigate(['/subscription-form']);
+      } else if (this.authService.hasRole(['ROLE_CONSEILLER'])) {
+        await this.router.navigate(['/clients-contracts']);
+      } else {
+        // Default navigation or handle other roles
+        await this.router.navigate(['/']);
+      }
+
+    // Reload the page after navigation
+    window.location.reload();
+    
     } catch (error: any) {
       console.error('Error during signin', error);
       this.loginErrorMessage = error.response?.data?.message || 'Échec de la connexion. Veuillez vérifier votre e-mail et votre mot de passe.';

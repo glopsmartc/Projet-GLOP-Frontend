@@ -6,8 +6,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   const router = inject(Router);
   const authService = inject(AuthService);
+  const expectedRoles: string[] = route.data['roles'] || [];
 
-  if (authService.isAuthenticated()) {
+  if (authService.isAuthenticated() && authService.hasRole(expectedRoles)) {
     return true;
   }
 
