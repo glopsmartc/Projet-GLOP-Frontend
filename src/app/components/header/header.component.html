@@ -28,7 +28,7 @@
         </ng-container>
 
 
-        <ng-container *ngIf="isAuthenticated">
+        <ng-container *ngIf="isAuthenticated && isClient">
           <li class="nav-item">
             <a class="nav-link" routerLink="/subscription-form">Souscrire à une offre</a>
           </li>
