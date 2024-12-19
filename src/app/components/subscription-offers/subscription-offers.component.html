@@ -10,7 +10,7 @@
     <h2 class="mt-4">{{ offre.nomOffre }}</h2>
     <div class="price mb-4">{{ offre.prixMinTotal }}</div>
     <ul class="features">
-      <li *ngFor="let feature of offre.descriptionMin.split('\n')">
+      <li *ngFor="let feature of offre.descriptionMin.split('\\n')">
         <i class="fas fa-check-circle"></i> {{ feature }}
       </li>
     </ul>
