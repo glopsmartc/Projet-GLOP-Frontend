@@ -28,7 +28,7 @@ export class SignContractComponent implements OnInit {
     // Récupérer le nom de l'utilisateur actuel
     this.contratService.getCurrentUser().then(
       (user) => {
-        this.currentUserName = user.nom; // Récupérer le champ `nom` depuis la réponse
+        this.currentUserName = `${user.prenom} ${user.nom}`; // Récupérer le champ `nom` depuis la réponse
         console.log('Utilisateur actuel:', user);
       },
       (error) => {
@@ -41,6 +41,7 @@ export class SignContractComponent implements OnInit {
       if (state && state['selectedPlan'] && state['formData']) {
         this.selectedPlan = state['selectedPlan'];
         this.formData = state['formData'];
+
         console.log('Données de l\'offre:', this.selectedPlan);
         console.log('Données du formulaire:', this.formData);
       } else {
@@ -80,14 +81,14 @@ export class SignContractComponent implements OnInit {
       // Générer le PDF
       const pdfBlob = this.generatePDF();
 
-        // Sauvegarde locale pour tester le fichier PDF généré
-        const url = window.URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'contract_test.pdf';
-        a.click();
+      // Sauvegarde locale pour tester le fichier PDF généré
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contract_test.pdf';
+      a.click();
 
-        console.log('PDF sauvegardé localement pour test.');
+      console.log('PDF sauvegardé localement pour test.');
 
 
       // Sauvegarder les données du contrat via l'API
@@ -109,96 +110,144 @@ export class SignContractComponent implements OnInit {
     }
   }
 
+  
   generatePDF(): Blob {
     const doc = new jsPDF.default();
+    const pageHeight = doc.internal.pageSize.height;
+    let cursorY = 18;
   
-    // Ajouter un en-tête avec logo et titre
+    // Add Header
     doc.setFontSize(20);
-    doc.text('MobiSureMoinsDeCO2 Assurance', 105, 20, { align: 'center' });
+    doc.text('MobiSureMoinsDeCO2 Assurance', 105, cursorY, { align: 'center' });
+    cursorY += 10;
     doc.setFontSize(14);
-    doc.text('Contrat d\'assurance', 105, 30, { align: 'center' });
-    doc.line(10, 35, 200, 35); // Ligne séparatrice
+    doc.text('Contrat d\'assurance', 105, cursorY, { align: 'center' });
+    cursorY += 10;
+    doc.line(10, cursorY, 200, cursorY);
+    cursorY += 10;
   
-    // Section Détails du contrat
-    doc.setFontSize(12);
+    // Add Contract Details
     doc.setFont('helvetica', 'bold');
-    doc.text('Détails du contrat :', 10, 50);
+    doc.text('Vos Informations :', 10, cursorY);
+    cursorY += 10;
   
     doc.setFont('helvetica', 'normal');
-    doc.text('Offre :', 20, 60);
-    doc.text(this.selectedPlan.name, 60, 60);
+    const addLine = (label: string, value: string | undefined) => {
+      if (value) {
+        if (cursorY + 10 > pageHeight) {
+          doc.addPage();
+          cursorY = 20;
+        }
+        doc.text(`${label}: ${value}`, 20, cursorY);
+        cursorY += 7;
+      }
+    };
   
-    doc.text('Prix :', 20, 70);
-    doc.text(`${this.selectedPlan.price}`, 60, 70);
+    addLine('Durée du Contrat', this.formData.dureeContrat);
+    addLine('Date de Début', this.formData.debutContrat);
+    addLine('Destination', this.formData.destination);
+    addLine('Date Aller', this.formData.dateAller);
+    addLine('Date Retour', this.formData.dateRetour);
+    addLine('Date de Naissance du Souscripteur', this.formData.dateNaissanceSouscripteur);
+    addLine('Téléphone', this.formData.numeroTelephone);
   
-    doc.text('Durée :', 20, 80);
-    doc.text(this.formData.dureeContrat, 60, 80);
+    if (this.formData.assurerTransport === 'true') {
+      addLine('Transport Assuré', 'Oui');
+    }
   
-    doc.text('Date de début :', 20, 90);
-    doc.text(this.formData.debutContrat || 'Non spécifiée', 60, 90);
+    const transportTypes: string[] = [];
+    if (this.formData.voiture === 'true') transportTypes.push('Voiture');
+    if (this.formData.trotinette === 'true') transportTypes.push('Trotinette');
+    if (this.formData.bicyclette === 'true') transportTypes.push('Bicyclette');
+    if (transportTypes.length) {
+      addLine('Type de Transport', transportTypes.join(' & '));
+    }
   
-    doc.line(10, 100, 200, 100); // Ligne séparatrice
+    // Add Insured Persons
+    if (this.formData.nombrePersonnes > 0) {
+      addLine('Personnes Assurées', `${this.formData.nombrePersonnes}`);
+      this.formData.accompagnants.forEach((person: any, index: number) => {
+        if (cursorY + 50 > pageHeight) {
+          doc.addPage();
+          cursorY = 20;
+        }
+        doc.text(`Personne ${index + 1} :`, 30, cursorY);
+        cursorY += 7;
+        doc.text(`Nom : ${person.nom}`, 40, cursorY);
+        cursorY += 7;
+        doc.text(`Prénom : ${person.prenom}`, 40, cursorY);
+        cursorY += 7;
+        doc.text(`Sexe : ${person.sexe}`, 40, cursorY);
+        cursorY += 7;
+        doc.text(`Date Naissance : ${person.dateNaissance}`, 40, cursorY);
+        cursorY += 7;
+      });
+    }
   
-    // Section Caractéristiques
+    doc.line(10, cursorY, 200, cursorY);
+    cursorY += 10;
+  
+    // Add Features
+    if (cursorY + 30 > pageHeight) {
+      doc.addPage();
+      cursorY = 20;
+    }
     doc.setFont('helvetica', 'bold');
-    doc.text('Caractéristiques :', 10, 110);
-  
+    doc.text('Caractéristiques :', 10, cursorY);
+    cursorY += 10;
     doc.setFont('helvetica', 'normal');
-    const features = this.selectedPlan.description.split('\n');
-    features.forEach((feature: string, index: number) => {
-        doc.text(`- ${feature}`, 20, 120 + index * 10);
+    const features = this.selectedPlan.description.split('\\n');
+    features.forEach((feature: string) => {
+      if (cursorY + 10 > pageHeight) {
+        doc.addPage();
+        cursorY = 20;
+      }
+      doc.text(`- ${feature}`, 20, cursorY);
+      cursorY += 7;
     });
   
-    const lastFeatureY = 120 + features.length * 10;
+    // Add Signatures
+    if (cursorY + 70 > pageHeight) {
+      doc.addPage();
+      cursorY = 20;
+    }
+    const signatureStartY = pageHeight - 60;
   
-    doc.line(10, lastFeatureY + 10, 200, lastFeatureY + 10); // Ligne séparatrice
-  
-    // Obtenir la date actuelle
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString('fr-FR'); // Format français
-  
-    // Position de départ pour le bloc de signature
-    const signatureStartY = lastFeatureY + 40; // Ajusté pour réduire l’espace
-  
-    // Dimensions des cadres
-    const frameWidth = 80;
-    const frameHeight = 50; // Augmenter légèrement la hauteur pour inclure la date
-  
-    // Chemin ou base64 de l'image de signature
-    const signatureImage = 'assets/img/signature.png'; 
-  
-    // Cadre pour la signature de l'entreprise
     doc.setDrawColor(0);
-    doc.rect(20, signatureStartY, frameWidth, frameHeight); // Rectangle pour l'entreprise
-    doc.setFont('courier', 'bold');
-    doc.text('MobiSureMoinsDeCO2 Assurance', 25, signatureStartY + 10); // Texte dans le rectangle
-    doc.addImage(signatureImage, 'PNG', 25, signatureStartY + 15, 50, 15); // Ajouter l'image de la signature
-    doc.setFont('helvetica', 'italic');
-    doc.text(`Date : ${formattedDate}`, 25, signatureStartY + 40); // Ajouter la date sous l'image
+    const frameWidth = 70;
+    const frameHeight = 42;
   
-    // Cadre pour la signature du titulaire
-    doc.rect(120, signatureStartY, frameWidth, frameHeight); // Rectangle pour le titulaire
-    doc.setFont('courier', 'bold');
-    doc.text('Pour le Titulaire', 125, signatureStartY + 10); // Texte dans le rectangle
-    doc.setFont('helvetica', 'italic');
-    doc.text('', 125, signatureStartY + 20);
+    // Company Signature
+    doc.rect(20, signatureStartY, frameWidth, frameHeight);
     doc.setFont('helvetica', 'bold');
-    doc.text(this.currentUserName || 'Non spécifié', 135, signatureStartY + 20); // Utiliser le nom récupéré
-    doc.setFont('helvetica', 'italic');
-    doc.text(`Date : ${formattedDate}`, 125, signatureStartY + 40); // Ajouter la date pour le titulaire
+    doc.setFontSize(10);
+    doc.text('MobiSureMoinsDeCO2 Assurance', 25, signatureStartY + 10);
+    doc.addImage('assets/img/signature.png', 'PNG', 25, signatureStartY + 15, 50, 15);
+    doc.setFont('helvetica', 'bold');
+    const formattedDate = new Date().toLocaleDateString('fr-FR');
+    doc.text(`Date : ${formattedDate}`, 25, signatureStartY + 35);
   
-    // Ligne de séparation (facultatif)
-    doc.line(10, signatureStartY + frameHeight + 10, 200, signatureStartY + frameHeight + 10);
+    // Client Signature
+    doc.rect(120, signatureStartY, frameWidth, frameHeight);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Pour le Titulaire', 125, signatureStartY + 10);
+    doc.setFont('courier', 'bold');
+    doc.text(this.currentUserName || 'Non spécifié', 135, signatureStartY + 20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Date : ${formattedDate}`, 125, signatureStartY + 35);
   
-    // Convertir en Blob
+    // Convert to Blob
     return doc.output('blob');
   }
+  
+
 
 }
 
 @Component({
   selector: 'app-conditions-dialog',
   template: `
+  <div class="p-5">
     <h1 class="dialog-header">Conditions Générales</h1>
     <div class="dialog-content">
       <p><strong>1. Objet du Contrat :</strong> Ce contrat a pour objet de définir les termes et conditions d'abonnement aux services d'assurance proposés par MobiSureMoinsDeCO2.</p>
@@ -210,7 +259,7 @@ export class SignContractComponent implements OnInit {
       <p><strong>7. Acceptation des Conditions :</strong> L'abonnement prend effet uniquement lorsque l'utilisateur accepte ces conditions générales et la politique de confidentialité en toute connaissance de cause.</p>
     </div>
     <button mat-button (click)="close()" class="close-btn">Fermer</button>
-
+  </div>
   `,
   styles: [
     `
@@ -240,6 +289,7 @@ export class SignContractComponent implements OnInit {
       padding: 10px 20px;
       border: none;
       cursor: pointer;
+      border-radius: 5px; 
     }
 
     .close-btn:hover {
@@ -250,7 +300,7 @@ export class SignContractComponent implements OnInit {
   ]
 })
 export class ConditionsDialogComponent {
-  constructor(private dialogRef: MatDialogRef<ConditionsDialogComponent>) {}
+  constructor(private dialogRef: MatDialogRef<ConditionsDialogComponent>) { }
 
   close(): void {
     this.dialogRef.close(true);
