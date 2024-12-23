@@ -11,7 +11,7 @@ import { SubscriptionOffersComponent } from './components/subscription-offers/su
 import { SignContractComponent } from './components/sign-contract/sign-contract.component';
 import { MesContratsComponent } from './components/mes-contrats/mes-contrats.component';
 
-import { ErrorPageComponent } from './components/error-page/error-page.component'; 
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { ClientContractsComponent } from './conseillerComponents/client-contracts/client-contracts.component';
 
 import { authGuard } from './guards/auth.guard';
