@@ -122,4 +122,16 @@ export class ContratService {
     }
   }  
   
+  
+  async getCurrentUser(): Promise<{ email: string; nom: string,  prenom: string }> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
+      const currentUser = response.data; // Assurez-vous que `nom` est un champ retourné par votre backend
+      return { email: currentUser.email, nom: currentUser.nom, prenom: currentUser.prenom }; // Retourne le nom et l'email
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'utilisateur actuel:', error);
+      throw error;
+    }
+  }
+  
 }
