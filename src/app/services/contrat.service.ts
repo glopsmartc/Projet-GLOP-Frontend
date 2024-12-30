@@ -140,7 +140,7 @@ export class ContratService {
     try {
         const response = await axios.patch(
             `${this.apiUrl}/${id}/resilier`, 
-            {}, // Corps de requête vide (ou autre si nécessaire)
+            {}, 
             this.getAuthHeaders()
         );
         console.log('Contrat résilié avec succès:', response.data);
@@ -153,7 +153,7 @@ export class ContratService {
         } else {
             console.error('Erreur inconnue:', error.message);
         }
-        throw error; // Relance l'erreur pour que l'appelant puisse la gérer
+        throw error; 
     }
 }
   

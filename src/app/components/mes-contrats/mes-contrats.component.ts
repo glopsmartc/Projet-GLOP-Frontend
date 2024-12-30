@@ -11,6 +11,8 @@ import { ContratService } from '../../services/contrat.service';
 })
 export class MesContratsComponent implements OnInit {
   contracts: any[] = [];
+  filteredContracts: any[] = []; // Contrats filtrés à afficher
+  activeFilter: string = 'all'; // Filtre actif ('all', 'actif', 'terminé', 'résilié')
 
   // injection du service dans le constructeur
   constructor(private contratService: ContratService) {}
@@ -26,8 +28,24 @@ export class MesContratsComponent implements OnInit {
       console.log('Chargement des contrats...');
       this.contracts = await this.contratService.getUserContracts(); // Appel du service
       console.log('Contrats chargés:', this.contracts);
+      this.applyFilter(); // Appliquer le filtre actuel
     } catch (error) {
       console.error('Erreur lors du chargement des contrats:', error);
+    }
+  }
+
+  filterContracts(filter: string) {
+    this.activeFilter = filter; // Met à jour le filtre actif
+    this.applyFilter();
+  }
+
+  private applyFilter() {
+    if (this.activeFilter === 'all') {
+      this.filteredContracts = this.contracts; // Tous les contrats
+    } else {
+      this.filteredContracts = this.contracts.filter(
+        contract => contract.statut === this.activeFilter
+      );
     }
   }
 
