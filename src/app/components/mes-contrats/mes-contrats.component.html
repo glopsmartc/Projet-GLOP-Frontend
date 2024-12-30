@@ -8,28 +8,34 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Liste de Contrats d'Assurance</h1>
+        <h1 class="title">Mes contrats d'assurance</h1>
 
         <!-- Filtres -->
         <div class="filters">
-            <a href="#all-contracts" class="filter-btn">Tous mes contrats</a>
-            <a href="#ongoing-contracts" class="filter-btn active">Contrats en cours</a>
-            <a href="#completed-contracts" class="filter-btn">Contrats terminés</a>
+            <button (click)="filterContracts('all')" class="filter-btn" [class.active]="activeFilter === 'all'">Tous mes contrats</button>
+            <button (click)="filterContracts('actif')" class="filter-btn" [class.active]="activeFilter === 'actif'">Mes contrats en cours</button>
+            <button (click)="filterContracts('Résilié')" class="filter-btn" [class.active]="activeFilter === 'Résilié'">Mes contrats résiliés</button>
+            <button (click)="filterContracts('terminé')" class="filter-btn" [class.active]="activeFilter === 'terminé'">Mes contrats terminés</button>
         </div>
 
         <!-- Liste des contrats -->
         <div class="contracts">
-            <div *ngIf="contracts.length === 0" class="no-contracts-message">
-                <p>Aucun contrat trouvé.</p>
-            </div>
+            <div *ngIf="filteredContracts.length === 0" class="no-contracts-message">
+                <p>
+                  <ng-container *ngIf="activeFilter === 'actif'">Vous n'avez aucun contrat actif.</ng-container>
+                  <ng-container *ngIf="activeFilter === 'terminé'">Vous n'avez aucun contrat terminé.</ng-container>
+                  <ng-container *ngIf="activeFilter === 'all'">Vous n'avez aucun contrat.</ng-container>
+                </p>
+              </div>
 
-            <div *ngFor="let contract of contracts" class="contract-card">
+              <div *ngFor="let contract of filteredContracts" class="contract-card">
                 <p class="contract-title"> Contrat Assurance {{ contract.id }}</p> 
                 <div class="contract-actions">
                     <a href="#" class="download-btn">
                         <i class="fas fa-download"></i> Télécharger
                     </a>
-                    <button class="cancel-btn" >Résilier</button>
+                     <!-- bouton resilier est seulement pour les contrats actif!!! -->
+                    <button *ngIf="contract.statut === 'actif'" class="cancel-btn" (click)="onResilierContrat(contract.id)">Résilier</button>
                 </div>
             </div>
         </div>
