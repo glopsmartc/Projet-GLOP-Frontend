@@ -30,4 +30,22 @@ export class MesContratsComponent implements OnInit {
       console.error('Erreur lors du chargement des contrats:', error);
     }
   }
+
+  async onResilierContrat(contratId: string) {
+    try {
+      // Conversion de l'ID en nombre
+      const contratIdNumber = parseInt(contratId, 10);
+      if (isNaN(contratIdNumber)) {
+        throw new Error(`L'ID fourni (${contratId}) n'est pas un nombre valide.`);
+      }
+  
+      console.log(`Résiliation du contrat avec ID : ${contratIdNumber}...`);
+      await this.contratService.resilierContrat(contratIdNumber); // Appel du service
+      console.log(`Contrat avec ID : ${contratIdNumber} résilié.`);
+      this.loadContracts(); // Recharger les contrats après résiliation
+    } catch (error) {
+      console.error('Erreur lors de la résiliation du contrat:', error);
+    }
+  }
+
 }

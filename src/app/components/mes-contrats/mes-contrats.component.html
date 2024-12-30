@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Liste de Contrats d'Assurance</h1>
+        <h1 class="title">Liste des Contrats d'Assurance</h1>
 
         <!-- Filtres -->
         <div class="filters">
@@ -29,7 +29,7 @@
                     <a href="#" class="download-btn">
                         <i class="fas fa-download"></i> Télécharger
                     </a>
-                    <button class="cancel-btn" >Résilier</button>
+                    <button class="cancel-btn" (click)="onResilierContrat(contract.id)">Résilier</button>
                 </div>
             </div>
         </div>

@@ -133,5 +133,28 @@ export class ContratService {
       throw error;
     }
   }
+
+
+  //methode pour resilier contrat
+  async resilierContrat(id: number): Promise<void> {
+    try {
+        const response = await axios.patch(
+            `${this.apiUrl}/${id}/resilier`, 
+            {}, // Corps de requête vide (ou autre si nécessaire)
+            this.getAuthHeaders()
+        );
+        console.log('Contrat résilié avec succès:', response.data);
+    } catch (error: any) {
+        // Gestion détaillée de l'erreur
+        if (error.response) {
+            console.error('Erreur de l’API:', error.response.status, error.response.data);
+        } else if (error.request) {
+            console.error('Aucune réponse reçue :', error.request);
+        } else {
+            console.error('Erreur inconnue:', error.message);
+        }
+        throw error; // Relance l'erreur pour que l'appelant puisse la gérer
+    }
+}
   
 }
