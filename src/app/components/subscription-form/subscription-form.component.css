@@ -183,3 +183,9 @@ select:focus {
   background-color: #FFFFFF;
   /* Assure un fond blanc au focus */
 }
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 12px;
+}
