@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { ContratService } from '../../services/contrat.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationResiliationComponent } from '../../confirmation-resiliation/confirmation-resiliation.component';
 
 @Component({
   selector: 'app-mes-contrats',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './mes-contrats.component.html',
   styleUrl: './mes-contrats.component.css'
 })
@@ -15,7 +18,7 @@ export class MesContratsComponent implements OnInit {
   activeFilter: string = 'all'; // Filtre actif ('all', 'actif', 'terminé', 'résilié')
 
   // injection du service dans le constructeur
-  constructor(private contratService: ContratService) {}
+  constructor(private contratService: ContratService, private dialog: MatDialog) {}
 
   // recuperation des contrats au chargement du composant
   ngOnInit(): void {
@@ -51,16 +54,26 @@ export class MesContratsComponent implements OnInit {
 
   async onResilierContrat(contratId: string) {
     try {
-      // Conversion de l'ID en nombre
-      const contratIdNumber = parseInt(contratId, 10);
-      if (isNaN(contratIdNumber)) {
-        throw new Error(`L'ID fourni (${contratId}) n'est pas un nombre valide.`);
+      //ouvre la boîte de dialogue de confirmation
+      const dialogRef = this.dialog.open(ConfirmationResiliationComponent);
+      //attendre que la boîte de dialogue soit fermée et récupérer la réponse
+      const result = await dialogRef.afterClosed().toPromise();
+
+      if (result) {
+          // Conversion de l'ID en nombre
+          const contratIdNumber = parseInt(contratId, 10);
+          if (isNaN(contratIdNumber)) {
+            throw new Error(`L'ID fourni (${contratId}) n'est pas un nombre valide.`);
+          }
+      
+          console.log(`Résiliation du contrat avec ID : ${contratIdNumber}...`);
+          await this.contratService.resilierContrat(contratIdNumber); // Appel du service
+          console.log(`Contrat avec ID : ${contratIdNumber} résilié.`);
+          this.loadContracts(); // Recharger les contrats après résiliation
+      } else {
+          console.log('Action de résiliation annulée.');
       }
-  
-      console.log(`Résiliation du contrat avec ID : ${contratIdNumber}...`);
-      await this.contratService.resilierContrat(contratIdNumber); // Appel du service
-      console.log(`Contrat avec ID : ${contratIdNumber} résilié.`);
-      this.loadContracts(); // Recharger les contrats après résiliation
+
     } catch (error) {
       console.error('Erreur lors de la résiliation du contrat:', error);
     }
