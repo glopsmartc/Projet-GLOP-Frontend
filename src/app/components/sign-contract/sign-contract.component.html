@@ -9,28 +9,42 @@
   <p *ngIf="formData?.dateAller"><strong>Date Aller :</strong> {{ formData.dateAller }}</p>
   <p *ngIf="formData?.dateRetour"><strong>Date Retour :</strong> {{ formData.dateRetour }}</p>
 
-  <p *ngIf="formData?.dateNaissanceSouscripteur"><strong>Date de Naissance du Souscripteur :</strong> {{ formData.dateNaissanceSouscripteur }}</p>
+  <p *ngIf="formData?.dateNaissanceSouscripteur"><strong>Date de Naissance du Souscripteur :</strong> {{
+    formData.dateNaissanceSouscripteur }}</p>
   <p *ngIf="formData?.numeroTelephone"><strong>Téléphone :</strong> {{ formData.numeroTelephone }}</p>
 
-  <p *ngIf="formData?.assurerTransport === 'true'"><strong>Transport Assuré :</strong> {{ formData.assurerTransport === 'true' ? 'Oui' : 'Non' }}</p>
+  <p *ngIf="formData?.assurerTransport === 'true'"><strong>Transport Assuré :</strong> {{ formData.assurerTransport ===
+    'true' ? 'Oui' : 'Non' }}</p>
 
   <p *ngIf="formData?.voiture === 'true' || formData?.trotinette === 'true' || formData?.bicyclette === 'true'">
     <strong>Type de Transport :</strong>
     {{ formData.voiture === 'true' ? 'Voiture' : '' }}
-    <span *ngIf="formData?.voiture === 'true' && (formData?.trotinette === 'true' || formData?.bicyclette === 'true')"> | </span>
+    <span *ngIf="formData?.voiture === 'true' && (formData?.trotinette === 'true' || formData?.bicyclette === 'true')">
+      & </span>
     {{ formData.trotinette === 'true' ? 'Trotinette' : '' }}
-    <span *ngIf="formData?.trotinette === 'true' && formData?.bicyclette === 'true'"> | </span>
+    <span *ngIf="formData?.trotinette === 'true' && formData?.bicyclette === 'true'"> & </span>
     {{ formData.bicyclette === 'true' ? 'Bicyclette' : '' }}
   </p>
 
   <p *ngIf="formData?.nombrePersonnes > 0"><strong>Personnes Assurées :</strong> {{ formData.nombrePersonnes }}</p>
+  <p *ngIf="formData?.nombrePersonnes > 0">
+    <ng-container *ngFor="let accompagnant of formData.accompagnants; let i = index">
+      <div class="accompagnant-info">
+        <strong>Personne {{ i + 1 }} :</strong><br>
+        <strong>- Nom :</strong> {{ accompagnant.nom }}<br>
+        <strong>- Prénom :</strong> {{ accompagnant.prenom }}<br>
+        <strong>- Sexe :</strong> {{ accompagnant.sexe }}<br>
+        <strong>- Date Naissance :</strong> {{ accompagnant.dateNaissance }}<br>
+      </div>
+    </ng-container>
+  </p>
 </div>
 
 <div class="container mt-4">
   <h3 class="text-center" *ngIf="selectedPlan?.name">Plan {{ selectedPlan.name }}</h3>
   <h4 class="text-center" *ngIf="selectedPlan?.price"><strong>Prix :</strong> {{ selectedPlan.price }}</h4>
   <ul class="list-group">
-    <li *ngFor="let feature of selectedPlan?.description.split('\\n')" class="list-group-item">
+    <li *ngFor="let feature of selectedPlan.description.split('\\n')" class="list-group-item">
       <i class="fas fa-check-circle"></i> {{ feature }}
     </li>
   </ul>
@@ -39,11 +53,12 @@
 <!-- case à cocher pour accepter les conditions -->
 <div class="text-center mt-4">
   <label>
-    <input type="checkbox" [(ngModel)]="acceptTerms" /> J'accepte les 
-    <a href="javascript:void(0);" (click)="openConditions()">conditions générales et la politique de confidentialité </a> et je signe le contrat
+    <input type="checkbox" [(ngModel)]="acceptTerms" /> J'accepte les
+    <a href="javascript:void(0);" (click)="openConditions()">conditions générales et la politique de confidentialité
+    </a> et je signe le contrat
   </label>
 </div>
 
-<div class="text-center mt-3">
+<div class="text-center mt-3 mb-5">
   <button class="mt-2" [disabled]="!acceptTerms" (click)="finalizeContract()">Finaliser le Contrat</button>
 </div>

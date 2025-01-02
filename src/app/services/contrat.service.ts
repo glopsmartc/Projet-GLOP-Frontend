@@ -21,6 +21,20 @@ export class ContratService {
     };
   }
 
+   // Méthode pour récupérer les contrats de l'utilisateur connecté
+   async getUserContracts(): Promise<any> {  
+    try {
+      console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
+      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); // Appel de l'API pour récupérer les contrats
+      console.log('Réponse des contrats de l\'utilisateur:', response.data);
+      return response.data;  // Retourne les contrats de l'utilisateur
+    } catch (error: unknown) {
+      console.error('Erreur lors de la récupération des contrats de l\'utilisateur (GET):', error);
+      throw error;  // Re-throw the error for further handling
+    }
+  }
+
+
   // Méthode pour récupérer l'offre correspondante
   async getOffreCorrespondante(request: any): Promise<any> {
     try {
@@ -107,5 +121,40 @@ export class ContratService {
       throw error;
     }
   }  
+  
+  
+  async getCurrentUser(): Promise<{ email: string; nom: string,  prenom: string }> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
+      const currentUser = response.data; // Assurez-vous que `nom` est un champ retourné par votre backend
+      return { email: currentUser.email, nom: currentUser.nom, prenom: currentUser.prenom }; // Retourne le nom et l'email
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'utilisateur actuel:', error);
+      throw error;
+    }
+  }
+
+
+  //methode pour resilier contrat
+  async resilierContrat(id: number): Promise<void> {
+    try {
+        const response = await axios.patch(
+            `${this.apiUrl}/${id}/resilier`, 
+            {}, 
+            this.getAuthHeaders()
+        );
+        console.log('Contrat résilié avec succès:', response.data);
+    } catch (error: any) {
+        // Gestion détaillée de l'erreur
+        if (error.response) {
+            console.error('Erreur de l’API:', error.response.status, error.response.data);
+        } else if (error.request) {
+            console.error('Aucune réponse reçue :', error.request);
+        } else {
+            console.error('Erreur inconnue:', error.message);
+        }
+        throw error; 
+    }
+}
   
 }
