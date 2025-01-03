@@ -31,9 +31,9 @@
               <div *ngFor="let contract of filteredContracts" class="contract-card">
                 <p class="contract-title"> Contrat Assurance {{ contract.id }}</p> 
                 <div class="contract-actions">
-                    <a href="#" class="download-btn">
+                    <a class="download-btn" (click)="onDownloadContract(contract.id)">
                         <i class="fas fa-download"></i> Télécharger
-                    </a>
+                    </a>                    
                      <!-- bouton resilier est seulement pour les contrats actif!!! -->
                     <button *ngIf="contract.statut === 'actif'" class="cancel-btn" (click)="onResilierContrat(contract.id)">Résilier</button>
                 </div>

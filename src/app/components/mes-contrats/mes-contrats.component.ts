@@ -79,4 +79,28 @@ export class MesContratsComponent implements OnInit {
     }
   }
 
+  async onDownloadContract(contractId: string) {
+    try {
+      console.log(`Téléchargement du contrat avec l'ID : ${contractId}...`);
+      // Appeler le service pour récupérer le fichier du contrat
+      const fileBlob = await this.contratService.downloadContractFile(contractId);
+      
+      // Créer une URL pour le fichier téléchargé
+      const url = window.URL.createObjectURL(fileBlob);
+  
+      // Créer un lien temporaire pour lancer le téléchargement
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `contrat_${contractId}.pdf`;
+      anchor.click();
+  
+      // Libérer l'URL créée
+      window.URL.revokeObjectURL(url);
+  
+      console.log(`Contrat avec l'ID ${contractId} téléchargé avec succès.`);
+    } catch (error) {
+      console.error(`Erreur lors du téléchargement du contrat avec l'ID ${contractId}:`, error);
+    }
+  }
+  
 }
