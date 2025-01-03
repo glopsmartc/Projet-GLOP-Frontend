@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment'; 
+
+declare const window: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ForgotPassService {
-  private apiUrl = `${environment.apiBaseUrl}/auth`;
+  private apiUrl = `${window.config.apiBaseUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
