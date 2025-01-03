@@ -8,9 +8,21 @@ declare const window: any;
   providedIn: 'root'
 })
 export class ForgotPassService {
-  private apiUrl = `${window.config.apiBaseUrl}/auth`;
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.apiUrl = this.getApiUrl(); // Safely get the apiUrl
+  }
+
+  // Safe method to get the apiUrl, ensuring window is defined
+  private getApiUrl(): string {
+    if (typeof window !== 'undefined' && window.config) {
+      return `${window.config.apiBaseUrl}/auth`;
+    } else {
+      console.warn('window.config is not available or window is undefined');
+      return ''; 
+    }
+  }
 
   forgotPassword(email: string): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/forgot-password`, { email });
