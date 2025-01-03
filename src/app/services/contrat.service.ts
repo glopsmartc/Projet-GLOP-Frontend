@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { AuthService } from './auth.service'; // Importer AuthService pour accéder au token
-import { environment } from '../../environments/environment'; 
+
+declare const window: any;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContratService {
-  apiUrl = `${environment.apiBaseUrlContrat}/api/contrat`; 
+  private apiUrl = `${window.config.apiBaseUrl}/api/contrat`; 
 
   constructor(private authService: AuthService) {} // Injection d'AuthService
 

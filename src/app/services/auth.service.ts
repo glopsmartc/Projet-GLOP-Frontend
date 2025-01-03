@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import axios from 'axios';
-import { environment } from '../../environments/environment';
+
+declare const window: any;
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.apiBaseUrl}/auth`;
+  private apiUrl = `${window.config.apiBaseUrl}/auth`;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isTokenValid(this.getToken()));
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private roles: string[] = [];
