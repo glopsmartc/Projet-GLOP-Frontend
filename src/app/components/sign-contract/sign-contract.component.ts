@@ -105,6 +105,12 @@ export class SignContractComponent implements OnInit {
       await this.contratService.createContract(contractData, pdfFile);
 
       console.log('Contrat et PDF sauvegardés avec succès.');
+
+       // Afficher le message de succès
+       alert('Votre contrat a été généré et sauvegardé avec succès !'); 
+
+      // Redirection vers /mescontrats après succès
+      this.router.navigate(['/mes-contrats']);
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du contrat ou du PDF :', error);
     }
