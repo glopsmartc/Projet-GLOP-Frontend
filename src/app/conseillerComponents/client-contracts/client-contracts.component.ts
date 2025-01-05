@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ContratService } from '../../services/contrat.service';
 
 @Component({
   selector: 'app-client-contracts',
@@ -8,12 +9,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './client-contracts.component.html',
   styleUrl: './client-contracts.component.css'
 })
-export class ClientContractsComponent {
+export class ClientContractsComponent implements OnInit {
+  clients: any[] = []; // Liste des clients
 
-  clients = [
-    { nom: 'Dupont', prenom: 'Jean', telephone: '0612345678', email: 'jean.dupont@example.com' },
-    { nom: 'Durand', prenom: 'Marie', telephone: '0623456789', email: 'marie.durand@example.com' },
-    { nom: 'Martin', prenom: 'Paul', telephone: '0634567890', email: 'paul.martin@example.com' }
-  ];
+  constructor(private contratService: ContratService) {}
 
+  ngOnInit(): void {
+    this.loadClients(); // Charger les données des clients au démarrage
+  }
+
+  private async loadClients(): Promise<void> {
+    try {
+      console.log('Chargement des clients...');
+      this.clients = await this.contratService.getAllClients(); // Appel au service pour récupérer les clients
+      console.log('Clients chargés:', this.clients);
+    } catch (error) {
+      console.error('Erreur lors du chargement des clients:', error);
+    }
+  }
 }
