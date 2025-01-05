@@ -12,10 +12,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let client of clients">
+        <tr *ngFor="let client of clients; index as i">
           <td>{{ client.nom }}</td>
           <td>{{ client.prenom }}</td>
-          <td>{{ client.numTel }}</td>
+          <td>{{ client.telephone }}</td>
           <td>{{ client.email }}</td>
           <td>
             <button class="btn btn-primary">

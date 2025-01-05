@@ -14,7 +14,7 @@ body {
     background-color: white;
     margin: 0;
     padding: 0;
-    color: #757575;
+    color: var(--dark-gray);
 }
 
 .container {
@@ -25,8 +25,8 @@ body {
 
 .title {
     text-align: center;
-    font-size: 2.2rem;
-    color: rgba(0, 0, 0, 0.837);
+    font-size: 2.5rem;
+    color: black;
     margin-bottom: 30px;
 }
 
@@ -39,7 +39,7 @@ body {
 }
 
 .filter-btn {
-    background-color: #3f6f35;
+    background-color: var(--light-green);
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -47,13 +47,11 @@ body {
     font-size: 1rem;
     transition: background-color 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: none;
 }
 
-.filter-btn.active {
-    background-color:#6b8856;
-    color: white;
-  }
+.filter-btn:hover {
+    background-color: var(--main-green);
+}
 
 /* Liste des contrats */
 .contracts {
@@ -97,7 +95,7 @@ body {
 }
 
 .download-btn {
-    background-color:  #3271b9;
+    background-color: var(--dark-blue);
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
@@ -110,11 +108,11 @@ body {
 }
 
 .download-btn:hover {
-    background-color: #446488; /* Bleu légèrement plus foncé */
+    background-color: #1565c0; /* Bleu légèrement plus foncé */
 }
 
 .cancel-btn {
-    background-color: #b71c1c;
+    background-color: var(--red);
     color: white;
     padding: 8px 12px;
     border: none;
@@ -125,5 +123,5 @@ body {
 }
 
 .cancel-btn:hover {
-    background-color: #9b2f2f; /* Rouge légèrement plus foncé */
+    background-color: #b71c1c; /* Rouge légèrement plus foncé */
 }

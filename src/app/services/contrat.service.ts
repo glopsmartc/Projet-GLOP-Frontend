@@ -1,42 +1,19 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { AuthService } from './auth.service'; 
-
-declare const window: any;
+import { AuthService } from './auth.service'; // Importer AuthService pour accéder au token
+import { environment } from '../../environments/environment'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContratService {
-  private apiUrl: string;
-  private apiUrlUsers: string;
+  apiUrl = `${environment.apiBaseUrlContrat}/api/contrat`; 
 
-  constructor(private authService: AuthService) {
-    this.apiUrl = this.getApiUrl();
-    this.apiUrlUsers = this.getApiUrlUsers();
-  }
-
-  private getApiUrl(): string {
-    if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlContrat) {
-      return `${window.config.apiBaseUrlContrat}/api/contrat`;
-    } else {
-      console.warn('window.config is not available or window is undefined');
-      return ''; 
-    }
-  }
-  
-  private getApiUrlUsers(): string {
-    if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlContrat) {
-      return `${window.config.apiBaseUrl}/users`;
-    } else {
-      console.warn('window.config is not available or window is undefined');
-      return ''; 
-    }
-  }
+  constructor(private authService: AuthService) {} // Injection d'AuthService
 
   private getAuthHeaders() {
-    const token = this.authService.getToken();
-    console.log('Token utilisé pour l\'authentification:', token);
+    const token = this.authService.getToken(); // Retrieve the token from AuthService
+    console.log('Token utilisé pour l\'authentification:', token); // Log the token
     return {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -156,57 +133,5 @@ export class ContratService {
       throw error;
     }
   }
-
-
-  //methode pour resilier contrat
-  async resilierContrat(id: number): Promise<void> {
-    try {
-        const response = await axios.patch(
-            `${this.apiUrl}/${id}/resilier`, 
-            {}, 
-            this.getAuthHeaders()
-        );
-        console.log('Contrat résilié avec succès:', response.data);
-    } catch (error: any) {
-        // Gestion détaillée de l'erreur
-        if (error.response) {
-            console.error('Erreur de l’API:', error.response.status, error.response.data);
-        } else if (error.request) {
-            console.error('Aucune réponse reçue :', error.request);
-        } else {
-            console.error('Erreur inconnue:', error.message);
-        }
-        throw error; 
-    }
-}
- 
-async downloadContractFile(contractId: string): Promise<Blob> {
-  try {
-    console.log(`Envoi de la requête pour télécharger le fichier du contrat avec l'ID : ${contractId}...`);
-    const response = await axios.get(`${this.apiUrl}/download/${contractId}`, {
-      ...this.getAuthHeaders(),
-      responseType: 'blob', // Important pour recevoir un fichier
-    });
-
-    console.log(`Fichier du contrat avec l'ID ${contractId} récupéré avec succès.`);
-    return response.data; // Retourner le fichier Blob
-  } catch (error) {
-    console.error(`Erreur lors de la récupération du fichier pour le contrat avec l'ID ${contractId}:`, error);
-    throw error; // 'erreur pour qu'elle soit gérée dans le composant
-  }
-}
-
-async getAllClients(): Promise<any[]> {
-  try {
-    console.log('Envoi de la requête pour récupérer tous les clients');
-    const response = await axios.get(`${this.apiUrlUsers}/`, this.getAuthHeaders());
-    console.log('Réponse des clients disponibles :', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la récupération des clients :', error);
-    throw error;
-  }
-}
-
-
+  
 }

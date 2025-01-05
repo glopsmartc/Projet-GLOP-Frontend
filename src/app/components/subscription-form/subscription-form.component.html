@@ -40,10 +40,6 @@
             <label>
               <input type="checkbox" formControlName="bicyclette" /> Bicyclette
             </label>
-            <!-- le message d'erreur seulement lorsque aucune option n'est sélectionnée  -->
-            <div *ngIf="formSubmitted && myForm.errors?.['transportRequired'] && myForm.get('assurerTransport')?.value">
-              <span class="error-message">Veuillez choisir un moyen de transport.</span>
-            </div>
           </div>
 
           <!-- Number of people to insure (Visible if 'assurer d'autres personnes' is selected) -->
@@ -51,16 +47,7 @@
           <div class="person-input" *ngIf="myForm.get('assurerPersonnes')?.value">
             <div *ngIf="myForm.get('assurerTransport')?.value">
               <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
-              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" [class.invalid]="formSubmitted && myForm.get('nombrePersonnes')?.invalid"/>
-
-              <!-- error messages -->
-              <div *ngIf="formSubmitted && myForm.get('nombrePersonnes')?.hasError('required')">
-                <span class="error-message">Ce champ est obligatoire si vous souhaitez assurer d'autres personnes.</span>
-              </div>
-              <div *ngIf="formSubmitted && myForm.get('nombrePersonnes')?.hasError('min')">
-                <span class="error-message">Le nombre doit être au moins de 1.</span>
-              </div>
-
+              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
             </div>
           </div>
         </div>
@@ -70,25 +57,13 @@
           <div class="form-item" *ngIf="myForm.get('assurerPersonnes')?.value">
             <div *ngIf="!myForm.get('assurerTransport')?.value">
               <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
-              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" [class.invalid]="formSubmitted && myForm.get('nombrePersonnes')?.invalid"/>
-
-               <!-- error messages -->
-              <div *ngIf="formSubmitted && myForm.get('nombrePersonnes')?.hasError('required')">
-                <span class="error-message">Ce champ est obligatoire si vous souhaitez assurer d'autres personnes.</span>
-              </div>
-              <div *ngIf="formSubmitted && myForm.get('nombrePersonnes')?.hasError('min')">
-                <span class="error-message">Le nombre doit être au moins de 1.</span>
-              </div>
-
+              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" />
             </div>
           </div>
           <!-- fin -->
           <div class="form-item" *ngIf="showDebutContrat">
             <label class="label-right">Le contrat débute le </label>
             <input class="form-control" type="date" formControlName="debutContrat" [min]="minDate"/>
-            <span *ngIf="myForm.get('debutContrat')?.invalid && myForm.get('debutContrat')?.touched" class="error-message">
-              Ce champ est obligatoire.
-            </span>
           </div>
 
 
@@ -98,28 +73,25 @@
               <option value="">Sélectionner un pays</option>
               <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
             </select>
-            <!-- error messages-->
-            
-            <div *ngIf="formSubmitted && myForm.get('destination')?.hasError('required')">
-              <span class="error-message">Veuillez sélectionner une destination.</span>
-            </div>
-
             <div class="form-item">
               <label class="label-right">Date aller :</label>
-              <input class="form-control" type="date" formControlName="dateAller" [min]="minDate" [max]="maxDateAller" (change)="onDateAllerChange($event)"/>
-              <!-- error messages-->
-              <div *ngIf="formSubmitted && myForm.get('dateAller')?.hasError('required')">
-                <span class="error-message">Ce champ est obligatoire.</span>
-              </div>
+              <input
+                class="form-control"
+                type="date"
+                formControlName="dateAller"
+                [min]="minDate" 
+                (change)="onDateAllerChange($event)"
+              />
             </div>
             
             <div class="form-item">
               <label class="label-right">Date retour :</label>
-              <input class="form-control" type="date" formControlName="dateRetour" [min]="minDateRetour" (change)="onDateRetourChange($event)"/>
-              <!-- error messages -->
-              <div *ngIf="formSubmitted && myForm.get('dateRetour')?.hasError('required')">
-                <span class="error-message">Ce champ est obligatoire.</span>
-              </div>
+              <input
+                class="form-control"
+                type="date"
+                formControlName="dateRetour"
+                [min]="minDateRetour" 
+              />
             </div>
             
           </div>

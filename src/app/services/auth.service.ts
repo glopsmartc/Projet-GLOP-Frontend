@@ -1,36 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import axios from 'axios';
-
-declare const window: any;
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl: string;
+  private apiUrl = `${environment.apiBaseUrl}/auth`;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isTokenValid(this.getToken()));
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private roles: string[] = [];
 
   constructor() {
-    this.apiUrl = this.getApiUrl(); // safe method to get apiUrl
     this.isAuthenticatedSubject.next(this.isTokenValid(this.getToken()));
     this.extractRoles();
   }
-
-  // Safe method to retrieve the API base URL from the window config
-  private getApiUrl(): string {
-    if (typeof window !== 'undefined' && window.config) {
-      return `${window.config.apiBaseUrl}/auth`; // only access window.config if window is available
-    }
-    console.warn('window.config is not available');
-    return ''; 
-  }
-
   public extractRoles(): void {
-    const token = this.getToken();
-    if (token) {
+    const token = this.getToken(); if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         this.roles = payload.roles || [];
@@ -68,6 +55,8 @@ export class AuthService {
       throw error;
     }
   }
+  
+  
 
   private storeToken(token: string): void {
     if (this.isBrowser()) {
