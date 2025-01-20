@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { AuthService } from './auth.service'; 
+import { AuthService } from './auth.service';
 
 declare const window: any;
 
@@ -9,11 +9,9 @@ declare const window: any;
 })
 export class ContratService {
   private apiUrl: string;
-  private apiUrlUsers: string;
 
   constructor(private authService: AuthService) {
     this.apiUrl = this.getApiUrl();
-    this.apiUrlUsers = this.getApiUrlUsers();
   }
 
   private getApiUrl(): string {
@@ -21,16 +19,7 @@ export class ContratService {
       return `${window.config.apiBaseUrlContrat}/api/contrat`;
     } else {
       console.warn('window.config is not available or window is undefined');
-      return ''; 
-    }
-  }
-  
-  private getApiUrlUsers(): string {
-    if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlContrat) {
-      return `${window.config.apiBaseUrl}/users`;
-    } else {
-      console.warn('window.config is not available or window is undefined');
-      return ''; 
+      return '';
     }
   }
 
@@ -45,7 +34,7 @@ export class ContratService {
   }
 
    // Méthode pour récupérer les contrats de l'utilisateur connecté
-   async getUserContracts(): Promise<any> {  
+   async getUserContracts(): Promise<any> {
     try {
       console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
       const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); // Appel de l'API pour récupérer les contrats
@@ -76,17 +65,17 @@ export class ContratService {
       const formData = new FormData();
       formData.append('request', JSON.stringify(request)); // Add contract data
       formData.append('file', pdfFile); // Add the PDF file
-  
+
       console.log('Envoi de la requête pour créer le contrat :', request);
-  
+
       // Call the API to create the contract
       const response = await axios.post(`${this.apiUrl}/create`, formData, {
         headers: {
           ...this.getAuthHeaders().headers,
-          Accept: 'application/json', 
+          Accept: 'application/json',
         },
       });
-  
+
       console.log('Réponse du backend (contrat créé avec offre) :', response.data);
       return response.data; // Return the contract data
     } catch (error) {
@@ -94,12 +83,12 @@ export class ContratService {
       throw error; // Re-throw the error for further handling
     }
   }
-  
+
   async getCurrentUserEmail(): Promise<string> {
     try {
       const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
-      const currentUser = response.data; 
-      return currentUser.email; 
+      const currentUser = response.data;
+      return currentUser.email;
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'utilisateur actuel:', error);
       throw error;
@@ -130,7 +119,7 @@ export class ContratService {
       console.error(`Erreur lors de la récupération du contrat avec l'ID ${id} :`, error);
       throw error;
     }
-  }  
+  }
 
   // consulter tous les contrats
   async getAllContrats(): Promise<any[]> {
@@ -143,9 +132,22 @@ export class ContratService {
       console.error('Erreur lors de la récupération des contrats :', error);
       throw error;
     }
-  }  
-  
-  
+  }
+
+  // consulter tous les contrats
+  async getAllContratsFroConseiller(): Promise<any[]> {
+    try {
+      console.log('Envoi de la requête pour récupérer tous les contrats');
+      const response = await axios.get(`${this.apiUrl}/`, this.getAuthHeaders()); // Add trailing slash
+      console.log('Réponse des contrats disponibles :', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats :', error);
+      throw error;
+    }
+  }
+
+
   async getCurrentUser(): Promise<{ email: string; nom: string,  prenom: string }> {
     try {
       const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
@@ -162,8 +164,8 @@ export class ContratService {
   async resilierContrat(id: number): Promise<void> {
     try {
         const response = await axios.patch(
-            `${this.apiUrl}/${id}/resilier`, 
-            {}, 
+            `${this.apiUrl}/${id}/resilier`,
+            {},
             this.getAuthHeaders()
         );
         console.log('Contrat résilié avec succès:', response.data);
@@ -176,10 +178,10 @@ export class ContratService {
         } else {
             console.error('Erreur inconnue:', error.message);
         }
-        throw error; 
+        throw error;
     }
 }
- 
+
 async downloadContractFile(contractId: string): Promise<Blob> {
   try {
     console.log(`Envoi de la requête pour télécharger le fichier du contrat avec l'ID : ${contractId}...`);
@@ -195,18 +197,5 @@ async downloadContractFile(contractId: string): Promise<Blob> {
     throw error; // 'erreur pour qu'elle soit gérée dans le composant
   }
 }
-
-async getAllClients(): Promise<any[]> {
-  try {
-    console.log('Envoi de la requête pour récupérer tous les clients');
-    const response = await axios.get(`${this.apiUrlUsers}/`, this.getAuthHeaders());
-    console.log('Réponse des clients disponibles :', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la récupération des clients :', error);
-    throw error;
-  }
-}
-
 
 }
