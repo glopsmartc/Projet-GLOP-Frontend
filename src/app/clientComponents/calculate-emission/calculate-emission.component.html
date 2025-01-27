@@ -1,0 +1,31 @@
+<div class="container">
+  <h2>Calculer mon émission CO2</h2>
+  <form (ngSubmit)="calculateEmissions()">
+    <div class="form-group">
+      <label for="km">Distance parcourue (km)</label>
+      <input type="number" class="form-control" id="km" [(ngModel)]="km" name="km" required>
+    </div>
+    <div class="form-group">
+      <label for="transports">Types de transport</label>
+      <select class="form-control" id="transports" [(ngModel)]="selectedTransport" name="transports" required>
+        <option *ngFor="let transport of transports" [value]="transport.id">{{ transport.name }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Calculer</button>
+  </form>
+
+  <!-- Afficher les résultats -->
+  <div *ngIf="emissions.length > 0" class="mt-4">
+    <h3>Résultats</h3>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let emission of emissions">
+        {{ emission.name }}: {{ emission.value }} g CO2
+      </li>
+    </ul>
+  </div>
+
+  <!-- Afficher les erreurs -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    {{ errorMessage }}
+  </div>
+</div>
