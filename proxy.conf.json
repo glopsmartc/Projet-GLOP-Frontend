@@ -1,0 +1,9 @@
+{
+    "/api/*": {
+      "target": "https://impactco2.fr",
+      "secure": true,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+  }
+  
