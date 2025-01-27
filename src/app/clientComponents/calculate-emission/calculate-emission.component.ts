@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { EmissionCo2Service } from '../../services/emission-co2.service'; 
+
 @Component({
   selector: 'app-calculate-emission',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './calculate-emission.component.html',
-  styleUrl: './calculate-emission.component.css'
+  styleUrls: ['./calculate-emission.component.css']
 })
 export class CalculateEmissionComponent {
-  km: number = 0; // Propriété pour stocker la distance
-  selectedTransport: number = 2; // Valeur par défaut : TGV (2)
+  km: number = 0;
+  selectedTransport: number = 2;
   transports: { id: number, name: string }[] = [
     { id: 1, name: 'Avion' },
     { id: 2, name: 'TGV' },
@@ -34,33 +35,20 @@ export class CalculateEmissionComponent {
   emissions: any[] = [];
   errorMessage: string = '';
 
+  constructor(private emissionCo2Service: EmissionCo2Service) { }
 
-  constructor(private http: HttpClient) { } // Injection du service HttpClient
-
-  // Méthode pour calculer les émissions
-  calculateEmissions() {
-    const apiUrl = 'https://impactco2.fr/api/v1/transport';
-    const apiKey = '4fd577a1-4bac-49aa-acdd-fb2ef9d7d294';
-
-    const headers = {
-      'Authorization': `Bearer ${apiKey}` // ajout le token d'authentification
-    };
-
-    const params = {
-      km: this.km.toString(),
-      transports: this.selectedTransport.toString()
-    };
-
-    this.http.get<any>(apiUrl, { headers, params }).subscribe({
-      next: (response) => {
-        this.emissions = response.data; // Stockage des données d'émission
-        this.errorMessage = '';
-      },
-      error: (error) => {
-        this.errorMessage = 'Erreur lors de la récupération des données.';
-        console.error(error);
-      }
-    });
-  }
-
+ calculateEmissions() {
+  this.emissionCo2Service.calculateEmissions(this.km, this.selectedTransport).subscribe({
+    next: (response) => {
+      console.log('Données reçues du backend :', response); 
+     this.emissions = Array.isArray(response.data) ? response.data : [response.data]; 
+      console.log('Données dans emissions :', this.emissions); 
+      this.errorMessage = '';
+    },
+    error: (error) => {
+      this.errorMessage = 'Erreur lors de la récupération des données.';
+      console.error('Erreur backend :', error);
+    }
+  });
+}
 }

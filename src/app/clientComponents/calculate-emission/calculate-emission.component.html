@@ -1,31 +1,48 @@
-<div class="container">
-  <h2>Calculer mon émission CO2</h2>
-  <form (ngSubmit)="calculateEmissions()">
-    <div class="form-group">
-      <label for="km">Distance parcourue (km)</label>
-      <input type="number" class="form-control" id="km" [(ngModel)]="km" name="km" required>
+<div class="container my-5">
+  <h2 class="text-center mb-4">Calculer mon émission CO2</h2>
+  
+  <!-- Formulaire -->
+  <form (ngSubmit)="calculateEmissions()" class="p-4 border rounded shadow-sm">
+    <div class="form-group mb-3">
+      <label for="km" class="form-label fw-bold">Distance parcourue (km)</label>
+      <input 
+        type="number" 
+        class="form-control" 
+        id="km" 
+        [(ngModel)]="km" 
+        name="km" 
+        placeholder="Entrez la distance parcourue"
+        required>
     </div>
-    <div class="form-group">
-      <label for="transports">Types de transport</label>
-      <select class="form-control" id="transports" [(ngModel)]="selectedTransport" name="transports" required>
-        <option *ngFor="let transport of transports" [value]="transport.id">{{ transport.name }}</option>
+    <div class="form-group mb-3">
+      <label for="transports" class="form-label fw-bold">Type de transport</label>
+      <select 
+        class="form-select" 
+        id="transports" 
+        [(ngModel)]="selectedTransport" 
+        name="transports" 
+        required>
+        <option *ngFor="let transport of transports" [value]="transport.id">
+          {{ transport.name }}
+        </option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">Calculer</button>
+    <button type="submit" class="btn btn-primary w-100">Calculer</button>
   </form>
 
-  <!-- Afficher les résultats -->
+  <!-- Résultats -->
   <div *ngIf="emissions.length > 0" class="mt-4">
-    <h3>Résultats</h3>
+    <h3 class="text-success">Résultats </h3>
     <ul class="list-group">
-      <li class="list-group-item" *ngFor="let emission of emissions">
-        {{ emission.name }}: {{ emission.value }} g CO2
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let emission of emissions">
+        <span style="color: #000; font-weight: bold;">{{ emission.name }}</span> <!-- Noir ou une couleur bien contrastée -->
+        <span class="badge bg-success rounded-pill" style="color: #fff;">{{ emission.value }} g CO2</span> <!-- Blanc sur fond vert -->
       </li>
     </ul>
   </div>
 
-  <!-- Afficher les erreurs -->
+  <!-- Erreurs -->
   <div *ngIf="errorMessage" class="alert alert-danger mt-4">
-    {{ errorMessage }}
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
   </div>
 </div>

@@ -37,7 +37,7 @@ export class ContratService {
    async getUserContracts(): Promise<any> {
     try {
       console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
-      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); // Appel de l'API pour récupérer les contrats
+      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); 
       console.log('Réponse des contrats de l\'utilisateur:', response.data);
       return response.data;  // Retourne les contrats de l'utilisateur
     } catch (error: unknown) {
