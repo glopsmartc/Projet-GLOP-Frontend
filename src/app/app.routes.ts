@@ -18,6 +18,7 @@ import { CalculateEmissionComponent } from './clientComponents/calculate-emissio
 import { authGuard } from './guards/auth.guard';
 
 import { MatDialogModule } from '@angular/material/dialog';
+import { AssistanceRequestComponent } from './clientComponents/assistance-request/assistance-request.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -29,6 +30,7 @@ export const routes: Routes = [
   { path: 'sign-contract', component: SignContractComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'mes-contrats', component: MesContratsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'calculate-emission', component: CalculateEmissionComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
+  { path: 'assistance-request', component: AssistanceRequestComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'error-page', component: ErrorPageComponent },
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

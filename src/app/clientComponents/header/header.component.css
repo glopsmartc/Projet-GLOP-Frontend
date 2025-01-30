@@ -3,49 +3,49 @@
     padding: 0.5rem 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+
   .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
     color: #4A803F;
   }
-  
+
   .navbar-nav .nav-link {
     font-size: 1rem;
     padding: 0.75rem 1rem;
     color: #555;
     transition: color 0.3s;
   }
-  
+
   .navbar-nav .nav-link:hover {
     color: #4A803F;
   }
-  
+
   .navbar-nav .btn {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border-radius: 0.25rem;
   }
-  
+
   .navbar-toggler {
     border: none;
   }
-  
+
   .navbar-toggler-icon {
     font-size: 1.25rem;
   }
-  
+
   /* Responsive styling for mobile view */
   @media (max-width: 991.98px) {
     .navbar-nav {
       text-align: center;
     }
-    
+
     .navbar-nav .nav-item {
       margin-bottom: 10px;
     }
   }
-  
+
   .btn-customer{
     background-color: #cd7425;
   }
