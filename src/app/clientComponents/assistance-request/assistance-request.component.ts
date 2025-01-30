@@ -104,7 +104,7 @@ export class AssistanceRequestComponent {
           this.errorMessage = 'Veuillez entrer un numéro de téléphone.';
           return false;
         }
-        if (!this.email && !this.validateEmail(this.email)) {
+        if (!this.email || !this.validateEmail(this.email)) {
           this.errorMessage = 'Veuillez entrer une adresse email valide.';
           return false;
         }

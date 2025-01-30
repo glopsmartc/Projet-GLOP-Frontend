@@ -1,62 +1,60 @@
-<div class="assistance-request">
+<div class="assistance-request mt-4">
   <h1>Soumettre une demande d’assistance</h1>
   <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande rapidement.</p>
 
-  <div class="mb-5">
-    <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
+  <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
 
-    <!-- Step 1: Type of Assistance -->
-    <div class="mt-5" *ngIf="step === 1">
-      <h2>Type d’assistance</h2>
-      <select [(ngModel)]="assistanceType">
-        <option value="">Sélectionnez le type d’assistance</option>
-        <option value="Vehicule">Dépannage véhicule</option>
-        <option value="Medicale">Assistance médicale</option>
-        <option value="Technique">Problème technique</option>
-        <option value="Autre">Autre</option>
-      </select>
-      <div *ngIf="assistanceType === 'Autre'">
-        <input type="text" [(ngModel)]="otherDescription" placeholder="Veuillez préciser votre demande">
-      </div>
-
-      <h2 class="mt-3">Urgence</h2>
-      <label>
-        <input type="radio" [(ngModel)]="urgency" value="Urgent"> Urgent
-      </label>
-      <label>
-        <input type="radio" [(ngModel)]="urgency" value="Non-urgent"> Non urgent
-      </label>
+  <!-- Step 1: Type of Assistance -->
+  <div class="mb-5" *ngIf="step === 1">
+    <h2>Type d’assistance</h2>
+    <select [(ngModel)]="assistanceType">
+      <option value="">Sélectionnez le type d’assistance</option>
+      <option value="Vehicule">Dépannage véhicule</option>
+      <option value="Medicale">Assistance médicale</option>
+      <option value="Technique">Problème technique</option>
+      <option value="Autre">Autre</option>
+    </select>
+    <div *ngIf="assistanceType === 'Autre'">
+      <input type="text" [(ngModel)]="otherDescription" placeholder="Veuillez préciser votre demande">
     </div>
 
-    <!-- Step 2: Location -->
-    <div *ngIf="step === 2">
-      <h2>Localisation</h2>
-      <input type="text" [(ngModel)]="location" placeholder="Où avez-vous besoin d’assistance ?">
-      <label>
-        <input type="checkbox" [(ngModel)]="useCurrentLocation"> Utiliser ma position actuelle
-      </label>
-    </div>
+    <h2 class="mt-3">Urgence</h2>
+    <label>
+      <input type="radio" [(ngModel)]="urgency" value="Urgent"> Urgent
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="urgency" value="Non-urgent"> Non urgent
+    </label>
+  </div>
 
-    <!-- Step 3: Description -->
-    <div *ngIf="step === 3">
-      <h2>Description</h2>
-      <textarea [(ngModel)]="description" placeholder="Décrivez votre problème en détail"></textarea>
-      <h2>Joindre un document</h2>
-      <p>Veuillez télécharger un fichier PDF contenant les informations suivantes :</p>
-      <ul>
-        <li *ngIf="assistanceType === 'Medicale'">Un rapport médical ou une ordonnance.</li>
-        <li *ngIf="assistanceType === 'Vehicule'">Un devis de réparation ou une facture du garage.</li>
-        <li *ngIf="assistanceType === 'Technique'">Un document technique décrivant le problème.</li>
-        <li *ngIf="assistanceType === 'Autre'">Un document justificatif relatif à votre demande.</li>
-      </ul>
-      <input type="file" (change)="onFileUpload($event)" accept="application/pdf">    </div>
+  <!-- Step 2: Location -->
+  <div class="mb-5" *ngIf="step === 2">
+    <h2>Localisation</h2>
+    <input type="text" [(ngModel)]="location" placeholder="Où avez-vous besoin d’assistance ?">
+    <label>
+      <input type="checkbox" [(ngModel)]="useCurrentLocation"> Utiliser ma position actuelle
+    </label>
+  </div>
 
-    <!-- Step 4: Contact Information -->
-    <div *ngIf="step === 4">
-      <h2>Informations de contact</h2>
-      <input type="tel" [(ngModel)]="phone" placeholder="Téléphone">
-      <input type="email" [(ngModel)]="email" placeholder="Email">
-    </div>
+  <!-- Step 3: Description -->
+  <div class="mb-5" *ngIf="step === 3">
+    <h2>Description</h2>
+    <textarea [(ngModel)]="description" placeholder="Décrivez votre problème en détail"></textarea>
+    <h2>Joindre un document</h2>
+    <p>Veuillez télécharger un fichier PDF contenant les informations suivantes :</p>
+    <ul>
+      <li *ngIf="assistanceType === 'Medicale'">Un rapport médical ou une ordonnance.</li>
+      <li *ngIf="assistanceType === 'Vehicule'">Un devis de réparation ou une facture du garage.</li>
+      <li *ngIf="assistanceType === 'Technique'">Un document technique décrivant le problème.</li>
+      <li *ngIf="assistanceType === 'Autre'">Un document justificatif relatif à votre demande.</li>
+    </ul>
+    <input type="file" (change)="onFileUpload($event)" accept="application/pdf">    </div>
+
+  <!-- Step 4: Contact Information -->
+  <div class="mb-5" *ngIf="step === 4">
+    <h2>Informations de contact</h2>
+    <input type="tel" [(ngModel)]="phone" placeholder="Téléphone">
+    <input type="email" [(ngModel)]="email" placeholder="Email">
   </div>
 
   <!-- Navigation Buttons -->
@@ -64,7 +62,7 @@
     <button *ngIf="step > 1 && step < 5" (click)="previousStep()">Précédent</button>
     <button *ngIf="step < 4" (click)="nextStep()">Suivant</button>
     <button *ngIf="step === 4" (click)="validateAndSubmit()">Soumettre</button>  </div>
-</div>
+  </div>
 
 <!-- Confirmation Screen -->
 <div *ngIf="submitted && step === 5" class="confirmation">
@@ -76,5 +74,5 @@
   <p><strong>Numéro de Téléphone:</strong> {{ phone }}</p>
   <p><strong>Email:</strong> {{ email }}</p>
   <p class="mt-3">Notre équipe vous contactera sous peu. Merci de votre patience.</p>
-  <button (click)="goHome()">Retour à l’accueil</button>
+  <button class="mb-5" (click)="goHome()">Retour à l’accueil</button>
 </div>
