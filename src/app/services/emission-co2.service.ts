@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AuthService } from './auth.service'; 
+import { AuthService } from './auth.service';
 
 declare const window: any;
 
@@ -18,7 +18,7 @@ export class EmissionCo2Service {
 
 
   private getApiUrl(): string {
-    if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlContrat) {
+    if (typeof window !== 'undefined' && window.config?.apiBaseUrlContrat) {
       return `${window.config.apiBaseUrlContrat}/api/emissions`;
     } else {
       console.warn('window.config is not available or window is undefined');
@@ -27,7 +27,7 @@ export class EmissionCo2Service {
   }
 
   private getAuthHeaders() {
-    const token = this.authService.getToken();  
+    const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

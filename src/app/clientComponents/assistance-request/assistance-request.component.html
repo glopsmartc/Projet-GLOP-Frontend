@@ -27,14 +27,33 @@
     </label>
   </div>
 
-  <!-- Step 2: Location -->
-  <div class="mb-5" *ngIf="step === 2">
-    <h2>Localisation</h2>
-    <input type="text" [(ngModel)]="location" placeholder="Où avez-vous besoin d’assistance ?">
-    <label>
-      <input type="checkbox" [(ngModel)]="useCurrentLocation"> Utiliser ma position actuelle
-    </label>
+<!-- Step 2: Location -->
+<div class="mb-5" *ngIf="step === 2">
+  <h2>Localisation</h2>
+
+  <div *ngIf="isLocating" class="loading">Récupération de votre position...</div>
+  <div *ngIf="geoError" class="error-message">{{ geoError }}</div>
+
+  <input
+    type="text"
+    [(ngModel)]="location"
+    placeholder="Où avez-vous besoin d’assistance ?"
+  >
+
+  <label>
+    <input
+      type="checkbox"
+      [(ngModel)]="useCurrentLocation"
+      (change)="onLocationCheckboxChange($event)"
+    >
+    Utiliser ma position actuelle
+  </label>
+
+  <!-- Confirmation Message -->
+  <div *ngIf="locationConfirmed" class="success-message">
+    Votre position actuelle : {{ location }}
   </div>
+</div>
 
   <!-- Step 3: Description -->
   <div class="mb-5" *ngIf="step === 3">

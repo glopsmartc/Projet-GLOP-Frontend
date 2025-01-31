@@ -8,19 +8,17 @@
     --red: #d32f2f; /* Rouge */
 }
 
-/* Global */
-body {
-    font-family: Arial, sans-serif;
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    color: #757575;
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+}
+
+h1 {
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  font-size: 25px;
 }
 
 .title {

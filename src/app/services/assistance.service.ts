@@ -10,20 +10,20 @@ declare const window: any;
 export class AssistanceService {
 
    private apiUrl: string;
-  
+
     constructor(private authService: AuthService) {
       this.apiUrl = this.getApiUrl();
     }
-  
+
     private getApiUrl(): string {
-      if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlAssistance) {
+      if (typeof window !== 'undefined' && window.config?.apiBaseUrlAssistance) {
         return `${window.config.apiBaseUrlAssistance}/api/assistance`;
       } else {
         console.warn('window.config is not available or window is undefined');
         return '';
       }
     }
-  
+
     private getAuthHeaders() {
       const token = this.authService.getToken();
       console.log('Token utilisé pour l\'authentification:', token);
@@ -33,5 +33,5 @@ export class AssistanceService {
         },
       };
     }
-  
+
 }
