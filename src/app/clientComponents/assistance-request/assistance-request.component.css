@@ -8,7 +8,22 @@
 .error-message {
   color: red;
   font-size: 14px;
-  margin-top: 5px;
+}
+.loading {
+  color: #666;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 25px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .assistance-request h1 {

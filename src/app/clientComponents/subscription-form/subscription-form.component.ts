@@ -38,9 +38,9 @@ export class SubscriptionFormComponent implements OnInit {
       dateAller:['', Validators.required],
       dateRetour: ['', Validators.required],
       destination: ['', Validators.required],
-    }, { 
+    }, {
       validators: Validators.compose([
-        this.transportSelectionValidator, 
+        this.transportSelectionValidator,
       ])
     });
 
@@ -48,7 +48,7 @@ export class SubscriptionFormComponent implements OnInit {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
     this.minDateRetour = this.minDate; // Set initial Date Retour to today's date
-    this.maxDateAller = ''; 
+    this.maxDateAller = '';
 
     //ecoute les changements sur dureeContrat
     this.myForm.get('dureeContrat')?.valueChanges.subscribe(value => {
@@ -129,7 +129,7 @@ export class SubscriptionFormComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     //max 10 personnes accompagnante
     this.myForm.get('nombrePersonnes')?.valueChanges.subscribe((value) => {
       if (value > 10) {
@@ -154,21 +154,31 @@ export class SubscriptionFormComponent implements OnInit {
     this.loadCountries();//pour charger la liste des pays dès que le composant est initialisé
   }
 
+  clearErrorMessage() {
+    this.formSubmitted = false;
+    Object.keys(this.myForm.controls).forEach(key => {
+      const control = this.myForm.get(key);
+      if (control) {
+        control.markAsUntouched();
+      }
+    });
+  }
+
   onDateRetourChange(event: Event) {
     const selectedDate = (event.target as HTMLInputElement).value;
     this.maxDateAller = selectedDate; // Update 'Date aller' maximum date to 'Date retour'
     //console.log("Date Retour modifiée:", selectedDate, "Max Date Aller:", this.maxDateAller);
   }
-  
+
   onDateAllerChange(event: Event) {
     const selectedDate = (event.target as HTMLInputElement).value;
     this.minDateRetour = selectedDate; // Update 'Date retour' minimum date to 'Date aller'
   }
-  
+
   formSubmitted = false;
 
   onNextPage() {
-    this.formSubmitted = true; 
+    this.formSubmitted = true;
     //console.log(this.myForm.get('nombrePersonnes')?.errors);
     if (this.myForm.invalid) {
       //marque tous les champs comme touchés pour déclencher les validations

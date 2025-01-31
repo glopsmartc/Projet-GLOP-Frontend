@@ -1,5 +1,5 @@
 <div class="body">
-  <div class="container">
+  <div class="container mt-4">
     <div class="form-container">
       <form [formGroup]="myForm">
         <h1>Souscription à un contrat d'assurance</h1>
@@ -7,7 +7,8 @@
         <!-- Contract Duration Dropdown -->
         <div class="form-item">
           <label class="label-right">Vous souhaitez vous assurer pour :</label>
-          <select formControlName="dureeContrat">
+          <select formControlName="dureeContrat" (change)="clearErrorMessage()">
+            <option value="" disabled selected>Sélectionner la durée du contrat</option>
             <option value="1_voyage">1 voyage</option>
             <option value="1_mois">1 mois</option>
             <option value="3_mois">3 mois</option>
@@ -51,7 +52,7 @@
           <div class="person-input" *ngIf="myForm.get('assurerPersonnes')?.value">
             <div *ngIf="myForm.get('assurerTransport')?.value">
               <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
-              <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" [class.invalid]="formSubmitted && myForm.get('nombrePersonnes')?.invalid"/>
+              <input type="number" placeholder="Nombre de personnes accompagnants" formControlName="nombrePersonnes" [class.invalid]="formSubmitted && myForm.get('nombrePersonnes')?.invalid"/>
 
               <!-- error messages -->
               <div *ngIf="formSubmitted && myForm.get('nombrePersonnes')?.hasError('required')">
@@ -69,7 +70,7 @@
           <!-- dans le cas ou assurer mon moyen n'est pas selctionner le div prend la largeur des autres composant-->
           <div class="form-item" *ngIf="myForm.get('assurerPersonnes')?.value">
             <div *ngIf="!myForm.get('assurerTransport')?.value">
-              <label for="nombrePersonnes">Nombre de personnes accompagnant :</label>
+              <label for="nombrePersonnes">Nombre de personnes accompagnants :</label>
               <input type="number" placeholder="Nombre de personnes accompagnant" formControlName="nombrePersonnes" [class.invalid]="formSubmitted && myForm.get('nombrePersonnes')?.invalid"/>
 
                <!-- error messages -->
@@ -99,7 +100,7 @@
               <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
             </select>
             <!-- error messages-->
-            
+
             <div *ngIf="formSubmitted && myForm.get('destination')?.hasError('required')">
               <span class="error-message">Veuillez sélectionner une destination.</span>
             </div>
@@ -112,7 +113,7 @@
                 <span class="error-message">Ce champ est obligatoire.</span>
               </div>
             </div>
-            
+
             <div class="form-item">
               <label class="label-right">Date retour :</label>
               <input class="form-control" type="date" formControlName="dateRetour" [min]="minDateRetour" (change)="onDateRetourChange($event)"/>
@@ -121,10 +122,10 @@
                 <span class="error-message">Ce champ est obligatoire.</span>
               </div>
             </div>
-            
+
           </div>
         </div>
-        <button type="button" class="mt-2" (click)="onNextPage()">Suivant</button>
+        <button type="button" class="mt-4" (click)="onNextPage()">Suivant</button>
       </form>
     </div>
   </div>

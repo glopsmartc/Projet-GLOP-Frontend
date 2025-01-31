@@ -15,7 +15,7 @@ export class ContratService {
   }
 
   private getApiUrl(): string {
-    if (typeof window !== 'undefined' && window.config && window.config.apiBaseUrlContrat) {
+    if (typeof window !== 'undefined' && window?.config?.apiBaseUrlContrat) {
       return `${window.config.apiBaseUrlContrat}/api/contrat`;
     } else {
       console.warn('window.config is not available or window is undefined');
@@ -37,7 +37,7 @@ export class ContratService {
    async getUserContracts(): Promise<any> {
     try {
       console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
-      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders()); 
+      const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders());
       console.log('Réponse des contrats de l\'utilisateur:', response.data);
       return response.data;  // Retourne les contrats de l'utilisateur
     } catch (error: unknown) {

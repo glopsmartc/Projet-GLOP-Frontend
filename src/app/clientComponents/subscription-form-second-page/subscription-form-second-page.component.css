@@ -1,3 +1,27 @@
+
+.body {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+label {
+  display: inline-block;
+  align-items: auto;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+
+input{
+  background-color: #FFFFFF;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
 button {
     border-radius: 20px;
     border: 1px solid #4A803F;
@@ -11,3 +35,9 @@ button {
     transition: transform 80ms ease-in;
     margin-top: 20px;
   }
+
+h1 {
+  font-weight: bold;
+  font-size: 25px;
+  font-family: 'Montserrat', sans-serif;
+}
