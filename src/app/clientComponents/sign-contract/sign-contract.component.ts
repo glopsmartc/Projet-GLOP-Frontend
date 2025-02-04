@@ -96,6 +96,7 @@ export class SignContractComponent implements OnInit {
         ...this.formData,
         planName: this.selectedPlan.name,
         price: this.selectedPlan.price,
+        descriptionOffre: this.selectedPlan.description
       };
       console.log('Envoi des données du contrat :', contractData);
 

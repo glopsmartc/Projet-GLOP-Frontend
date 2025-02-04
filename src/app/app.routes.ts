@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SubscriptionOffersComponent } from './clientComponents/subscription-offers/subscription-offers.component';
 import { SignContractComponent } from './clientComponents/sign-contract/sign-contract.component';
 import { MesContratsComponent } from './clientComponents/mes-contrats/mes-contrats.component';
+import { ConstatAmiableComponent } from './clientComponents/constat-amiable/constat-amiable.component';
 
 import { ErrorPageComponent } from './clientComponents/error-page/error-page.component';
 import { ClientContractsComponent } from './conseillerComponents/client-contracts/client-contracts.component';
@@ -32,6 +33,7 @@ export const routes: Routes = [
   { path: 'calculate-emission', component: CalculateEmissionComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'assistance-request', component: AssistanceRequestComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'error-page', component: ErrorPageComponent },
+  { path: 'constat-amiable', component: ConstatAmiableComponent },
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
