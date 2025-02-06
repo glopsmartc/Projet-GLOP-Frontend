@@ -44,31 +44,31 @@
 
     <h2>Joindre un document</h2>
     <p>Veuillez télécharger PDFs ou images relatifs à votre demande.</p>
-    <input type="file" (change)="onFileUpload($event)" accept="application/pdf, image/*" multiple>
 
-    <div *ngIf="pdfFiles.length > 0 || imageFiles.length > 0" class="mt-3"> </div>
+    <!-- Section fichiers -->
+    <div class="file-uploads">
+      <input type="file" (change)="onFileUpload($event)" accept="application/pdf,image/*" multiple>
 
-    <!-- Display All PDFs -->
-    <div *ngIf="pdfFiles.length > 0">
-      <div *ngFor="let pdfFile of pdfFiles; let i = index">
-        <p><a href="#" (click)="toggleFileVisibility('pdf', $event, i)">Voir le fichier PDF '{{pdfFile.name}}'</a></p>
+      <div *ngIf="pdfFiles.length > 0 || imageFiles.length > 0" class="mt-3"> </div>
 
-        <div *ngIf="showPdf[i]">
-          <object [data]="pdfFile.preview" type="application/pdf" width="50%" height="300px">
-            <p>Impossible d'afficher le PDF, veuillez vérifier le fichier.</p>
-          </object>
-        </div>
+      <!-- Liste des PDFs -->
+      <div *ngFor="let pdf of pdfFiles; let i = index" class="pdf-item">
+        <span>{{ pdf.name }}</span>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="togglePdfDisplay(i)">
+          {{ showPdf[i] ? 'Masquer' : 'Afficher' }}</a></u>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="removePdf(i)">Supprimer</a></u>
+        <object *ngIf="showPdf[i]" [data]="pdf.preview" type="application/pdf" width="50%" height="420px">
+          <p>Le document PDF "{{pdf.name}}" ne peut pas être affiché. Veuillez télécharger le fichier pour le visualiser.</p>
+        </object>
       </div>
-    </div>
 
-    <!-- Display All Images -->
-    <div *ngIf="imageFiles.length > 0">
-      <div *ngFor="let imageFile of imageFiles; let i = index">
-        <p><a href="#" (click)="toggleFileVisibility('image', $event, i)">Voir l'image '{{imageFile.name}}'</a></p>
-
-        <div *ngIf="showImage[i]">
-          <img [src]="imageFile.preview" alt="Preview" width="50%" />
-        </div>
+      <!-- Liste des images -->
+      <div *ngFor="let image of imageFiles; let i = index" class="image-item">
+        <span>{{ image.name }}</span>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="toggleImageDisplay(i)">
+          {{ showImage[i] ? 'Masquer' : 'Afficher' }}</a></u>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="removeImage(i)">Supprimer</a></u>
+        <img *ngIf="showImage[i]" [src]="image.preview" alt="Preview" width="50%">
       </div>
     </div>
 

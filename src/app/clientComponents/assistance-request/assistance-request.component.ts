@@ -167,52 +167,60 @@ export class AssistanceRequestComponent {
   }
 
 
-onFileUpload(event: any) {
+  onFileUpload(event: any) {
     const files = event.target.files;
-
-    // Reset arrays before adding new files
-    this.imageFiles = [];
-    this.pdfFiles = [];
-    this.showImage = [];
-    this.showPdf = [];
 
     for (const file of files) {
       if (file.size > this.MAX_FILE_SIZE) {
-        alert(`Le fichier ${file.name} dépasse la taille limite de 1 Mo.`);
-        continue;  // Skip this file
+        alert(`Le fichier ${file.name} dépasse la taille limite de 5 Mo.`);
+        continue;
       }
 
       if (file.type === 'application/pdf') {
-        // Handle PDF files
-        const pdfPreview = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
-        this.pdfFiles.push({ file, name: file.name, preview: pdfPreview });
+        const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+        this.pdfFiles.push({
+          file: file,
+          name: file.name,
+          preview: safeUrl
+        });
         this.showPdf.push(false);
       } else if (file.type.startsWith('image/')) {
-        // Handle image files and preview them
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          const imagePreview = e.target.result;
-          this.imageFiles.push({ file, name: file.name, preview: imagePreview });
+          this.imageFiles.push({
+            file: file,
+            name: file.name,
+            preview: e.target.result
+          });
           this.showImage.push(false);
         };
-        reader.readAsDataURL(file);  // Convert image file to base64 for preview
-      } else {
-        console.log('Invalid file type. Please upload a PDF or an image.');
+        reader.readAsDataURL(file);
       }
     }
     console.log('Uploaded Files:', files);
   }
 
-  toggleFileVisibility(fileType: string, event: Event, index: number) {
-    event.preventDefault(); // Prevent the default action (i.e., page reload or navigation)
-
-    if (fileType === 'pdf') {
-      this.showPdf[index] = !this.showPdf[index];
-    } else if (fileType === 'image') {
-      this.showImage[index] = !this.showImage[index];
-    }
+  togglePdfDisplay(index: number) {
+    this.showPdf[index] = !this.showPdf[index];
   }
 
+  toggleImageDisplay(index: number) {
+    this.showImage[index] = !this.showImage[index];
+  }
+
+  removePdf(index: number) {
+    console.log('Removing PDF at index:', index);
+    this.pdfFiles.splice(index, 1);
+    this.showPdf.splice(index, 1);
+    console.log('Updated PDFs:', this.pdfFiles);
+  }
+
+  removeImage(index: number) {
+    console.log('Removing image at index:', index);
+    this.imageFiles.splice(index, 1);
+    this.showImage.splice(index, 1);
+    console.log('Updated images:', this.imageFiles);
+  }
 
 
   validateEmail(email: string): boolean {
