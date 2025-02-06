@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-assistance-request',
@@ -14,11 +15,13 @@ import { firstValueFrom } from 'rxjs';
 export class AssistanceRequestComponent {
   step: number = 1;
   assistanceType: string = '';
+  medicalAssistance: string = '';
+  medicalInfo: string = '';
   urgency: string = '';
   location: string = '';
   useCurrentLocation: boolean = false;
   description: string = '';
-  otherDescription: string = '';
+  otherType: string = '';
   phone: string = '';
   email: string = '';
   submitted: boolean = false;
@@ -32,7 +35,14 @@ export class AssistanceRequestComponent {
   geoError: string = '';
   locationConfirmed: boolean = false;
 
-  constructor(private readonly http: HttpClient) {}
+  pdfFiles: { file: File, name: string, preview: SafeResourceUrl }[] = [];   // Changed to SafeResourceUrl type
+  imageFiles: { file: File, name: string, preview: string }[] = [];
+  showPdf: boolean[] = [];  // Array to track visibility of each PDF
+  showImage: boolean[] = [];  // Array to track visibility of each image
+
+  MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+  constructor(private readonly http: HttpClient, private readonly sanitizer: DomSanitizer) { }
 
   async onLocationCheckboxChange(event: any) {
     if (event.target.checked) {
@@ -112,7 +122,7 @@ export class AssistanceRequestComponent {
   nextStep() {
     if (this.validateStep()) {
       this.emptyFieldError = false;
-      if (this.step < 4) {
+      if (this.step < 3) {
         this.step++;
       }
     } else {
@@ -139,10 +149,11 @@ export class AssistanceRequestComponent {
       urgency: this.urgency,
       location: this.location,
       description: this.description,
+      medicalAssistance: this.medicalAssistance,
+      medicalInfo: this.medicalInfo,
       phone: this.phone,
       email: this.email,
-      otherDescription:
-        this.assistanceType === 'Autre' ? this.otherDescription : null,
+      otherType: this.assistanceType === 'Autre' ? this.otherType : null,
       pdfFile: this.pdfFile,
     };
     console.log('Request Submitted:', requestData);
@@ -155,15 +166,54 @@ export class AssistanceRequestComponent {
     this.submitted = false;
   }
 
-  onFileUpload(event: any) {
-    const file = event.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      this.pdfFile = file;
-      console.log('File Uploaded:', file);
-    } else {
-      console.log('Please upload a valid PDF file.');
+
+onFileUpload(event: any) {
+    const files = event.target.files;
+
+    // Reset arrays before adding new files
+    this.imageFiles = [];
+    this.pdfFiles = [];
+    this.showImage = [];
+    this.showPdf = [];
+
+    for (const file of files) {
+      if (file.size > this.MAX_FILE_SIZE) {
+        alert(`Le fichier ${file.name} dépasse la taille limite de 1 Mo.`);
+        continue;  // Skip this file
+      }
+
+      if (file.type === 'application/pdf') {
+        // Handle PDF files
+        const pdfPreview = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+        this.pdfFiles.push({ file, name: file.name, preview: pdfPreview });
+        this.showPdf.push(false);
+      } else if (file.type.startsWith('image/')) {
+        // Handle image files and preview them
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const imagePreview = e.target.result;
+          this.imageFiles.push({ file, name: file.name, preview: imagePreview });
+          this.showImage.push(false);
+        };
+        reader.readAsDataURL(file);  // Convert image file to base64 for preview
+      } else {
+        console.log('Invalid file type. Please upload a PDF or an image.');
+      }
+    }
+    console.log('Uploaded Files:', files);
+  }
+
+  toggleFileVisibility(fileType: string, event: Event, index: number) {
+    event.preventDefault(); // Prevent the default action (i.e., page reload or navigation)
+
+    if (fileType === 'pdf') {
+      this.showPdf[index] = !this.showPdf[index];
+    } else if (fileType === 'image') {
+      this.showImage[index] = !this.showImage[index];
     }
   }
+
+
 
   validateEmail(email: string): boolean {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -176,13 +226,15 @@ export class AssistanceRequestComponent {
         return (
           !!this.assistanceType &&
           !!this.urgency &&
-          (this.assistanceType !== 'Autre' || !!this.otherDescription)
+          !!this.description &&
+          (this.assistanceType !== 'Autre' || !!this.otherType) &&
+          (this.assistanceType !== 'Autre' || !!this.medicalAssistance) &&
+          (this.medicalAssistance !== 'Oui' || !!this.medicalInfo) &&
+          (this.assistanceType !== 'Medicale' || !!this.medicalInfo)
         );
       case 2:
         return !!this.location;
       case 3:
-        return !!this.description && !!this.pdfFile;
-      case 4:
         if (!this.phone) {
           this.errorMessage = 'Veuillez entrer un numéro de téléphone.';
           return false;

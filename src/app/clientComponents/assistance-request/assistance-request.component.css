@@ -26,14 +26,13 @@ h1 {
   font-family: 'Montserrat', sans-serif;
 }
 
-.assistance-request h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
+.assistance-request h2 {
+  font-size: 18px;
+  margin-top: 20px;
 }
 
-.assistance-request h2 {
-  font-size: 20px;
-  margin-top: 20px;
+::placeholder, p, label {
+  font-size: 14px;
 }
 
 .assistance-request input,
@@ -41,9 +40,10 @@ h1 {
 .assistance-request textarea {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
+  margin: 10px 0 0 0;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 14px;
 }
 
  button {

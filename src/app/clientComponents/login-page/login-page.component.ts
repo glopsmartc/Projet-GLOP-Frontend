@@ -134,7 +134,7 @@ export class LoginPageComponent implements OnInit {
 
       // Navigate based on role
       if (this.authService.hasRole(['ROLE_CLIENT'])) {
-        await this.router.navigate(['/subscription-form']);
+        await this.router.navigate(['/calculate-emission']);
       } else if (this.authService.hasRole(['ROLE_CONSEILLER'])) {
         await this.router.navigate(['/clients-contracts']);
       } else {
@@ -144,7 +144,7 @@ export class LoginPageComponent implements OnInit {
 
     // Reload the page after navigation
     window.location.reload();
-    
+
     } catch (error: any) {
       console.error('Error during signin', error);
       this.loginErrorMessage = error.response?.data?.message || 'Échec de la connexion. Veuillez vérifier votre e-mail et votre mot de passe.';
