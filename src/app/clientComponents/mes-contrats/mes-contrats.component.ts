@@ -10,17 +10,19 @@ import { ConfirmationResiliationComponent } from '../confirmation-resiliation/co
   standalone: true,
   imports: [CommonModule, MatDialogModule],
   templateUrl: './mes-contrats.component.html',
-  styleUrl: './mes-contrats.component.css'
+  styleUrls: ['./mes-contrats.component.css']
 })
 export class MesContratsComponent implements OnInit {
   contracts: any[] = [];
   filteredContracts: any[] = []; // Contrats filtrés à afficher
   activeFilter: string = 'all'; // Filtre actif ('all', 'actif', 'terminé', 'résilié')
 
-  // injection du service dans le constructeur
+  // Variables pour la pagination
+  currentPage: number = 1;
+  contractsPerPage: number = 3;
+
   constructor(private contratService: ContratService, private dialog: MatDialog) {}
 
-  // recuperation des contrats au chargement du composant
   ngOnInit(): void {
     this.loadContracts();
   }
@@ -29,16 +31,16 @@ export class MesContratsComponent implements OnInit {
   private async loadContracts() {
     try {
       console.log('Chargement des contrats...');
-      this.contracts = await this.contratService.getUserContracts(); // Appel du service
+      this.contracts = await this.contratService.getUserContracts(); 
       console.log('Contrats chargés:', this.contracts);
-      this.applyFilter(); // Appliquer le filtre actuel
+      this.applyFilter();
     } catch (error) {
       console.error('Erreur lors du chargement des contrats:', error);
     }
   }
 
   filterContracts(filter: string) {
-    this.activeFilter = filter; // Met à jour le filtre actif
+    this.activeFilter = filter;
     this.applyFilter();
   }
 
@@ -50,28 +52,46 @@ export class MesContratsComponent implements OnInit {
         contract => contract.statut === this.activeFilter
       );
     }
+
+    // Trier les contrats par ID de manière décroissante
+    this.filteredContracts.sort((a, b) => b.id - a.id);
+  }
+
+  // Pagination : obtenir les contrats à afficher pour la page actuelle
+  getPaginatedContracts() {
+    const start = (this.currentPage - 1) * this.contractsPerPage;
+    const end = start + this.contractsPerPage;
+    return this.filteredContracts.slice(start, end);
+  }
+
+  // Méthode pour changer de page
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
+
+  // Méthode pour obtenir le nombre total de pages
+  get totalPages() {
+    return Math.ceil(this.filteredContracts.length / this.contractsPerPage);
   }
 
   async onResilierContrat(contratId: string) {
     try {
-      //ouvre la boîte de dialogue de confirmation
       const dialogRef = this.dialog.open(ConfirmationResiliationComponent);
-      //attendre que la boîte de dialogue soit fermée et récupérer la réponse
       const result = await dialogRef.afterClosed().toPromise();
 
       if (result) {
-          // Conversion de l'ID en nombre
-          const contratIdNumber = parseInt(contratId, 10);
-          if (isNaN(contratIdNumber)) {
-            throw new Error(`L'ID fourni (${contratId}) n'est pas un nombre valide.`);
-          }
+        const contratIdNumber = parseInt(contratId, 10);
+        if (isNaN(contratIdNumber)) {
+          throw new Error(`L'ID fourni (${contratId}) n'est pas un nombre valide.`);
+        }
 
-          console.log(`Résiliation du contrat avec ID : ${contratIdNumber}...`);
-          await this.contratService.resilierContrat(contratIdNumber); // Appel du service
-          console.log(`Contrat avec ID : ${contratIdNumber} résilié.`);
-          this.loadContracts(); // Recharger les contrats après résiliation
+        console.log(`Résiliation du contrat avec ID : ${contratIdNumber}...`);
+        await this.contratService.resilierContrat(contratIdNumber);
+        console.log(`Contrat avec ID : ${contratIdNumber} résilié.`);
+        this.loadContracts(); // Recharger les contrats après résiliation
       } else {
-          console.log('Action de résiliation annulée.');
+        console.log('Action de résiliation annulée.');
       }
 
     } catch (error) {
@@ -102,5 +122,4 @@ export class MesContratsComponent implements OnInit {
       console.error(`Erreur lors du téléchargement du contrat avec l'ID ${contractId}:`, error);
     }
   }
-
 }

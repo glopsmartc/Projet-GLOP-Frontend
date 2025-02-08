@@ -53,6 +53,11 @@ h1 {
     color: white;
   }
 
+  .filter-btn:hover {
+    background-color: #6b8856;
+    color: white;
+}
+
 /* Liste des contrats */
 .contracts {
     display: grid;
@@ -109,6 +114,8 @@ h1 {
 
 .download-btn:hover {
     background-color: #446488; /* Bleu légèrement plus foncé */
+    cursor: pointer;
+
 }
 
 .cancel-btn {
@@ -125,3 +132,46 @@ h1 {
 .cancel-btn:hover {
     background-color: #9b2f2f; /* Rouge légèrement plus foncé */
 }
+
+/* Conteneur de la pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Boutons de la pagination */
+.pagination button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    font-size: 16px;
+    background-color: #3f6f35;
+    color: white;
+    border: 1px solid #3f6f35;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Apparence du bouton au survol */
+.pagination button:hover {
+    background-color: #6b8856; 
+    border-color: #6b8856;
+}
+
+/* Apparence du bouton désactivé */
+.pagination button:disabled {
+    background-color: #ccc; /* Gris clair */
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Affichage du texte de la page */
+.pagination span {
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+
+
