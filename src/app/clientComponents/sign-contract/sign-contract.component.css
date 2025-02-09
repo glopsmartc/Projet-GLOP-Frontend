@@ -78,7 +78,7 @@ body {
   
   /* Lien vers conditions générales */
   a {
-    color: #007bff;
+    color: #45a049;
     text-decoration: none;
   }
   
@@ -104,3 +104,26 @@ body {
     margin-top: 1.5rem;
   }
   
+  /* Style du prix initial */
+.initial-price {
+  font-size: 18px;
+  color: #888; /* Gris clair pour le prix initial */
+  text-decoration: line-through; /* Pour donner l'effet barré */
+}
+
+.initial-price span {
+  font-size: 20px;
+  color: #888;
+}
+
+/* Style du prix final */
+.final-price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #388e3c; /* Vert pour attirer l'attention */
+  background-color: #e8f5e9; /* Fond très léger pour mettre en avant le prix final */
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 10px;
+}

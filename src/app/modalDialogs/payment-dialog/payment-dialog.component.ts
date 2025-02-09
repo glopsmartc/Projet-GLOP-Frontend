@@ -1,9 +1,11 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-payment-dialog',
@@ -14,18 +16,21 @@ import { CommonModule } from '@angular/common';
 })
 export class PaymentDialogComponent {
   isLoading = false;
-  isCvcPreviewVisible = false;  // This will control the visibility of the CVC preview
+  isCvcPreviewVisible = false;  
+  finalPrice: number;
+
 
   @Output() paymentConfirmed: EventEmitter<boolean> = new EventEmitter();
   
   selectedPlan: any;
-  constructor(private dialogRef: MatDialogRef<PaymentDialogComponent>, private router: Router) {}
+  constructor(private dialogRef: MatDialogRef<PaymentDialogComponent>, private router: Router, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.finalPrice = data.finalPrice;
+}
 
   ngOnInit(): void {
     let state = this.router.getCurrentNavigation()?.extras.state;
     if (!state) {
       state = history.state; // Fallback to history state if Angular state is not available
-
     }
 
     if (state && state['selectedPlan']) {

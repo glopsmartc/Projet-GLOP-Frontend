@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import * as jsPDF from 'jspdf';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component'; // <-- Import PaymentDialogComponent
+import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component'; 
 import { ContratService } from '../../services/contrat.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ReforestationDialogComponent } from '../../modalDialogs/reforestation-dialog/reforestation-dialog.component'; 
 
 @Component({
   selector: 'app-sign-contract',
@@ -20,6 +21,10 @@ export class SignContractComponent implements OnInit {
   selectedPlan: any;
   acceptTerms: boolean = false;
   currentUserName: string = 'Non spécifié';
+  carbonOffset = false;
+  finalPrice = 0;
+  offsetPercentage = 0.05;
+
   @ViewChild(PaymentDialogComponent) paymentDialog: PaymentDialogComponent | undefined;
 
   constructor(private router: Router, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private contratService: ContratService) { }
@@ -44,7 +49,11 @@ export class SignContractComponent implements OnInit {
 
         console.log('Données de l\'offre:', this.selectedPlan);
         console.log('Données du formulaire:', this.formData);
-      } else {
+        this.finalPrice = this.selectedPlan.price;
+        if (this.selectedPlan) {
+          this.updatePrice();
+        }}
+         else {
         console.error('State or required data is not available');
         this.router.navigate(['/error-page']);
       }
@@ -64,10 +73,18 @@ export class SignContractComponent implements OnInit {
     });
   }
 
+  openReforestationDialog(): void {
+    this.dialog.open(ReforestationDialogComponent, {
+      width: '80%',
+      height: '60%',
+    });
+  }
+
   finalizeContract() {
     const dialogRef = this.dialog.open(PaymentDialogComponent, {
       width: '400px',
       disableClose: true,
+      data: { finalPrice: this.finalPrice },
     });
 
     // Listen for the event from the dialog and call generatePDF when the event is triggered
@@ -75,6 +92,26 @@ export class SignContractComponent implements OnInit {
       this.generateAndSaveContract();
     });
   }
+
+  updatePrice() {
+    if (this.selectedPlan && this.selectedPlan.price) {
+      // Remove the currency symbol and convert to a number
+      const priceValue = parseFloat(this.selectedPlan.price.replace('€', '').trim());
+      
+      if (isNaN(priceValue)) {
+        console.warn('Invalid price value');
+        this.finalPrice = 0;
+      } else {
+        this.finalPrice = this.carbonOffset
+          ? priceValue * (1 + this.offsetPercentage)
+          : priceValue;
+      }
+    } else {
+      console.warn('selectedPlan or its price is undefined');
+      this.finalPrice = 0; 
+    }
+  } 
+  
 
   async generateAndSaveContract() {
     try {
@@ -95,7 +132,7 @@ export class SignContractComponent implements OnInit {
       const contractData = {
         ...this.formData,
         planName: this.selectedPlan.name,
-        price: this.selectedPlan.price,
+        price: `${this.finalPrice.toFixed(2)} €`,
         descriptionOffre: this.selectedPlan.description
       };
       console.log('Envoi des données du contrat :', contractData);
@@ -123,34 +160,45 @@ export class SignContractComponent implements OnInit {
     const pageHeight = doc.internal.pageSize.height;
     let cursorY = 18;
   
-    // Add Header
+    // Ajouter le logo au début du PDF
+    const logoUrl = 'assets/img/logo-mobi.png'; // Chemin de ton logo
+    doc.addImage(logoUrl, 'PNG', 20, cursorY, 40, 15); // Le logo sera de 40x15 mm
+    cursorY += 20;  // Décalage après le logo
+  
+    // Titre du contrat avec couleur
     doc.setFontSize(20);
+    doc.setTextColor(56, 142, 60); 
+    doc.setFont('helvetica', 'bold');
     doc.text('MobiSureMoinsDeCO2 Assurance', 105, cursorY, { align: 'center' });
     cursorY += 10;
+  
     doc.setFontSize(14);
     doc.text('Contrat d\'assurance', 105, cursorY, { align: 'center' });
     cursorY += 10;
-    doc.line(10, cursorY, 200, cursorY);
+    doc.line(10, cursorY, 200, cursorY); // Ligne sous le titre
     cursorY += 10;
   
-    // Add Contract Details
+    // Informations personnelles (titre en gras et couleur)
     doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0); // Noir pour les titres
     doc.text('Vos Informations :', 10, cursorY);
     cursorY += 10;
   
-    doc.setFont('helvetica', 'normal');
-    const addLine = (label: string, value: string | undefined) => {
+    // Fonction pour ajouter une ligne de données
+    const addLine = (label: string, value: string | undefined, color: string = 'black') => {
       if (value) {
         if (cursorY + 10 > pageHeight) {
           doc.addPage();
           cursorY = 20;
         }
+        doc.setTextColor(color);
         doc.text(`${label}: ${value}`, 20, cursorY);
         cursorY += 7;
       }
     };
   
-    addLine('Durée du Contrat', this.formData.dureeContrat);
+    // Informations
+    addLine('Durée du Contrat', this.formData.dureeContrat); // Couleur verte
     addLine('Date de Début', this.formData.debutContrat);
     addLine('Destination', this.formData.destination);
     addLine('Date Aller', this.formData.dateAller);
@@ -167,12 +215,12 @@ export class SignContractComponent implements OnInit {
     if (this.formData.trotinette === 'true') transportTypes.push('Trotinette');
     if (this.formData.bicyclette === 'true') transportTypes.push('Bicyclette');
     if (transportTypes.length) {
-      addLine('Type de Transport', transportTypes.join(' & '));
+      addLine('Type de Transport', transportTypes.join(' & '), '#388e3c'); // Couleur verte
     }
   
-    // Add Insured Persons
-    if (this.formData.nombrePersonnes > 0) {
-      addLine('Personnes Assurées', `${this.formData.nombrePersonnes}`);
+     // Add Insured Persons
+     if (this.formData.nombrePersonnes > 0) {
+      addLine('Personnes Assurées', `${this.formData.nombrePersonnes, '#388e3c'}`);
       this.formData.accompagnants.forEach((person: any, index: number) => {
         if (cursorY + 50 > pageHeight) {
           doc.addPage();
@@ -190,16 +238,17 @@ export class SignContractComponent implements OnInit {
         cursorY += 7;
       });
     }
-  
+
     doc.line(10, cursorY, 200, cursorY);
     cursorY += 10;
   
-    // Add Features
+    // Caractéristiques de l'offre (titre en gras et couleur)
     if (cursorY + 30 > pageHeight) {
       doc.addPage();
       cursorY = 20;
     }
     doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
     doc.text('Caractéristiques :', 10, cursorY);
     cursorY += 10;
     doc.setFont('helvetica', 'normal');
@@ -213,7 +262,7 @@ export class SignContractComponent implements OnInit {
       cursorY += 7;
     });
   
-    // Add Signatures
+    // Ajouter la signature
     if (cursorY + 70 > pageHeight) {
       doc.addPage();
       cursorY = 20;
@@ -224,17 +273,17 @@ export class SignContractComponent implements OnInit {
     const frameWidth = 70;
     const frameHeight = 42;
   
-    // Company Signature
+    // Signature de l'entreprise
     doc.rect(20, signatureStartY, frameWidth, frameHeight);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.text('MobiSureMoinsDeCO2 Assurance', 25, signatureStartY + 10);
-    doc.addImage('assets/img/signature.png', 'PNG', 25, signatureStartY + 15, 50, 15);
+    doc.addImage('assets/img/signature.png', 'PNG', 25, signatureStartY + 15, 50, 15); // Exemple de signature de l'entreprise
     doc.setFont('helvetica', 'bold');
     const formattedDate = new Date().toLocaleDateString('fr-FR');
     doc.text(`Date : ${formattedDate}`, 25, signatureStartY + 35);
   
-    // Client Signature
+    // Signature du client
     doc.rect(120, signatureStartY, frameWidth, frameHeight);
     doc.setFont('helvetica', 'bold');
     doc.text('Pour le Titulaire', 125, signatureStartY + 10);
@@ -243,18 +292,19 @@ export class SignContractComponent implements OnInit {
     doc.setFont('helvetica', 'bold');
     doc.text(`Date : ${formattedDate}`, 125, signatureStartY + 35);
   
-    // Convert to Blob
+    // Convertir le document en Blob pour téléchargement
     return doc.output('blob');
-  }
-  
-
+  } 
 
 }
 
 @Component({
   selector: 'app-conditions-dialog',
   template: `
-  <div class="p-5">
+  <div class="dialog-container">
+    <div class="logo-container">
+      <img src="assets/img/logo-mobi.png" alt="Logo MobiSureMoinsDeCO2" class="logo">
+    </div>
     <h1 class="dialog-header">Conditions Générales</h1>
     <div class="dialog-content">
       <p><strong>1. Objet du Contrat :</strong> Ce contrat a pour objet de définir les termes et conditions d'abonnement aux services d'assurance proposés par MobiSureMoinsDeCO2.</p>
@@ -270,39 +320,73 @@ export class SignContractComponent implements OnInit {
   `,
   styles: [
     `
+      .dialog-container {
+        background-color: #f1f8e9; /* Fond vert clair */
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+        text-align: left;
+      }
+
       .dialog-header {
-      font-size: 24px;
-      text-align: center;
-      color: #3f51b5;
-      margin-bottom: 20px;
-    }
+        font-size: 28px;
+        color: #388e3c; /* Vert foncé */
+        margin-bottom: 20px;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+      }
 
-    .dialog-content {
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 30px;
-    }
+      .dialog-content {
+        font-size: 16px;
+        color: #4caf50; /* Vert moyen */
+        line-height: 1.7;
+        font-family: 'Roboto', sans-serif;
+        margin-bottom: 20px;
+      }
 
-    .dialog-content p {
-      margin: 10px 0;
-    }
+      .dialog-content p {
+        margin-bottom: 15px;
+      }
 
-    .close-btn {
-      display: block;
-      margin: 0 auto;
-      font-size: 16px;
-      background-color: #3f51b5;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px; 
-    }
+      .dialog-content strong {
+        color: #388e3c;
+      }
 
-    .close-btn:hover {
-      background-color: #303f9f;
-    }
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
+      .logo {
+        max-width: 150px; 
+        margin: 0 auto;
+      }
+
+      .close-btn {
+        display: block;
+        width: 100%;
+        background-color: #4caf50; /* Vert primaire */
+        color: white;
+        padding: 12px;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .close-btn:hover {
+        background-color: #388e3c; /* Vert foncé au survol */
+      }
+
+      .close-btn:focus {
+        outline: none;
+      }
     `
   ]
 })
