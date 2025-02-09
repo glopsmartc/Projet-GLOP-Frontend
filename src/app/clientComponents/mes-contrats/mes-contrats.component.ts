@@ -19,7 +19,7 @@ export class MesContratsComponent implements OnInit {
 
   // Variables pour la pagination
   currentPage: number = 1;
-  contractsPerPage: number = 3;
+  contractsPerPage: number = 6;
 
   constructor(private contratService: ContratService, private dialog: MatDialog) {}
 
@@ -31,7 +31,7 @@ export class MesContratsComponent implements OnInit {
   private async loadContracts() {
     try {
       console.log('Chargement des contrats...');
-      this.contracts = await this.contratService.getUserContracts(); 
+      this.contracts = await this.contratService.getUserContracts();
       console.log('Contrats chargés:', this.contracts);
       this.applyFilter();
     } catch (error) {

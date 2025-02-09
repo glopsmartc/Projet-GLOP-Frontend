@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { EmissionCo2Service } from '../../services/emission-co2.service'; 
+import { EmissionCo2Service } from '../../services/emission-co2.service';
 
 @Component({
   selector: 'app-calculate-emission',
@@ -12,13 +12,15 @@ import { EmissionCo2Service } from '../../services/emission-co2.service';
 })
 export class CalculateEmissionComponent {
   km: number = 0;
-  selectedTransport: number = 2;
+  selectedTransport: string = 'voiture';
+  vehicleMake: string = '';
+  vehicleModel: string = '';
   transports: { id: number, name: string }[] = [
     { id: 1, name: 'Avion' },
     { id: 2, name: 'TGV' },
     { id: 3, name: 'Intercités' },
-    { id: 4, name: 'Voiture thermique' },
-    { id: 5, name: 'Voiture électrique' },
+    /*{ id: 4, name: 'Voiture thermique' },
+    { id: 5, name: 'Voiture électrique' },*/
     { id: 6, name: 'Autocar' },
     { id: 7, name: 'Vélo ou marche' },
     { id: 8, name: 'Vélo (ou trottinette) à assistance électrique' },
@@ -37,18 +39,39 @@ export class CalculateEmissionComponent {
 
   constructor(private emissionCo2Service: EmissionCo2Service) { }
 
- calculateEmissions() {
-  this.emissionCo2Service.calculateEmissions(this.km, this.selectedTransport).subscribe({
-    next: (response) => {
-      console.log('Données reçues du backend :', response); 
-     this.emissions = Array.isArray(response.data) ? response.data : [response.data]; 
-      console.log('Données dans emissions :', this.emissions); 
-      this.errorMessage = '';
-    },
-    error: (error) => {
-      this.errorMessage = 'Erreur lors de la récupération des données.';
-      console.error('Erreur backend :', error);
+  calculateEmissions() {
+    if (this.selectedTransport === 'voiture') {
+      this.emissionCo2Service.estimateVehicleEmissions(this.vehicleMake, this.vehicleModel, this.km).subscribe({
+        next: (response) => {
+          // Vérifier si la réponse contient les données attendues
+          if (response.data && response.data.co2e_gm) {
+            const carbonEmissions = response.data.co2e_gm; // Extraire co2e_gm
+            this.emissions = [{
+              name: `${this.vehicleMake} ${this.vehicleModel}`,
+              value: carbonEmissions // Utiliser co2e_gm ici
+            }];
+          } else {
+            this.errorMessage = 'Données de l\'API non valides.';
+          }
+          this.errorMessage = '';
+        },
+        error: (error) => {
+          this.errorMessage = 'Erreur lors de la récupération des données.';
+          console.error('Erreur backend :', error);
+        }
+      });
+    } else {
+      // Logique existante pour les autres transports
+      this.emissionCo2Service.calculateEmissions(this.km, parseInt(this.selectedTransport)).subscribe({
+        next: (response) => {
+          this.emissions = Array.isArray(response.data) ? response.data : [response.data];
+          this.errorMessage = '';
+        },
+        error: (error) => {
+          this.errorMessage = 'Erreur lors de la récupération des données.';
+          console.error('Erreur backend :', error);
+        }
+      });
     }
-  });
-}
+  }
 }
