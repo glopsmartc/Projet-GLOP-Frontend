@@ -154,16 +154,6 @@ export class SubscriptionFormComponent implements OnInit {
     this.loadCountries();//pour charger la liste des pays dès que le composant est initialisé
   }
 
-  clearErrorMessage() {
-    this.formSubmitted = false;
-    Object.keys(this.myForm.controls).forEach(key => {
-      const control = this.myForm.get(key);
-      if (control) {
-        control.markAsUntouched();
-      }
-    });
-  }
-
   onDateRetourChange(event: Event) {
     const selectedDate = (event.target as HTMLInputElement).value;
     this.maxDateAller = selectedDate; // Update 'Date aller' maximum date to 'Date retour'

@@ -1,8 +1,7 @@
-<div class="body">
-<h1 class="text-center my-4">Informations du souscripteur et des accompagnants </h1>
+<h2 class="text-center my-4">Informations du souscripteur et des accompagnants </h2>
 
 <div class="container">
-  <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" >
+  <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="p-4 shadow-lg rounded bg-white">
 
     <div class="form-group row align-items-center">
       <label class="col-sm-5 col-form-label">Date de naissance du souscripteur :</label>
@@ -13,7 +12,7 @@
 
     <div formArrayName="accompagnants" class="my-4">
       <div *ngFor="let accompagnant of accompagnants.controls; let i = index" [formGroupName]="i" class="border p-3 mb-3 rounded">
-        <h5 class="text-center mb-4">Accompagnant {{ i + 1 }}</h5>
+        <h5 class="text-center">Accompagnant {{ i + 1 }}</h5>
 
         <div class="form-group row align-items-center">
           <label class="col-sm-5 col-form-label">Nom :</label>
@@ -60,5 +59,4 @@
       <button type="submit" class="mt-2">Estimer le prix</button>
     </div>
   </form>
-</div>
 </div>
