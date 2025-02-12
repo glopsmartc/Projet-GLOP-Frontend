@@ -119,13 +119,13 @@ export class SignContractComponent implements OnInit {
       const pdfBlob = this.generatePDF();
 
       // Sauvegarde locale pour tester le fichier PDF généré
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'contract_test.pdf';
-      a.click();
+      //const url = window.URL.createObjectURL(pdfBlob);
+      //const a = document.createElement('a');
+      //a.href = url;
+      //a.download = 'contract_test.pdf';
+      //a.click();
 
-      console.log('PDF sauvegardé localement pour test.');
+      //console.log('PDF sauvegardé localement pour test.');
 
 
       // Sauvegarder les données du contrat via l'API
@@ -143,9 +143,6 @@ export class SignContractComponent implements OnInit {
       await this.contratService.createContract(contractData, pdfFile);
 
       console.log('Contrat et PDF sauvegardés avec succès.');
-
-       // Afficher le message de succès
-       alert('Votre contrat a été généré et sauvegardé avec succès !'); 
 
       // Redirection vers /mescontrats après succès
       this.router.navigate(['/mes-contrats']);
