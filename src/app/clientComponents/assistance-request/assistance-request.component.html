@@ -5,14 +5,27 @@
       rapidement.</p>
   </div>
 
-  <!-- Step 1: Type of Assistance -->
-  <div class="mb-5" *ngIf="step === 1">
-    <h2 style="display: inline-block;">Type d’assistance</h2>
-    <select [(ngModel)]="assistanceType" style="display: inline-block;">
-      <option value="">Sélectionnez le type d’assistance</option>
-      <option value="Medicale">Assistance médicale</option>
-      <option value="Autre">Autre</option>
+<!-- Step 0: Contract Selection -->
+<div class="mb-5" *ngIf="step === 0">
+  <h2>Sélectionnez un contrat actif</h2>
+  <div *ngIf="contractErrorMsg" class="error-message">
+    {{ contractErrorMsg }}
+  </div>
+  <div *ngIf="hasActiveContracts()">
+    <select [(ngModel)]="selectedContract" (change)="onContractSelect(selectedContract?.id)">
+      <option [ngValue]="null">Sélectionnez un contrat</option>
+      <option *ngFor="let contract of activeContracts" [ngValue]="contract">{{ contract.name }} ({{ contract.id }})</option>
     </select>
+  </div>
+</div>
+
+<!-- Step 1: Type of Assistance -->
+<div class="mb-5" *ngIf="step === 1">
+  <h2>Type d’assistance</h2>
+  <select [(ngModel)]="assistanceType" style="display: inline-block;">
+    <option value="">Sélectionnez le type d’assistance</option>
+    <option *ngFor="let service of services" [value]="service">{{ service }}</option>
+  </select>
 
     <div *ngIf="assistanceType === 'Autre'">
       <input type="text" [(ngModel)]="otherType" placeholder="Veuillez préciser votre demande" maxlength="62">
@@ -116,7 +129,7 @@
   <!-- Navigation Buttons -->
   <div class="navigation">
     <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
-    <button *ngIf="step > 1 && step < 4" (click)="previousStep()">Précédent</button>
+    <button *ngIf="step > 0 && step < 4" (click)="previousStep()">Précédent</button>
     <button *ngIf="step < 3" (click)="nextStep()">Suivant</button>
     <button *ngIf="step === 3" (click)="validateAndSubmit()">Soumettre</button>
   </div>

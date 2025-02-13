@@ -33,16 +33,16 @@ export class ContratService {
     };
   }
 
-   // Méthode pour récupérer les contrats de l'utilisateur connecté
-   async getUserContracts(): Promise<any> {
+  // Méthode pour récupérer les contrats de l'utilisateur connecté
+  async getUserContracts(): Promise<any> {
     try {
-      console.log('Envoi de la requête pour récupérer les contrats de l\'utilisateur (GET):');
+      console.log('Fetching user contracts...');
       const response = await axios.get(`${this.apiUrl}/user-contracts`, this.getAuthHeaders());
-      console.log('Réponse des contrats de l\'utilisateur:', response.data);
-      return response.data;  // Retourne les contrats de l'utilisateur
-    } catch (error: unknown) {
-      console.error('Erreur lors de la récupération des contrats de l\'utilisateur (GET):', error);
-      throw error;  // Re-throw the error for further handling
+      console.log('API Response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching contracts:', error);
+      throw error;
     }
   }
 
@@ -50,13 +50,13 @@ export class ContratService {
   // Méthode pour récupérer l'offre correspondante
   async getOffreCorrespondante(request: any): Promise<any> {
     try {
-        console.log('Envoi de la requête pour l\'offre correspondante (POST):', request);
-        const response = await axios.post(`${this.apiUrl}/getOffre`, request, this.getAuthHeaders());
-        console.log('Réponse des offres correspondantes (POST):', response);
-        return response.data;
+      console.log('Envoi de la requête pour l\'offre correspondante (POST):', request);
+      const response = await axios.post(`${this.apiUrl}/getOffre`, request, this.getAuthHeaders());
+      console.log('Réponse des offres correspondantes (POST):', response);
+      return response.data;
     } catch (error: unknown) {
-        console.error('Erreur lors de la récupération des offres (POST):', error);
-        throw error;
+      console.error('Erreur lors de la récupération des offres (POST):', error);
+      throw error;
     }
   }
 
@@ -148,7 +148,7 @@ export class ContratService {
   }
 
 
-  async getCurrentUser(): Promise<{ email: string; nom: string,  prenom: string }> {
+  async getCurrentUser(): Promise<{ email: string; nom: string, prenom: string }> {
     try {
       const response = await axios.get(`${this.apiUrl}/current-user`, this.getAuthHeaders());
       const currentUser = response.data; // Assurez-vous que `nom` est un champ retourné par votre backend
@@ -163,39 +163,50 @@ export class ContratService {
   //methode pour resilier contrat
   async resilierContrat(id: number): Promise<void> {
     try {
-        const response = await axios.patch(
-            `${this.apiUrl}/${id}/resilier`,
-            {},
-            this.getAuthHeaders()
-        );
-        console.log('Contrat résilié avec succès:', response.data);
+      const response = await axios.patch(
+        `${this.apiUrl}/${id}/resilier`,
+        {},
+        this.getAuthHeaders()
+      );
+      console.log('Contrat résilié avec succès:', response.data);
     } catch (error: any) {
-        // Gestion détaillée de l'erreur
-        if (error.response) {
-            console.error('Erreur de l’API:', error.response.status, error.response.data);
-        } else if (error.request) {
-            console.error('Aucune réponse reçue :', error.request);
-        } else {
-            console.error('Erreur inconnue:', error.message);
-        }
-        throw error;
+      // Gestion détaillée de l'erreur
+      if (error.response) {
+        console.error('Erreur de l’API:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('Aucune réponse reçue :', error.request);
+      } else {
+        console.error('Erreur inconnue:', error.message);
+      }
+      throw error;
     }
-}
-
-async downloadContractFile(contractId: string): Promise<Blob> {
-  try {
-    console.log(`Envoi de la requête pour télécharger le fichier du contrat avec l'ID : ${contractId}...`);
-    const response = await axios.get(`${this.apiUrl}/download/${contractId}`, {
-      ...this.getAuthHeaders(),
-      responseType: 'blob', // Important pour recevoir un fichier
-    });
-
-    console.log(`Fichier du contrat avec l'ID ${contractId} récupéré avec succès.`);
-    return response.data; // Retourner le fichier Blob
-  } catch (error) {
-    console.error(`Erreur lors de la récupération du fichier pour le contrat avec l'ID ${contractId}:`, error);
-    throw error; // 'erreur pour qu'elle soit gérée dans le composant
   }
-}
+
+  async downloadContractFile(contractId: string): Promise<Blob> {
+    try {
+      console.log(`Envoi de la requête pour télécharger le fichier du contrat avec l'ID : ${contractId}...`);
+      const response = await axios.get(`${this.apiUrl}/download/${contractId}`, {
+        ...this.getAuthHeaders(),
+        responseType: 'blob', // Important pour recevoir un fichier
+      });
+
+      console.log(`Fichier du contrat avec l'ID ${contractId} récupéré avec succès.`);
+      return response.data; // Retourner le fichier Blob
+    } catch (error) {
+      console.error(`Erreur lors de la récupération du fichier pour le contrat avec l'ID ${contractId}:`, error);
+      throw error; // 'erreur pour qu'elle soit gérée dans le composant
+    }
+  }
+
+  async getContractServices(contractId: number): Promise<string[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/offreDescription/${contractId}`, this.getAuthHeaders());
+      const servicesString = response.data;
+      return servicesString.split('\n');
+    } catch (error) {
+      console.error('Erreur lors de la récupération des services du contrat:', error);
+      throw error;
+    }
+  }
 
 }

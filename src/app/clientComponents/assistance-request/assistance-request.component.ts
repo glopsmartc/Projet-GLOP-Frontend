@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LocationService } from '../../services/location.service';
+import { ContratService } from '../../services/contrat.service'; // Import ContratService
 
 @Component({
   selector: 'app-assistance-request',
@@ -13,7 +13,7 @@ import { LocationService } from '../../services/location.service';
   styleUrl: './assistance-request.component.css',
 })
 export class AssistanceRequestComponent {
-  step: number = 1;
+  step: number = 0;
   assistanceType: string = '';
   medicalAssistance: string = '';
   medicalInfo: string = '';
@@ -30,6 +30,7 @@ export class AssistanceRequestComponent {
   emptyFieldError: boolean = false;
 
   errorMessage: string = 'Veuillez remplir tous les champs du formulaire.';
+  contractErrorMsg: string = '';
 
   isLocating: boolean = false;
   geoError: string = '';
@@ -45,7 +46,74 @@ export class AssistanceRequestComponent {
 
   MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  constructor(private readonly http: HttpClient, private readonly sanitizer: DomSanitizer, private readonly locationService: LocationService) { }
+  contracts: any[] = [];
+  activeContracts: any[] = [];
+  selectedContract: any = null;
+  services: string[] = [];
+
+  constructor(
+    private readonly sanitizer: DomSanitizer,
+    private readonly locationService: LocationService,
+    private readonly contratService: ContratService
+  ) { }
+
+  async ngOnInit() {
+    await this.loadContracts();
+  }
+
+  hasActiveContracts(): boolean {
+    return this.contracts.some(contract => contract.statut === 'actif');
+  }
+
+  async loadContracts() {
+    try {
+      this.contracts = await this.contratService.getUserContracts();
+      console.log('Contracts loaded:', this.contracts);
+
+      this.activeContracts = this.contracts.filter(contract => contract.statut === 'actif');
+      if (this.activeContracts.length === 0) {
+        this.contractErrorMsg = 'Vous n’avez aucun contrat actif. Veuillez souscrire à un contrat pour demander une assistance.';
+        this.emptyFieldError = false;
+      } else {
+        this.contractErrorMsg = '';
+        this.emptyFieldError = false;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats:', error);
+      this.contractErrorMsg = 'Erreur lors de la récupération des contrats. Veuillez réessayer plus tard.';
+      this.emptyFieldError = false;
+    }
+  }
+
+  async onContractSelect(contractId: number) {
+    try {
+      this.selectedContract = this.contracts.find(contract => contract.id === contractId);
+      if (this.selectedContract && this.selectedContract.statut !== 'actif') {
+        this.contractErrorMsg = 'Ce contrat n’est pas actif. Veuillez sélectionner un contrat actif.';
+        this.selectedContract = null;
+        return;
+      }
+      if (this.selectedContract) {
+        const servicesString = await this.contratService.getContractServices(contractId);
+        if (Array.isArray(servicesString) && servicesString.length > 0) {
+          const cleanString = servicesString[0].replace(/\\n/g, '\n');
+          this.services = cleanString.split('\n');
+          this.contractErrorMsg = '';
+        } else {
+          this.services = [];
+          console.error('Invalid services string format');
+        }
+        console.log('Services array:', this.services);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la sélection du contrat:', error);
+      this.contractErrorMsg = 'Erreur lors de la récupération des services du contrat. Veuillez réessayer plus tard.';
+      this.emptyFieldError = true;
+    }
+  }
+
+
+
 
   async getLocation() {
     this.isLocating = true;
@@ -62,8 +130,12 @@ export class AssistanceRequestComponent {
     }
   }
 
-
   nextStep() {
+  if (this.step === 0 && !this.selectedContract) {
+    this.errorMessage = 'Veuillez sélectionner un contrat pour continuer.';
+    this.emptyFieldError = true;
+    return;
+  }
     if (this.validateStep()) {
       this.emptyFieldError = false;
       if (this.step < 3) {
@@ -75,7 +147,9 @@ export class AssistanceRequestComponent {
   }
 
   previousStep() {
-    if (this.step > 1) this.step--;
+    if (this.step > 0) this.step--;
+    this.contractErrorMsg = '';
+    this.emptyFieldError = false;
   }
 
   validateAndSubmit() {
@@ -174,6 +248,11 @@ export class AssistanceRequestComponent {
 
   validateStep(): boolean {
     switch (this.step) {
+      case 0:
+        if (!this.selectedContract) {
+          return false;
+        }
+        return true;
       case 1:
         return (
           !!this.assistanceType &&
@@ -200,4 +279,5 @@ export class AssistanceRequestComponent {
         return false;
     }
   }
+
 }
