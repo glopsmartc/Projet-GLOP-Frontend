@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label for="PaymentAmount">Payment amount</label>
                 <div class="amount-placeholder">
-                    <span>{{ selectedPlan.price }}</span>
+                    <span>${{finalPrice.toFixed(2)}} €</span>
                 </div>
             </div>
             <div class="form-group mt-3">
@@ -48,7 +48,7 @@
                 <button id="PayButton" class="btn btn-block btn-success submit-button mt-3" type="button"
                     (click)="onPayClick()">
                     <span class="submit-button-lock"></span>
-                    <span class="align-middle">Pay {{ selectedPlan?.price }}</span>
+                    <span class="align-middle">Pay ${{finalPrice.toFixed(2)}} €</span>
                 </button>
             </div>
         </form>

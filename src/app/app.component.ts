@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderComponent } from './clientComponents/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -42,14 +42,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
-  
+
   ngAfterViewInit(): void {
     const hamBurger: HTMLElement | null = this.elementRef.nativeElement.querySelector(".toggle-btn");
-    
+
     if (hamBurger) {
       this.renderer.listen(hamBurger, 'click', () => {
         const sidebar: HTMLElement | null = this.elementRef.nativeElement.querySelector("#sidebar");
-        
+
         if (sidebar) {
           sidebar.classList.toggle("expand");
         }

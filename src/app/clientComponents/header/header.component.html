@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/null">
+      <img src="assets/img/logo-img.png" style="height: 58px;" alt="Logo">&nbsp;
+      <span style="display: inline-block; vertical-align: middle;">MobiSureMoinsDeCO2</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <ng-container *ngIf="!isAuthenticated">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" routerLink="/" (click)="collapseNavbar()">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="collapseNavbar()">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="collapseNavbar()">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-customer text-white ms-3 mt-1" routerLink="/login" (click)="collapseNavbar()">Se connecter</a>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="isAuthenticated && isClient">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/calculate-emission" (click)="collapseNavbar()">Calculer mon emission CO2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/subscription-form" (click)="collapseNavbar()">Souscrire à une offre</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="assistanceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Assistance
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="assistanceDropdown">
+              <li><a class="dropdown-item" routerLink="/assistance-request" (click)="collapseNavbar()">Demande d'assistance</a></li>
+              <li><a class="dropdown-item" routerLink="/constat-amiable" (click)="collapseNavbar()">Template Constat Amiable</a></li>
+              <li><a class="dropdown-item" routerLink="/assistance-requests" (click)="collapseNavbar()">Suivre mes demandes</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/mes-contrats" (click)="collapseNavbar()">Mes contrats</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-customer text-white ms-3 mt-1" (click)="onLogout(); collapseNavbar()">Se déconnecter</a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>

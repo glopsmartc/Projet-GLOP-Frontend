@@ -1,0 +1,139 @@
+<div class="assistance-request mt-4">
+  <div *ngIf="!submitted">
+    <h1>Soumettre une demande d’assistance</h1>
+    <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande
+      rapidement.</p>
+  </div>
+
+  <!-- Step 1: Type of Assistance -->
+  <div class="mb-5" *ngIf="step === 1">
+    <h2 style="display: inline-block;">Type d’assistance</h2>
+    <select [(ngModel)]="assistanceType" style="display: inline-block;">
+      <option value="">Sélectionnez le type d’assistance</option>
+      <option value="Medicale">Assistance médicale</option>
+      <option value="Autre">Autre</option>
+    </select>
+
+    <div *ngIf="assistanceType === 'Autre'">
+      <input type="text" [(ngModel)]="otherType" placeholder="Veuillez préciser votre demande" maxlength="62">
+
+      <h2 class="mt-3">Avez-vous besoin d'une assistance médicale ?</h2>
+      <label>
+        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Oui"> Oui
+      </label>
+      <label>
+        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Non"> Non
+      </label>
+    </div>
+
+    <div *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'">
+      <h2>Informations médicales à transmettre au médecin :</h2>
+      <textarea [(ngModel)]="medicalInfo" placeholder="Décrivez les informations médicales pertinentes"></textarea>
+    </div>
+
+    <h2 class="mt-3">Urgence</h2>
+    <label>
+      <input type="radio" [(ngModel)]="urgency" name="urgency" value="Urgent"> Urgent
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="urgency" name="urgency" value="Non-urgent"> Non urgent
+    </label>
+
+    <h2>Déscription</h2>
+    <textarea [(ngModel)]="description" placeholder="Décrivez votre problème en détail"></textarea>
+
+    <h2>Joindre un document</h2>
+    <p>Veuillez télécharger PDFs ou images relatifs à votre demande.</p>
+
+    <!-- Section fichiers -->
+    <div class="file-uploads">
+      <input type="file" (change)="onFileUpload($event)" accept="application/pdf,image/*" multiple>
+
+      <div *ngIf="pdfFiles.length > 0 || imageFiles.length > 0" class="mt-3"> </div>
+
+      <!-- Liste des PDFs -->
+      <div *ngFor="let pdf of pdfFiles; let i = index" class="pdf-item">
+        <span>{{ pdf.name }}</span>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="togglePdfDisplay(i)">
+            {{ showPdf[i] ? 'Masquer' : 'Afficher' }}</a></u>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="removePdf(i)">Supprimer</a></u>
+        <div>
+          <object *ngIf="showPdf[i]" [data]="pdf.preview" type="application/pdf" width="50%" height="420px">
+            <p>Le document PDF "{{pdf.name}}" ne peut pas être affiché. Veuillez télécharger le fichier pour le
+              visualiser.</p>
+          </object>
+        </div>
+      </div>
+
+      <!-- Liste des images -->
+      <div *ngFor="let image of imageFiles; let i = index" class="image-item">
+        <span>{{ image.name }}</span>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="toggleImageDisplay(i)">
+            {{ showImage[i] ? 'Masquer' : 'Afficher' }}</a></u>&nbsp;
+        <u style="color: green; cursor: pointer;"><a (click)="removeImage(i)">Supprimer</a></u>
+        <div>
+          <img *ngIf="showImage[i]" [src]="image.preview" alt="Preview" width="50%">
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Step 2: Location -->
+  <div class="mb-5" *ngIf="step === 2">
+    <div class="location-section">
+      <h2>Localisation</h2>
+
+      <div *ngIf="isLocating" class="loading">
+        Récupération de ma position...
+      </div>
+
+      <div *ngIf="locationError" class="error">
+        {{ locationError }}
+      </div>
+
+      <div *ngIf="location" class="location-info">
+        <p>📍 {{ location }}</p>
+      </div>
+
+      <button (click)="getLocation()" [disabled]="isLocating" class="location-button bg-transparent"
+        style="color: green;"> Obtenir ma position </button>
+
+      <div class="manual-input">
+        <input type="text" [(ngModel)]="manualLocation" placeholder="Où avez-vous besoin d’assistance ?">
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Contact Information -->
+  <div class="mb-5" *ngIf="step === 3">
+    <h2>Informations de contact</h2>
+    <input type="tel" [(ngModel)]="phone" placeholder="Téléphone">
+    <input type="email" [(ngModel)]="email" placeholder="Email">
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="navigation">
+    <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
+    <button *ngIf="step > 1 && step < 4" (click)="previousStep()">Précédent</button>
+    <button *ngIf="step < 3" (click)="nextStep()">Suivant</button>
+    <button *ngIf="step === 3" (click)="validateAndSubmit()">Soumettre</button>
+  </div>
+</div>
+
+<!-- Confirmation Screen -->
+<div *ngIf="submitted && step === 4" class="confirmation">
+  <h1 class="mb-4">Votre demande a été soumise avec succès !</h1>
+  <p><strong>Type d’assistance:</strong> {{ assistanceType }}<span *ngIf="assistanceType === 'Autre'"> : {{
+      otherType }}</span></p>
+  <p *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'"><strong>Informations médicales:</strong> {{
+    medicalInfo }} </p>
+  <p><strong>Description:</strong> {{ description }}</p>
+  <p><strong>Urgence:</strong> {{ urgency }}</p>
+  <p><strong>Localisation:</strong> {{ location }}</p>
+  <p><strong>Numéro de Téléphone:</strong> {{ phone }}</p>
+  <p><strong>Email:</strong> {{ email }}</p>
+  <p class="mt-3">Notre équipe vous contactera sous peu. Merci de votre patience.</p>
+  <button class="mb-5" (click)="goHome()">Retour à l’accueil</button>
+</div>

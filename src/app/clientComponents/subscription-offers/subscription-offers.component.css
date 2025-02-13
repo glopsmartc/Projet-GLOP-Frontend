@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.body {
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 25px;
+  font-family: "Montserrat", sans-serif;
+}
+
+p {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.pricing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem;
+
+  .plan {
+    background-color: #fff;
+    padding: 2.5rem;
+    margin-block-end: 2.5rem;
+    width: 400px;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.3s;
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      margin-bottom: 1rem;
+      font-size: 30px;
+    }
+
+    ul.features {
+      list-style-type: none;
+      text-align: left;
+
+      li {
+        margin: 8px;
+
+        .fas {
+          margin-right: 4px;
+        }
+
+        .fa-check-circle {
+          color: #5b9a4e;
+        }
+
+        .fa-times-circle {
+          color: #eb4d4b;
+        }
+      }
+    }
+
+    button {
+      border: none;
+      width: 100%;
+      padding: 12px 35px;
+      margin-bottom: 20px;
+      background-color: #5b9a4e;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    &.popular {
+      border: 2px solid #5b9a4e;
+      position: relative;
+      transform: scale(1.08);
+
+      span {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #5b9a4e;
+        color: #fff;
+        padding: 4px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+      }
+    }
+
+    &.standard {
+      border: 2px solid #5b9a4e;
+      position: relative;
+      transform: scale(1.08);
+
+      span {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #5b9a4e;
+        color: #fff;
+        padding: 4px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+      }
+    }
+
+    &:hover {
+      box-shadow: 5px 7px 62px -20px rgb(50, 142, 0);
+    }
+  }
+}

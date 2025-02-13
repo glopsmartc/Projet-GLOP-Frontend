@@ -1,0 +1,34 @@
+.badge {
+  padding: 0.5em;
+  border-radius: 0.25em;
+}
+
+.status-en-attente {
+  background-color: #ffc107;
+  color: #343a40;
+}
+
+.status-en-cours {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.status-accepté {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.priority-urgent {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.priority-normal {
+  background-color: #ffc107;
+  color: #343a40;
+}
+
+.priority-faible {
+  background-color: #28a745;
+  color: #fff;
+}
