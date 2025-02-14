@@ -7,10 +7,10 @@
 
 <!-- Step 0: Contract Selection -->
 <div class="mb-5" *ngIf="step === 0">
-  <h2>Sélectionnez un contrat actif</h2>
   <div *ngIf="contractErrorMsg" class="error-message">
     {{ contractErrorMsg }}
   </div>
+  <h2 *ngIf="!contractErrorMsg">Sélectionnez un contrat actif</h2>
   <div *ngIf="hasActiveContracts()">
     <select [(ngModel)]="selectedContract" (change)="onContractSelect(selectedContract?.id)">
       <option [ngValue]="null">Sélectionnez un contrat</option>
@@ -130,7 +130,7 @@
   <div class="navigation">
     <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
     <button *ngIf="step > 0 && step < 4" (click)="previousStep()">Précédent</button>
-    <button *ngIf="step < 3" (click)="nextStep()">Suivant</button>
+    <button *ngIf="step < 3 && !contractErrorMsg" (click)="nextStep()">Suivant</button>
     <button *ngIf="step === 3" (click)="validateAndSubmit()">Soumettre</button>
   </div>
 </div>
