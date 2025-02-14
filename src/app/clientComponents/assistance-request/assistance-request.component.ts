@@ -80,7 +80,7 @@ export class AssistanceRequestComponent {
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des contrats:', error);
-      this.contractErrorMsg = 'Erreur lors de la récupération des contrats. Veuillez réessayer plus tard.';
+      this.contractErrorMsg = 'Vous n’avez aucun contrat actif. Veuillez souscrire à un contrat pour demander une assistance.';
       this.emptyFieldError = false;
     }
   }
