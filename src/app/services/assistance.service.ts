@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { AuthService } from './auth.service';
-
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 declare const window: any;
 
 @Injectable({
@@ -34,4 +36,24 @@ export class AssistanceService {
       };
     }
 
+    async submitDossierWithFiles(formData: FormData): Promise<any> {
+      try {
+    
+          console.log('Envoi de la requête pour créer la demande assistance :', formData);
+    
+          // Call the API to create the contract
+          const response = await axios.post(`${this.apiUrl}/create`, formData, {
+            headers: {
+              ...this.getAuthHeaders().headers,
+              Accept: 'application/json',
+            },
+          });
+    
+          console.log('Réponse du backend (demande créé) :', response.data);
+          return response.data; // Return the demande data
+        } catch (error) {
+          console.error('Erreur lors de la création de la demande ou de l\'upload du fichier :', error);
+          throw error; // Re-throw the error for further handling
+        }
+      }
 }
