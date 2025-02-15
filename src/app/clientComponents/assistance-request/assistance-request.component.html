@@ -14,7 +14,7 @@
   <div *ngIf="hasActiveContracts()">
     <select [(ngModel)]="selectedContract" (change)="onContractSelect(selectedContract?.id)">
       <option [ngValue]="null">Sélectionnez un contrat</option>
-      <option *ngFor="let contract of activeContracts" [ngValue]="contract">{{ contract.name }} ({{ contract.id }})</option>
+      <option *ngFor="let contract of activeContracts" [ngValue]="contract"> {{ contract.name }} ({{ contract.id }})</option>
     </select>
   </div>
 </div>
@@ -27,22 +27,20 @@
     <option *ngFor="let service of services" [value]="service">{{ service }}</option>
   </select>
 
-    <div *ngIf="assistanceType === 'Autre'">
-      <input type="text" [(ngModel)]="otherType" placeholder="Veuillez préciser votre demande" maxlength="62">
+  <div *ngIf="assistanceType === 'Conseils médicaux' || assistanceType === 'Pris en charge des frais médicaux' || assistanceType === 'Orientation vers des hôpitaux référencés'">
+    <h2 class="mt-3">Avez-vous des maladies chroniques ?</h2>
+    <label>
+      <input type="radio" [(ngModel)]="maladieChronique" name="maladieChronique" [value]="true"> Oui
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="maladieChronique" name="maladieChronique" [value]="false"> Non
+    </label>
+  </div>
 
-      <h2 class="mt-3">Avez-vous besoin d'une assistance médicale ?</h2>
-      <label>
-        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Oui"> Oui
-      </label>
-      <label>
-        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Non"> Non
-      </label>
-    </div>
-
-    <div *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'">
-      <h2>Informations médicales à transmettre au médecin :</h2>
-      <textarea [(ngModel)]="medicalInfo" placeholder="Décrivez les informations médicales pertinentes"></textarea>
-    </div>
+   <div *ngIf="maladieChronique">
+  <h2>Maladies chroniques :</h2>
+  <textarea [(ngModel)]="descriptionMaladie" placeholder="Décrivez vos maladies chroniques"></textarea>
+</div>
 
     <h2 class="mt-3">Urgence</h2>
     <label>
@@ -55,9 +53,10 @@
     <h2>Déscription</h2>
     <textarea [(ngModel)]="description" placeholder="Décrivez votre problème en détail"></textarea>
 
-    <h2>Joindre un document</h2>
-    <p>Veuillez télécharger PDFs ou images relatifs à votre demande.</p>
-
+    <h2>Joindre les documents</h2>
+    <p>Veuillez télécharger les PDFs ou images relatifs à votre demande.</p>
+    <p><strong>Note :</strong> Si votre demande concerne un <strong>accident</strong>, veuillez également joindre le <strong>constat amiable</strong>. Vous pouvez télécharger un modèle de constat amiable en cliquant <a href="/constat-amiable" target="_blank">ici</a>.</p>
+    
     <!-- Section fichiers -->
     <div class="file-uploads">
       <input type="file" (change)="onFileUpload($event)" accept="application/pdf,image/*" multiple>
@@ -122,8 +121,8 @@
   <!-- Step 4: Contact Information -->
   <div class="mb-5" *ngIf="step === 3">
     <h2>Informations de contact</h2>
-    <input type="tel" [(ngModel)]="phone" placeholder="Téléphone">
-    <input type="email" [(ngModel)]="email" placeholder="Email">
+    <input type="tel" placeholder="Tel (+33)" [(ngModel)]="phone" name="phone" required />
+    <input type="email" [(ngModel)]="email" placeholder="Email" required>
   </div>
 
   <!-- Navigation Buttons -->
@@ -140,8 +139,8 @@
   <h1 class="mb-4">Votre demande a été soumise avec succès !</h1>
   <p><strong>Type d’assistance:</strong> {{ assistanceType }}<span *ngIf="assistanceType === 'Autre'"> : {{
       otherType }}</span></p>
-  <p *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'"><strong>Informations médicales:</strong> {{
-    medicalInfo }} </p>
+  <p *ngIf="maladieChronique === true"><strong>Informations médicales:</strong> {{
+   description }} </p>
   <p><strong>Description:</strong> {{ description }}</p>
   <p><strong>Urgence:</strong> {{ urgency }}</p>
   <p><strong>Localisation:</strong> {{ location }}</p>
