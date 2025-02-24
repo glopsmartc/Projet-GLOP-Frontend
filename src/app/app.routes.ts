@@ -21,6 +21,7 @@ import { authGuard } from './guards/auth.guard';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AssistanceRequestComponent } from './clientComponents/assistance-request/assistance-request.component';
 import { AssistanceRequestListComponent } from './assistance-request-list/assistance-request-list.component';
+import { ClientListComponent } from './conseillerComponents/clients-list/clients-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'constat-amiable', component: ConstatAmiableComponent },
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: 'assistance-requests', component: AssistanceRequestListComponent },
+  { path: 'clients-list', component: ClientListComponent},
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
 ];

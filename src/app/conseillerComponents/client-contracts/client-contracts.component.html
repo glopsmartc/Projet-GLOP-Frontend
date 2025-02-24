@@ -1,6 +1,6 @@
 <div class="container my-4">
   <h1 class="text-center">Liste des Contrats Clients</h1>
-  <br><br>
+  <br>
 
   <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="text-center">
@@ -15,36 +15,45 @@
     {{ errorMessage }}
   </div>
 
-  <!-- Contracts Table -->
-  <table *ngIf="!isLoading && clients.length > 0" class="table table-striped mt-4">
-    <thead class="thead-dark">
-      <tr>
-        <th>Nom du Client</th>
-        <th>Prénom du Client</th>
-        <th>Téléphone</th>
-        <th>Email</th>
-        <th>Statut</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let client of clients; index as i">
-        <td>{{ client.clientNom }}</td>
-        <td>{{ client.clientPrenom }}</td>
-        <td>{{ client.telephone }}</td>
-        <td>{{ client.email }}</td>
-        <td>{{ client.statut }}</td>
-        <td>
-          <button class="btn btn-primary" (click)="onDownloadContract(client.id)">
-            Télécharger le PDF
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- Search Input -->
+  <input type="text" class="form-control mb-3" placeholder="Rechercher un client..." [(ngModel)]="searchText" />
 
   <!-- No Contracts Message -->
-  <div *ngIf="!isLoading && clients.length === 0" class="alert alert-info" role="alert">
+  <div *ngIf="!isLoading && groupedClients.length === 0" class="alert alert-info" role="alert">
     Aucun contrat trouvé.
+  </div>
+
+  <!-- Clients List -->
+  <div *ngIf="!isLoading && groupedClients.length > 0">
+    <div *ngFor="let client of filteredClients()" class="card mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>{{ client.nom }} {{ client.prenom }}</strong>
+        <button class="btn btn-link" (click)="client.showContracts = !client.showContracts">
+          {{ client.showContracts ? 'Masquer' : 'Voir les contrats' }}
+        </button>
+      </div>
+      <div *ngIf="client.showContracts" class="card-body">
+        <p><strong>Téléphone :</strong> {{ client.telephone }}</p>
+        <p><strong>Email :</strong> {{ client.email }}</p>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Statut</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let contract of client.contrats">
+              <td>{{ contract.statut }}</td>
+              <td>
+                <button class="btn btn-primary" (click)="onDownloadContract(contract.id)">
+                  Télécharger le PDF
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

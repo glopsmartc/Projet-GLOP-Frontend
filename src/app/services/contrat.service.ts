@@ -9,14 +9,25 @@ declare const window: any;
 })
 export class ContratService {
   private apiUrl: string;
+  private apiUrlUtilisateur: string;
 
   constructor(private authService: AuthService) {
     this.apiUrl = this.getApiUrl();
+    this.apiUrlUtilisateur = this.getApiUrlUtilisateur();
   }
 
   private getApiUrl(): string {
     if (typeof window !== 'undefined' && window?.config?.apiBaseUrlContrat) {
       return `${window.config.apiBaseUrlContrat}/api/contrat`;
+    } else {
+      console.warn('window.config is not available or window is undefined');
+      return '';
+    }
+  }
+
+  private getApiUrlUtilisateur(): string {
+    if (typeof window !== 'undefined' && window?.config?.apiBaseUrl) {
+      return `${window.config.apiBaseUrl}/clients`;
     } else {
       console.warn('window.config is not available or window is undefined');
       return '';
@@ -209,4 +220,14 @@ export class ContratService {
     }
   }
 
+  
+  async getAllClients(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrlUtilisateur}/`, this.getAuthHeaders());
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des clients:', error);
+      throw error;
+    }
+  }
 }
