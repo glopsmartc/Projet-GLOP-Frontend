@@ -25,7 +25,7 @@ export class AuthService {
       return `${window.config.apiBaseUrl}/auth`; // only access window.config if window is available
     }
     console.warn('window.config is not available');
-    return ''; 
+    return '';
   }
 
   public extractRoles(): void {
