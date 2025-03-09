@@ -18,7 +18,7 @@ export class PartenairesListComponent implements OnInit {
 
   isAdding: boolean = false;  // Affichage du formulaire d'ajout
   newPartenaire: any = {};  // Données du nouveau partenaire
-  
+
   partenaireEnCours: any = null;  // Partenaire en cours de modification
   isEditing: boolean = false;  // Affichage du formulaire d'édition
 
@@ -43,10 +43,15 @@ export class PartenairesListComponent implements OnInit {
 
   // Supprimer un partenaire
   async deletePartenaire(id: number) {
+    if (!id) {
+      console.error('Erreur: ID du partenaire est invalide:', id);
+      return;
+    }
+    console.log('ID du partenaire à supprimer:', id);
     if (confirm('Voulez-vous vraiment supprimer ce partenaire ?')) {
       try {
         await this.partenaireService.deletePartenaire(id);
-        this.partenaires = this.partenaires.filter(p => p.id !== id);  // Filtrer le partenaire supprimé
+        this.partenaires = this.partenaires.filter(p => p.idSousPartenaire !== id);
       } catch (error) {
         this.errorMessage = 'Erreur lors de la suppression du partenaire.';
       }
@@ -63,7 +68,7 @@ export class PartenairesListComponent implements OnInit {
   async savePartenaire() {
     if (this.partenaireEnCours) {
       try {
-        await this.partenaireService.updatePartenaire(this.partenaireEnCours.id, this.partenaireEnCours);
+        await this.partenaireService.updatePartenaire(this.partenaireEnCours.idSousPartenaire, this.partenaireEnCours);
         this.isEditing = false;
         this.partenaireEnCours = null;
         this.loadPartenaires();  // Rafraîchir la liste des partenaires

@@ -28,7 +28,6 @@ export class AssistanceService {
 
     private getAuthHeaders() {
       const token = this.authService.getToken();
-      console.log('Token utilisé pour l\'authentification:', token);
       return {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,9 +37,9 @@ export class AssistanceService {
 
     async submitDossierWithFiles(formData: FormData): Promise<any> {
       try {
-    
+
           console.log('Envoi de la requête pour créer la demande assistance :', formData);
-    
+
           // Call the API to create the contract
           const response = await axios.post(`${this.apiUrl}/create`, formData, {
             headers: {
@@ -48,7 +47,7 @@ export class AssistanceService {
               Accept: 'application/json',
             },
           });
-    
+
           console.log('Réponse du backend (demande créé) :', response.data);
           return response.data; // Return the demande data
         } catch (error) {

@@ -120,7 +120,7 @@ export class AssistanceRequestComponent {
   async getLocation() {
     this.isLocating = true;
     this.locationError = '';
-  
+
     try {
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simule un délai de chargement
       const result = await this.locationService.getCurrentLocation();
@@ -178,19 +178,19 @@ export class AssistanceRequestComponent {
       this.emptyFieldError = true;
     }
   }
-  
+
 
   submitRequestWithFiles() {
     const formData = new FormData();
-  
+
     this.pdfFiles.forEach((pdf) => {
       formData.append('pdfFiles', pdf.file, pdf.name);
     });
-  
+
     this.imageFiles.forEach((image) => {
       formData.append('imageFiles', image.file, image.name);
     });
-  
+
     const dossierData = {
       description: this.description,
       type: this.assistanceType,
@@ -202,19 +202,19 @@ export class AssistanceRequestComponent {
       numTel: this.phone,
       email: this.email,
     };
-  
+
     formData.append(
       'dossierData',
       new Blob([JSON.stringify(dossierData)], { type: 'application/json' })
     );
-  
+
     this.assistanceService
       .submitDossierWithFiles(formData)
       .then((response) => console.log('Dossier soumis avec succès avec fichiers:', response))
       .catch((error) =>
         console.error('Erreur lors de la soumission avec fichiers :', error)
       );
-  }  
+  }
 
   goHome() {
     this.step = 1;
@@ -223,13 +223,13 @@ export class AssistanceRequestComponent {
 
   onFileUpload(event: any) {
     const files = event.target.files;
-  
+
     for (const file of files) {
       if (file.size > this.MAX_FILE_SIZE) {
         alert(`Le fichier ${file.name} dépasse la taille limite de 5 Mo.`);
         continue;
       }
-  
+
       if (file.type === 'application/pdf') {
         const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
         this.pdfFiles.push({
@@ -283,7 +283,7 @@ export class AssistanceRequestComponent {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   }
-  
+
 
   validateStep(): boolean {
     switch (this.step) {
