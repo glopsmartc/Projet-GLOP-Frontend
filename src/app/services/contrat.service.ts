@@ -36,7 +36,6 @@ export class ContratService {
 
   private getAuthHeaders() {
     const token = this.authService.getToken();
-    console.log('Token utilisé pour l\'authentification:', token);
     return {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -220,7 +219,7 @@ export class ContratService {
     }
   }
 
-  
+
   async getAllClients(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrlUtilisateur}/`, this.getAuthHeaders());

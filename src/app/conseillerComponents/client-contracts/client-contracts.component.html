@@ -44,9 +44,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let contract of client.contrats">
-              <td>{{ contract.statut }}</td>
+                <td>{{ contract.statut === 'actif' ? 'Actif' : contract.statut }}</td>
               <td>
-                <button class="btn btn-primary" (click)="onDownloadContract(contract.id)">
+                <button class="btn btn-primary" style="padding: 3px 15px;" (click)="onDownloadContract(contract.id)">
                   Télécharger le PDF
                 </button>
               </td>

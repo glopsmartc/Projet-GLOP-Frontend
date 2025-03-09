@@ -1,8 +1,7 @@
 <div class="assistance-request mt-4">
   <div *ngIf="!submitted">
     <h1>Soumettre une demande d’assistance</h1>
-    <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande
-      rapidement.</p>
+    <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande rapidement.</p>
   </div>
 
 <!-- Step 0: Contract Selection -->
@@ -56,7 +55,7 @@
     <h2>Joindre les documents</h2>
     <p>Veuillez télécharger les PDFs ou images relatifs à votre demande.</p>
     <p><strong>Note :</strong> Si votre demande concerne un <strong>accident</strong>, veuillez également joindre le <strong>constat amiable</strong>. Vous pouvez télécharger un modèle de constat amiable en cliquant <a href="/constat-amiable" target="_blank">ici</a>.</p>
-    
+
     <!-- Section fichiers -->
     <div class="file-uploads">
       <input type="file" (change)="onFileUpload($event)" accept="application/pdf,image/*" multiple>

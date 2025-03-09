@@ -20,8 +20,9 @@ import { authGuard } from './guards/auth.guard';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { AssistanceRequestComponent } from './clientComponents/assistance-request/assistance-request.component';
-import { AssistanceRequestListComponent } from './assistance-request-list/assistance-request-list.component';
+import { AssistanceRequestListComponent } from './clientComponents/assistance-request-list/assistance-request-list.component';
 import { ClientListComponent } from './conseillerComponents/clients-list/clients-list.component';
+import { PartenairesListComponent } from './conseillerComponents/partenaires-list/partenaires-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -39,6 +40,7 @@ export const routes: Routes = [
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: 'assistance-requests', component: AssistanceRequestListComponent },
   { path: 'clients-list', component: ClientListComponent},
+  { path : 'partners-list', component: PartenairesListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
 ];

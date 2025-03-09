@@ -1,0 +1,146 @@
+<div class="container my-4">
+  <h1 class="text-center">Liste des Partenaires</h1>
+
+  <!-- Button to add a new partner -->
+  <button (click)="startAdding()" class="btn btn-outline-success mt-4 mb-3"
+    style="float: right; background-color: #4A803F; color: white;">
+    <i class="fas fa-plus-circle"></i> Ajouter un partenaire
+  </button>
+
+  <!-- Search field -->
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un partenaire...">
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p>Chargement des partenaires...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Partners table -->
+  <div class="table-responsive">
+    <table *ngIf="!isLoading && filteredPartenaires.length > 0" class="table table-striped mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>Adresse</th>
+          <th>Zone</th>
+          <th>Nom d'entreprise</th>
+          <th>Services</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let partenaire of filteredPartenaires">
+          <td>{{ partenaire.nom }}</td>
+          <td>{{ partenaire.prenom }}</td>
+          <td>{{ partenaire.numTel }}</td>
+          <td>{{ partenaire.email }}</td>
+          <td>{{ partenaire.adresse }}</td>
+          <td>{{ partenaire.zoneGeographique }}</td>
+          <td>{{ partenaire.nomEntreprise }}</td>
+          <td>{{ partenaire.servicesProposes }}</td>
+          <td>
+            <button (click)="editPartenaire(partenaire)" class="btn btn-sm me-2" style="background-color: #4A803F;">✏️
+              Modifier</button>
+            <button (click)="deletePartenaire(partenaire.idSousPartenaire)" class="btn btn-sm"
+              style="background-color: #cd7425;">🗑️ Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Message if no partners found -->
+  <div *ngIf="!isLoading && filteredPartenaires.length === 0" class="alert alert-info" role="alert">
+    Aucun partenaire trouvé.
+  </div>
+
+  <div class="modal" [class.show]="isAdding || isEditing" [style.display]="(isAdding || isEditing) ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ isAdding ? 'Ajouter un partenaire' : 'Modifier un partenaire' }}</h5>
+          <button type="button" class="btn-close" (click)="isAdding ? cancelAdd() : cancelEdit()"></button>
+        </div>
+
+        <!-- Form for adding -->
+        <div class="modal-body" *ngIf="isAdding">
+          <label>Nom :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.nom">
+
+          <label>Prénom :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.prenom">
+
+          <!-- Other fields for adding -->
+          <label>Téléphone :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.numTel">
+
+          <label>Email :</label>
+          <input type="email" class="form-control" [(ngModel)]="newPartenaire.email">
+
+          <label>Adresse :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.adresse">
+
+          <label>Zone géographique :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.zoneGeographique">
+
+          <label>Nom d'entreprise :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.nomEntreprise">
+
+          <label>Services proposés :</label>
+          <input type="text" class="form-control" [(ngModel)]="newPartenaire.servicesProposes">
+        </div>
+
+        <!-- Form for editing -->
+        <div class="modal-body" *ngIf="isEditing">
+          <label>Nom :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.nom">
+
+          <label>Prénom :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.prenom">
+
+          <!-- Other fields for editing -->
+          <label>Téléphone :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.numTel">
+
+          <label>Email :</label>
+          <input type="email" class="form-control" [(ngModel)]="partenaireEnCours.email">
+
+          <label>Adresse :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.adresse">
+
+          <label>Zone géographique :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.zoneGeographique">
+
+          <label>Nom d'entreprise :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.nomEntreprise">
+
+          <label>Services proposés :</label>
+          <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.servicesProposes">
+        </div>
+
+        <div class="modal-footer">
+          <button *ngIf="isAdding" (click)="addPartenaire()" class="btn btn-primary"
+            style="background-color:#4A803F; border-color: #4A803F; padding: 4px 15px;">Sauvegarder</button>
+          <button *ngIf="isEditing" (click)="savePartenaire()" class="btn btn-primary"
+            style="padding: 4px 15px;">Sauvegarder</button>
+          <button (click)="isAdding ? cancelAdd() : cancelEdit()" class="btn btn-secondary"
+            style="padding: 4px 15px;">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isAdding || isEditing"></div>
+</div>
