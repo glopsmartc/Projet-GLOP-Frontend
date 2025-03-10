@@ -94,7 +94,7 @@
   <!-- Step 2: Location -->
   <div class="mb-5" *ngIf="step === 2">
     <div class="location-section">
-      <h2>Localisation</h2>
+      <h2 class="mb-3">Localisation</h2>
 
       <div *ngIf="isLocating" class="loading">
         Récupération de ma position...
@@ -108,11 +108,12 @@
         <p>📍 {{ location }}</p>
       </div>
 
-      <button (click)="getLocation()" [disabled]="isLocating" class="location-button bg-transparent"
-        style="color: green;"> Obtenir ma position </button>
+      <button (click)="getLocation()" [disabled]="isLocating" class="location-button bg-transparent" style="color: green; padding:0; margin: 10px; text-decoration: underline;">
+        Obtenir ma position
+      </button>
 
       <div class="manual-input">
-        <input type="text" [(ngModel)]="manualLocation" placeholder="Où avez-vous besoin d’assistance ?">
+        <input type="text" [(ngModel)]="manualLocation" placeholder="Où avez-vous besoin d'assistance ?" />
       </div>
     </div>
   </div>
@@ -142,9 +143,9 @@
    description }} </p>
   <p><strong>Description:</strong> {{ description }}</p>
   <p><strong>Urgence:</strong> {{ urgency }}</p>
-  <p><strong>Localisation:</strong> {{ location }}</p>
+  <p><strong>Localisation:</strong> {{ manualLocation }}</p>
   <p><strong>Numéro de Téléphone:</strong> {{ phone }}</p>
   <p><strong>Email:</strong> {{ email }}</p>
   <p class="mt-3">Notre équipe vous contactera sous peu. Merci de votre patience.</p>
-  <button class="mb-5" (click)="goHome()">Retour à l’accueil</button>
+  <a class="my-5" style="color: #4a803f;" routerLink="/assistance-request">Retour à l’accueil</a>
 </div>

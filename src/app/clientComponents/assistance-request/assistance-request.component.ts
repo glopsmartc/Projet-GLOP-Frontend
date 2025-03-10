@@ -5,11 +5,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LocationService } from '../../services/location.service';
 import { ContratService } from '../../services/contrat.service'; // Import ContratService
 import { AssistanceService } from '../../services/assistance.service';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-assistance-request',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './assistance-request.component.html',
   styleUrl: './assistance-request.component.css',
 })
@@ -114,9 +116,6 @@ export class AssistanceRequestComponent {
     }
   }
 
-
-
-
   async getLocation() {
     this.isLocating = true;
     this.locationError = '';
@@ -125,6 +124,7 @@ export class AssistanceRequestComponent {
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simule un délai de chargement
       const result = await this.locationService.getCurrentLocation();
       this.location = result.address;
+      this.manualLocation = this.location; // Update manualLocation with the obtained location
     } catch (error) {
       if (error instanceof GeolocationPositionError) {
         switch (error.code) {
@@ -170,17 +170,25 @@ export class AssistanceRequestComponent {
     this.emptyFieldError = false;
   }
 
-  validateAndSubmit() {
+  async validateAndSubmit() {
     if (this.validateStep()) {
       this.emptyFieldError = false;
-      this.submitRequestWithFiles();
+      try {
+        await this.submitRequestWithFiles(); // Make sure this returns a Promise
+        this.step = 4;
+        this.submitted = true;
+      } catch (error) {
+        console.error('Error submitting request:', error);
+        this.errorMessage = 'Une erreur est survenue lors de la soumission. Veuillez réessayer.';
+        this.emptyFieldError = true;
+      }
     } else {
       this.emptyFieldError = true;
     }
   }
 
 
-  submitRequestWithFiles() {
+  submitRequestWithFiles(): Promise<any> {
     const formData = new FormData();
 
     this.pdfFiles.forEach((pdf) => {
@@ -208,17 +216,15 @@ export class AssistanceRequestComponent {
       new Blob([JSON.stringify(dossierData)], { type: 'application/json' })
     );
 
-    this.assistanceService
-      .submitDossierWithFiles(formData)
-      .then((response) => console.log('Dossier soumis avec succès avec fichiers:', response))
-      .catch((error) =>
-        console.error('Erreur lors de la soumission avec fichiers :', error)
-      );
-  }
-
-  goHome() {
-    this.step = 1;
-    this.submitted = false;
+    return this.assistanceService.submitDossierWithFiles(formData)
+      .then((response) => {
+        console.log('Dossier soumis avec succès avec fichiers:', response);
+        return response;
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la soumission avec fichiers :', error);
+        throw error;
+      });
   }
 
   onFileUpload(event: any) {
