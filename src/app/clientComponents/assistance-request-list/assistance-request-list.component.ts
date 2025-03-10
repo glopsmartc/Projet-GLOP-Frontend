@@ -1,35 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AssistanceService } from '../services/assistance.service';
 
 @Component({
   selector: 'app-assistance-request-list',
   templateUrl: './assistance-request-list.component.html',
   styleUrls: ['./assistance-request-list.component.css'],
-  standalone: true, // Si ton projet utilise des standalone components
-  imports: [CommonModule] // Import nécessaire pour les pipes comme 'date'
+  standalone: true,
+  imports: [CommonModule]
 })
-export class AssistanceRequestListComponent {
-  // Liste des demandes d'assistance simulée
-  requests = [
-    {
-      libelle: 'Problème de connexion',
-      statut: 'En attente',
-      priorite: 'Urgent',
-      dateDemande: new Date('2023-02-01T10:15:00')
-    },
-    {
-      libelle: 'Erreur serveur',
-      statut: 'En cours',
-      priorite: 'Normal',
-      dateDemande: new Date('2023-02-02T12:45:00')
-    },
-    {
-      libelle: 'Réinitialisation de mot de passe',
-      statut: 'Accepté',
-      priorite: 'Faible',
-      dateDemande: new Date('2023-02-03T14:30:00')
+export class AssistanceRequestListComponent implements OnInit {
+  requests: any[] = []; // Stocke les demandes d'assistance
+  loading: boolean = true; // Variable pour afficher un chargement
+  errorMessage: string | null = null; // Stocke un message d'erreur si besoin
+
+  constructor(private assistanceService: AssistanceService) {}
+
+  ngOnInit() {
+    this.loadRequests(); // Charge les demandes au démarrage
+  }
+
+  async loadRequests() {
+    try {
+      this.requests = await this.assistanceService.getAllRequests();
+      this.loading = false;
+    } catch (error) {
+      this.errorMessage = 'Impossible de charger les demandes d\'assistance.';
+      this.loading = false;
     }
-  ];
+  }
 
   // Méthode pour définir la classe CSS du statut
   getStatusClass(statut: string): string {

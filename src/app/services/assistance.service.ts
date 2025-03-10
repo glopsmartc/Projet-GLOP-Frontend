@@ -10,6 +10,17 @@ declare const window: any;
   providedIn: 'root'
 })
 export class AssistanceService {
+  //a coder
+  async getAllRequests(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
+      console.log('Données récupérées depuis le backend:', response.data);
+      return response.data; // Retourne la liste des dossiers
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes:', error);
+      throw error; // Laissez l'erreur remonter pour être gérée dans le composant
+    }
+  }
 
    private apiUrl: string;
 
