@@ -1,7 +1,10 @@
-<h2 class="text-center my-4">Informations du souscripteur et des accompagnants </h2>
+<!-- Première Page : Informations du souscripteur et des accompagnants -->
+<div *ngIf="+currentStep === 1">
+
+<h2 class="h2-custom">Informations du souscripteur et des accompagnants </h2>
 
 <div class="container">
-  <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()" class="p-4 shadow-lg rounded bg-white">
+  <form [formGroup]="detailsForm" (ngSubmit)="goToNextStep()" class="p-4 shadow-lg rounded bg-white">
 
     <div class="form-group row align-items-center">
       <label class="col-sm-5 col-form-label">Date de naissance du souscripteur :</label>
@@ -56,7 +59,73 @@
     </div>
 
     <div class="text-center mt-3">
-      <button type="submit" class="mt-2">Estimer le prix</button>
+      <button type="submit" class="mt-2"> Suivant </button>
+      <!-- <button type="submit" class="mt-2">Estimer le prix</button> -->
     </div>
   </form>
+</div>
+</div>
+
+
+
+ <!-- Deuxième Page : Calcul des émissions de CO2 -->
+<div *ngIf="+currentStep === 2">
+  <h2 class="h2-custom">Estimer votre émission de CO2</h2>
+  <div class="container">
+
+  <form (ngSubmit)="calculateEmissions()" class="p-3 border rounded shadow-sm">
+    <div class="form-group mb-3">
+      <label for="km" class="form-label fw-bold">{{ labelDistance }}</label>
+      <input type="number" class="form-control" id="km" [(ngModel)]="km" name="km" placeholder="Entrez la distance parcourue" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="transports" class="form-label fw-bold">Type de transport</label>
+      <select class="form-select" id="transports" [(ngModel)]="selectedTransport" name="transports" required>
+        <option value="" disabled selected>Sélectionnez un type de transport</option>
+        <option [value]="'voiture'">Voiture</option>
+        <option *ngFor="let transport of transports" [value]="transport.id">{{ transport.name }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="selectedTransport === 'voiture'" class="form-group mb-3">
+      <label for="vehicleMake" class="form-label fw-bold">Marque de la voiture</label>
+      <select class="form-select" id="vehicleMake" [(ngModel)]="vehicleMake" name="vehicleMake" (ngModelChange)="onMakeSelected($event)" required>
+        <option value="">Sélectionnez une marque</option>
+        <option *ngFor="let make of vehicleMakes" [value]="make">{{ make }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="selectedTransport === 'voiture'" class="form-group mb-3">
+      <label for="vehicleModel" class="form-label fw-bold">Modèle de la voiture</label>
+      <select class="form-select" id="vehicleModel" [(ngModel)]="vehicleModel" name="vehicleModel" required>
+        <option value="">Sélectionnez un modèle</option>
+        <option *ngFor="let model of vehicleModels" [value]="model">{{ model }}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-custom">Calculer</button>
+
+
+  <div *ngIf="emissions.length > 0" class="mt-3">
+    <p class="form-label fw-bold">Résultats</p>
+    <ul class="list-group mt-3">
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let emission of emissions">
+        <span style="color: #363636; font-weight: bold;">{{ emission.name }}</span>
+        <span class="badge rounded-pill" style="color: #fff; background-color: #cd7425;">{{ emission.value }}kg CO2</span>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+  </div>
+
+</form>
+
+<div class="text-center mt-3">
+  <button type="button" class="mt-2" (click)="onSubmit()">Estimer le prix</button>
+</div>
+
+</div>
 </div>
