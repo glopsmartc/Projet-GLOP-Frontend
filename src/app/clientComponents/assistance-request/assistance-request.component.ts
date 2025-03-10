@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LocationService } from '../../services/location.service';
 import { ContratService } from '../../services/contrat.service'; // Import ContratService
+import { AssistanceService } from '../../services/assistance.service';
 
 @Component({
   selector: 'app-assistance-request',
@@ -15,8 +16,8 @@ import { ContratService } from '../../services/contrat.service'; // Import Contr
 export class AssistanceRequestComponent {
   step: number = 0;
   assistanceType: string = '';
-  medicalAssistance: string = '';
-  medicalInfo: string = '';
+  maladieChronique: boolean = false;
+  descriptionMaladie: string = '';
   urgency: string = '';
   location: string = '';
   useCurrentLocation: boolean = false;
@@ -54,7 +55,8 @@ export class AssistanceRequestComponent {
   constructor(
     private readonly sanitizer: DomSanitizer,
     private readonly locationService: LocationService,
-    private readonly contratService: ContratService
+    private readonly contratService: ContratService,
+    private readonly assistanceService: AssistanceService,
   ) { }
 
   async ngOnInit() {
@@ -120,11 +122,27 @@ export class AssistanceRequestComponent {
     this.locationError = '';
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simule un délai de chargement
       const result = await this.locationService.getCurrentLocation();
       this.location = result.address;
     } catch (error) {
-      this.locationError = error instanceof Error ? error.message : 'Erreur de localisation';
+      if (error instanceof GeolocationPositionError) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            this.locationError = 'La localisation a été refusée. Veuillez autoriser l’accès à votre position.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            this.locationError = 'La localisation est indisponible. Veuillez vérifier votre connexion.';
+            break;
+          case error.TIMEOUT:
+            this.locationError = 'Le délai de localisation a expiré. Veuillez réessayer.';
+            break;
+          default:
+            this.locationError = 'Erreur de localisation inconnue.';
+        }
+      } else {
+        this.locationError = 'Erreur de localisation. Veuillez réessayer.';
+      }
     } finally {
       this.isLocating = false;
     }
@@ -155,35 +173,53 @@ export class AssistanceRequestComponent {
   validateAndSubmit() {
     if (this.validateStep()) {
       this.emptyFieldError = false;
-      this.submitRequest();
+      this.submitRequestWithFiles();
     } else {
       this.emptyFieldError = true;
     }
   }
 
-  submitRequest() {
-    const requestData = {
-      assistanceType: this.assistanceType,
-      urgency: this.urgency,
-      location: this.location,
+
+  submitRequestWithFiles() {
+    const formData = new FormData();
+
+    this.pdfFiles.forEach((pdf) => {
+      formData.append('pdfFiles', pdf.file, pdf.name);
+    });
+
+    this.imageFiles.forEach((image) => {
+      formData.append('imageFiles', image.file, image.name);
+    });
+
+    const dossierData = {
       description: this.description,
-      medicalAssistance: this.medicalAssistance,
-      medicalInfo: this.medicalInfo,
-      phone: this.phone,
+      type: this.assistanceType,
+      idContrat: this.selectedContract?.id,
+      maladieChronique: this.maladieChronique,
+      descriptionMaladie: this.descriptionMaladie,
+      positionActuelle: this.location || this.manualLocation,
+      priorite: this.urgency,
+      numTel: this.phone,
       email: this.email,
-      otherType: this.assistanceType === 'Autre' ? this.otherType : null,
-      pdfFile: this.pdfFile,
     };
-    console.log('Request Submitted:', requestData);
-    this.submitted = true;
-    this.step++;
+
+    formData.append(
+      'dossierData',
+      new Blob([JSON.stringify(dossierData)], { type: 'application/json' })
+    );
+
+    this.assistanceService
+      .submitDossierWithFiles(formData)
+      .then((response) => console.log('Dossier soumis avec succès avec fichiers:', response))
+      .catch((error) =>
+        console.error('Erreur lors de la soumission avec fichiers :', error)
+      );
   }
 
   goHome() {
     this.step = 1;
     this.submitted = false;
   }
-
 
   onFileUpload(event: any) {
     const files = event.target.files;
@@ -213,6 +249,8 @@ export class AssistanceRequestComponent {
           this.showImage.push(false);
         };
         reader.readAsDataURL(file);
+      } else {
+        alert(`Le fichier ${file.name} n'est pas un PDF ou une image valide.`);
       }
     }
     console.log('Uploaded Files:', files);
@@ -246,28 +284,38 @@ export class AssistanceRequestComponent {
     return regex.test(email);
   }
 
+
   validateStep(): boolean {
     switch (this.step) {
       case 0:
         if (!this.selectedContract) {
+          this.errorMessage = 'Veuillez sélectionner un contrat pour continuer.';
           return false;
         }
         return true;
       case 1:
-        return (
-          !!this.assistanceType &&
-          !!this.urgency &&
-          !!this.description &&
-          (this.assistanceType !== 'Autre' || !!this.otherType) &&
-          (this.assistanceType !== 'Autre' || !!this.medicalAssistance) &&
-          (this.medicalAssistance !== 'Oui' || !!this.medicalInfo) &&
-          (this.assistanceType !== 'Medicale' || !!this.medicalInfo)
-        );
+        if (!this.assistanceType || !this.urgency || !this.description) {
+          this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
+          return false;
+        }
+        if (this.assistanceType === 'Autre' && !this.otherType) {
+          this.errorMessage = 'Veuillez spécifier le type d’assistance.';
+          return false;
+        }
+        if (this.maladieChronique && !this.descriptionMaladie) {
+          this.errorMessage = 'Veuillez décrire vos maladies chroniques.';
+          return false;
+        }
+        return true;
       case 2:
-        return !!this.location;
+        if (!this.location && !this.manualLocation) {
+          this.errorMessage = 'Veuillez fournir une localisation.';
+          return false;
+        }
+        return true;
       case 3:
         if (!this.phone) {
-          this.errorMessage = 'Veuillez entrer un numéro de téléphone.';
+          this.errorMessage = 'Veuillez entrer un numéro de téléphone valide.';
           return false;
         }
         if (!this.email || !this.validateEmail(this.email)) {
@@ -279,5 +327,4 @@ export class AssistanceRequestComponent {
         return false;
     }
   }
-
 }

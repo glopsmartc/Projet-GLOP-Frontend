@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { AuthService } from './auth.service';
-
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 declare const window: any;
 
 @Injectable({
@@ -37,7 +39,6 @@ export class AssistanceService {
 
     private getAuthHeaders() {
       const token = this.authService.getToken();
-      console.log('Token utilisé pour l\'authentification:', token);
       return {
         headers: {
           Authorization: `Bearer ${token}`,
