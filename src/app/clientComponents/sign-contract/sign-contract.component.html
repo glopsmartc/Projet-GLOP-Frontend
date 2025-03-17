@@ -66,11 +66,6 @@
 </div>
 
 <div class="text-center mt-4">
-  <label class="carbon-offset-checkbox">
-    <input type="checkbox" [(ngModel)]="carbonOffset" (change)="updatePrice()" />
-    Je souhaite compenser mes émissions de carbone <strong>(+5%)</strong> en faisant un don pour un projet de reforestation.
-    <a href="javascript:void(0);" (click)="openReforestationDialog()">En savoir plus</a>
-  </label>
   <p ><strong class="final-price">Prix final: {{ finalPrice.toFixed(2) }} €</strong></p>
 </div>
 
