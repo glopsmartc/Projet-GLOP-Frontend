@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssistanceService } from '../services/assistance.service';
+import { AssistanceService } from '../../services/assistance.service';
 
 @Component({
   selector: 'app-assistance-request-list',
@@ -10,14 +10,16 @@ import { AssistanceService } from '../services/assistance.service';
   imports: [CommonModule]
 })
 export class AssistanceRequestListComponent implements OnInit {
-  requests: any[] = []; // Stocke les demandes d'assistance
-  loading: boolean = true; // Variable pour afficher un chargement
-  errorMessage: string | null = null; // Stocke un message d'erreur si besoin
+  requests: any[] = []; // Liste des demandes d'assistance
+  loading: boolean = true; // Indicateur de chargement
+  errorMessage: string | null = null; // Gestion des erreurs
+  selectedRequest: any | null = null; // Stocke la demande sélectionnée
+  documents: any[] = []; // Liste des fichiers joints
 
   constructor(private assistanceService: AssistanceService) {}
 
   ngOnInit() {
-    this.loadRequests(); // Charge les demandes au démarrage
+    this.loadRequests();
   }
 
   async loadRequests() {
@@ -30,13 +32,23 @@ export class AssistanceRequestListComponent implements OnInit {
     }
   }
 
-  // Méthode pour définir la classe CSS du statut
-  getStatusClass(statut: string): string {
-    return `badge status-${statut.toLowerCase().replace(' ', '-')}`;
+  async openDetails(request: any) {
+    this.selectedRequest = request;
+    this.documents = await this.assistanceService.getDocumentsForRequest(request.id);
   }
 
-  // Méthode pour définir la classe CSS de la priorité
+  closeDetails() {
+    this.selectedRequest = null;
+    this.documents = [];
+  }
+
+  getStatusClass(statut: string): string {
+    if (!statut) return '';
+    return `badge status-${statut.toLowerCase().replace(/\s+/g, '-')}`;
+  }
+
   getPriorityClass(priorite: string): string {
-    return `badge priority-${priorite.toLowerCase()}`;
+    if (!priorite) return '';
+    return `badge priority-${priorite.toLowerCase().replace(/\s+/g, '-')}`;
   }
 }
