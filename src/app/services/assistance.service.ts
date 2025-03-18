@@ -10,7 +10,6 @@ declare const window: any;
   providedIn: 'root'
 })
 export class AssistanceService {
-  //a coder
   async getAllRequests(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
@@ -18,7 +17,7 @@ export class AssistanceService {
       return response.data; // Retourne la liste des dossiers
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes:', error);
-      throw error; // Laissez l'erreur remonter pour être gérée dans le composant
+      throw error; 
     }
   }
 
@@ -60,7 +59,7 @@ export class AssistanceService {
           });
 
           console.log('Réponse du backend (demande créé) :', response.data);
-          return response.data; // Return the demande data
+          return response.data; 
         } catch (error) {
           console.error('Erreur lors de la création de la demande ou de l\'upload du fichier :', error);
           throw error; // Re-throw the error for further handling

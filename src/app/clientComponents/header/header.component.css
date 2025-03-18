@@ -26,6 +26,13 @@
 
 .navbar-nav .nav-link:hover, .dropdown-item:hover, .dropdown-item:focus {
   color: #cd7425;
+}
+
+.btn-customer:hover {
+  background-color: #dd873c;
+}
+
+.dropdown-item:focus {
   background-color: transparent;
 }
 

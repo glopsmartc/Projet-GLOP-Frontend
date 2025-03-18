@@ -1,9 +1,68 @@
 <ng-container *ngIf="isAuthenticated; else publicLayout">
 
-    <ng-container *ngIf="isClient; else conseillerTemplate">
+    <ng-container *ngIf="isClient; else otherRolesTemplate">
         <app-header></app-header>
         <router-outlet></router-outlet>
     </ng-container>
+
+    <ng-template #otherRolesTemplate>
+        <ng-container *ngIf="isLogisticien; else conseillerTemplate">
+            <div class="wrapper">
+
+                <aside id="sidebar">
+                    <div class="d-flex">
+                        <button class="toggle-btn" type="button">
+                            <span class="navbar navbar-toggler-icon"></span>
+                        </button>
+                        <div class="sidebar-logo">
+                            <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;">
+                            <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
+                        </div>
+                    </div>
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" routerLink="/assistance-requests">
+                                <i class="fas fa-headset"></i>
+                                <span>Demandes d'assistance</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" routerLink="/sub-partners">
+                                <i class="fas fa-handshake"></i>
+                                <span>Sous-partenaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="sidebar-footer">
+                        <!-- Notification Button -->
+                        <div class="notification-container">
+                          <button class="notification-btn" (click)="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
+                          </button>
+                          <div class="notification-dropdown" *ngIf="showNotifications">
+                            <p *ngIf="notifications.length === 0">Aucune notification</p>
+                            <ul>
+                              <li *ngFor="let notif of notifications">
+                                {{ notif.message }}
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <a href="" class="sidebar-link" (click)="onLogout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>                    
+                </aside>
+
+                <div class="main p-3">
+                    <router-outlet></router-outlet>
+                </div>
+
+            </div>
+        </ng-container>
+    </ng-template>
 
     <ng-template #conseillerTemplate>
         <div class="wrapper">
@@ -37,56 +96,12 @@
                             <span>Liste des clients</span>
                         </a>
                     </li>
-                    <!--<li class="sidebar-item">
-                        <a href="" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                            data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Auth</span>
-                        </a>
-                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="" class="sidebar-link">Login</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="" class="sidebar-link">Register</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                            data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                            <i class="fas fa-layer-group"></i>
-                            <span>Multi Level</span>
-                        </a>
-                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="" class="sidebar-link collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
-                                    Two Links
-                                </a>
-                                <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
-                                    <li class="sidebar-item">
-                                        <a href="" class="sidebar-link">Link 1</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="" class="sidebar-link">Link 2</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>-->
                     <li class="sidebar-item">
                         <a routerLink="partners-list" class="sidebar-link">
                             <i class="fas fa-handshake"></i>
                             <span>Partenaires</span>
                         </a>
                     </li>
-                    <!-- <li class="sidebar-item">
-                        <a href="" class="sidebar-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Setting</span>
-                        </a>
-                    </li> -->
                 </ul>
                 <div class="sidebar-footer">
                     <a href="" class="sidebar-link" (click)="onLogout()">
