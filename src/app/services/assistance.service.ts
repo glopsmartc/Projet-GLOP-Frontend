@@ -65,4 +65,16 @@ export class AssistanceService {
           throw error; // Re-throw the error for further handling
         }
       }
+
+      async getDocumentsForRequest(dossierId: number): Promise<any[]> {
+        try {
+          const response = await axios.get(`${this.apiUrl}/dossierDocuments/${dossierId}`, this.getAuthHeaders());
+          console.log('Documents récupérés pour le dossier:', dossierId, response.data);
+          return response.data; // Retourne la liste des documents liés à la demande
+        } catch (error) {
+          console.error("Erreur lors de la récupération des documents:", error);
+          return []; // Retourne un tableau vide en cas d'erreur
+        }
+      }
+
 }
