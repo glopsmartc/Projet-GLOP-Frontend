@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContratService } from '../../services/contrat.service';
 import { EmissionCo2Service } from '../../services/emission-co2.service';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ReforestationDialogComponent } from '../../modalDialogs/reforestation-dialog/reforestation-dialog.component';
 
 @Component({
   selector: 'app-subscription-form-second-page',
@@ -48,13 +50,16 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
   ];
   emissions: any[] = [];
   errorMessage: string = '';
+  carbonOffset: boolean = false;
+  isDisabled = true;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private contratService: ContratService,
-    private emissionCo2Service: EmissionCo2Service
+    private emissionCo2Service: EmissionCo2Service,
+    private dialog: MatDialog
   ) {
     this.accompagnants = this.fb.array([]); // Initialisation ici
     this.detailsForm = this.fb.group({
@@ -123,6 +128,9 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
       this.dureeContrat = params['dureeContrat'] || '1_voyage';
       this.updateLabel();
     });
+
+    // Supprimer l'ancienne valeur des émissions stockées
+    localStorage.removeItem('carbonEmissions');
   }
 
   updateLabel() {
@@ -135,7 +143,6 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
     };
     this.labelDistance = labels[this.dureeContrat] || 'Distance parcourue approximative (km)';
   }
-
 
   // Charger la liste des marques
   loadVehicleMakes(): void {
@@ -209,6 +216,37 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
       });
     }
   }
+
+  openReforestationDialog(): void {
+      this.dialog.open(ReforestationDialogComponent, {
+        width: '80%',
+        height: '60%',
+      });
+    }
+
+  saveCarbonOffsetPreference() {
+    // enregistre la valeur du checkbox dans le localStorage
+    localStorage.setItem('carbonOffset', String(this.carbonOffset));
+    console.log('this is the checkboxresult avant l"envoie', this.carbonOffset);
+
+    // enregistre les émissions dans le localStorage
+  if (this.emissions.length > 0) {
+    // Si les émissions existent, enregistrer la première émission (ou une autre logique si vous avez plusieurs émissions)
+    const emissionsValue = this.emissions.map(emission => emission.value);
+    localStorage.setItem('carbonEmissions', JSON.stringify(emissionsValue)); // Stocke uniquement les valeurs des émissions
+    console.log('Emissions sauvegardées dans localStorage:', emissionsValue);
+  } else {
+    console.warn('Aucune émission trouvée pour être enregistrée');
+  }
+  }
+
+  recalculate() {
+    this.isDisabled = false; // Réactive les éléments
+  }
+  onTransportChange() {
+    this.isDisabled = true;  // Grise les éléments (checkbox et texte)
+  }
+
 
   async onSubmit() {
     console.log(this.detailsForm.value); // Affiche les valeurs du formulaire
