@@ -51,6 +51,7 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
   emissions: any[] = [];
   errorMessage: string = '';
   carbonOffset: boolean = false;
+  isDisabled = true;
 
   constructor(
     private fb: FormBuilder,
@@ -127,6 +128,9 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
       this.dureeContrat = params['dureeContrat'] || '1_voyage';
       this.updateLabel();
     });
+
+    // Supprimer l'ancienne valeur des émissions stockées
+    localStorage.removeItem('carbonEmissions');
   }
 
   updateLabel() {
@@ -235,6 +239,15 @@ export class SubscriptionFormSecondPageComponent implements OnInit {
     console.warn('Aucune émission trouvée pour être enregistrée');
   }
   }
+
+  recalculate() {
+    this.isDisabled = false; // Réactive les éléments
+  }
+  onTransportChange() {
+    this.isDisabled = true;  // Grise les éléments (checkbox et texte)
+  }
+
+
   async onSubmit() {
     console.log(this.detailsForm.value); // Affiche les valeurs du formulaire
     const formData = this.detailsForm.value;

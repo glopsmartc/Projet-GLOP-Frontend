@@ -16,21 +16,43 @@ button {
   color: white;
   border: none;
   padding: 6px 12px;
-  font-size: 0.875rem; /* Taille de police plus petite */
+  font-size: 0.875rem;
   font-weight: bold; /* Même épaisseur que "fw-bold" */
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Même police */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   border-radius: 5px;
   cursor: pointer;
   text-transform: none; /* Empêche la majuscule automatique */
 }
 
 .h2-custom {
-  font-family: var(--bs-body-font-family); /* Utilise la même police que Bootstrap */
+  font-family: var(--bs-body-font-family);
   font-size: 1.5rem; /* Un peu plus grand */
-  font-weight: bold; /* Texte en gras */
+  font-weight: bold;
   text-align: center;
   margin: 1.5rem 0; /* Espacement */
-  color: #333; /* Ajuste la couleur si nécessaire */
+  color: #333;
+}
+
+/* Ajout d'un espace entre le texte et le lien */
+.space-between {
+  margin-left: 1px;
 }
 
 
+.carbon-offset-checkbox a {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Quand la classe "disabled" est appliquée, cela affecte le texte et le checkbox uniquement */
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+/* Le lien "En savoir plus" reste actif */
+.disabled a {
+  color: #007bff;
+  cursor: pointer; /* Restaure le curseur pour le lien */
+}
