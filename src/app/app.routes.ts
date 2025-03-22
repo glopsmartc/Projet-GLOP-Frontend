@@ -23,6 +23,7 @@ import { AssistanceRequestComponent } from './clientComponents/assistance-reques
 import { AssistanceRequestListComponent } from './clientComponents/assistance-request-list/assistance-request-list.component';
 import { ClientListComponent } from './conseillerComponents/clients-list/clients-list.component';
 import { PartenairesListComponent } from './conseillerComponents/partenaires-list/partenaires-list.component';
+import { AssistanceRequestsLogisComponent } from './logisticienComponents/assistance-requests-logis/assistance-requests-logis.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -40,7 +41,8 @@ export const routes: Routes = [
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
   { path: 'assistance-requests', component: AssistanceRequestListComponent },
   { path: 'clients-list', component: ClientListComponent},
-  { path : 'partners-list', component: PartenairesListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
+  { path: 'partners-list', component: PartenairesListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
+  { path: 'assistance-requests-logis', component: AssistanceRequestsLogisComponent, canActivate: [authGuard], data: { roles: ['ROLE_LOGISTICIEN'] } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
 ];
