@@ -1,5 +1,6 @@
 <div class="container mt-4">
-  <h2>Liste des demandes d'assistance</h2>
+  <h2 class="text-center"><strong>Liste des demandes d'assistance</strong></h2>
+  <br>
 
   <div *ngIf="loading" class="alert alert-info">Chargement des demandes...</div>
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -27,7 +28,8 @@
 <!-- Modale des détails -->
 <div class="modal" *ngIf="selectedRequest">
   <div class="modal-content">
-    <h3>Détails de la demande</h3>
+    <h3 class="text-center"><strong>Détails de la demande</strong></h3>
+    <br>
     <p><strong>Type :</strong> {{ selectedRequest.typeAssistance }}</p>
     <p><strong>Statut :</strong> {{ selectedRequest.statutDossier }}</p>
     <p><strong>Priorité :</strong> {{ selectedRequest.priorite }}</p>
