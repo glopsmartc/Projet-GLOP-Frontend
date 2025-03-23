@@ -27,6 +27,7 @@ import { AssistanceRequestsLogisComponent } from './logisticienComponents/assist
 import { AssistanceRequestsConsComponent } from './conseillerComponents/assistance-requests-cons/assistance-requests-cons.component';
 import { PartnersListComponent } from './logisticienComponents/partners-list/partners-list.component';
 
+
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'forgot-password', component: ForgotPassComponent },
@@ -44,6 +45,7 @@ export const routes: Routes = [
   { path: 'clients-list', component: ClientListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] },},
   { path: 'sub-partners-list', component: SousPartenairesListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER', 'ROLE_LOGISTICIEN'] } },
   { path: 'partners-list', component: PartnersListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER', 'ROLE_LOGISTICIEN'] } },
+
   { path: 'assistance-requests-cli', component: AssistanceRequestListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'assistance-requests-cons', component: AssistanceRequestsConsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] },},
   { path: 'assistance-requests-logis', component: AssistanceRequestsLogisComponent, canActivate: [authGuard], data: { roles: ['ROLE_LOGISTICIEN'] } },
