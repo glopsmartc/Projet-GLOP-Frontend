@@ -33,7 +33,7 @@ export class PartenairesListComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
     try {
-      this.partenaires = await this.partenaireService.getAllPartenaires();
+      this.partenaires = await this.partenaireService.getAllSousPartenaires();
     } catch (error) {
       this.errorMessage = 'Erreur lors du chargement des partenaires.';
     } finally {

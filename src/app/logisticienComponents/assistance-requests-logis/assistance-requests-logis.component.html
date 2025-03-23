@@ -2,6 +2,9 @@
   <h2 class="text-center"><strong>Liste des demandes d'assistance</strong></h2>
   <br>
 
+  <!-- Champ de recherche -->
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher une demande...">
+
   <div *ngIf="loading" class="alert alert-info">Chargement des demandes...</div>
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
@@ -9,17 +12,76 @@
     <thead>
       <tr>
         <th>Libellé</th>
+        <th>Partenaire</th>
         <th>Statut</th>
         <th>Priorité</th>
         <th>Date de demande</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let request of requests" (click)="openDetails(request)" style="cursor: pointer;">
-        <td>{{ request.typeAssistance }}</td>
-        <td><span [class]="getStatusClass(request.statutDossier)">{{ request.statutDossier }}</span></td>
-        <td><span [class]="getPriorityClass(request.priorite)">{{ request.priorite }}</span></td>
-        <td>{{ request.dateOuverture | date:'dd/MM/yyyy' }}</td>
+      <tr *ngFor="let request of filterRequests()">
+        <td (click)="openDetails(request)" style="cursor: pointer;">{{ request.typeAssistance }}</td>
+        <td>
+          <!-- Mode affichage partenaire -->
+          <div *ngIf="!editingPartenaire[request.idDossier]">
+            <span *ngIf="request.partenaire && partenaires[request.partenaire]">
+              {{ partenaires[request.partenaire].nomEntreprise }} ({{ partenaires[request.partenaire].zoneGeographique }})
+            </span>
+            <span *ngIf="!request.partenaire || !partenaires[request.partenaire]">Non associé</span>
+            <button class="btn btn-sm btn-outline-primary ms-2" (click)="togglePartenaireEdit(request.idDossier)">
+              Modifier
+            </button>
+          </div>
+
+          <!-- Mode édition partenaire -->
+          <div *ngIf="editingPartenaire[request.idDossier]">
+            <select [(ngModel)]="selectedPartenaireId" class="form-select form-select-sm" [disabled]="processingAssignment[request.idDossier]">
+              <option [ngValue]="null">-- Aucun partenaire --</option>
+              <option *ngFor="let partenaire of allPartenaires" [ngValue]="partenaire.idUser">
+                {{ partenaire.nomEntreprise }} ({{ partenaire.zoneGeographique }})
+              </option>
+            </select>
+            <div class="mt-1">
+              <button class="btn btn-sm btn-outline-primary me-1" [disabled]="processingAssignment[request.idDossier]" (click)="assignPartenaire(request.idDossier, selectedPartenaireId)">
+                Assigner
+              </button>
+              <button class="btn btn-sm btn-secondary" [disabled]="processingAssignment[request.idDossier]" (click)="togglePartenaireEdit(request.idDossier)">
+                Annuler
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <!-- Mode affichage statut -->
+          <div *ngIf="!editingStatut[request.idDossier]">
+            <span [class]="getStatusClass(request.statutDossier)" (click)="toggleStatutEdit(request.idDossier)" style="cursor: pointer;">
+              {{ request.statutDossier }}
+            </span>
+            <button class="btn btn-sm btn-outline-primary ms-2" (click)="toggleStatutEdit(request.idDossier)">
+              Modifier
+            </button>
+          </div>
+
+          <!-- Mode édition statut -->
+          <div *ngIf="editingStatut[request.idDossier]">
+            <select [(ngModel)]="selectedStatut" class="form-select form-select-sm" [disabled]="processingStatutUpdate[request.idDossier]">
+              <option value="Ouvert">Ouvert</option>
+              <option value="En-cours">En-cours</option>
+              <option value="Cloturé">Cloturé</option>
+              <option value="Annulé">Annulé</option>
+            </select>
+            <div class="mt-1">
+              <button class="btn btn-sm btn-outline-primary me-1" [disabled]="processingStatutUpdate[request.idDossier]" (click)="updateStatut(request.idDossier, selectedStatut)">
+                Enregistrer
+              </button>
+              <button class="btn btn-sm btn-secondary" [disabled]="processingStatutUpdate[request.idDossier]" (click)="toggleStatutEdit(request.idDossier)">
+                Annuler
+              </button>
+            </div>
+          </div>
+        </td>
+        <td (click)="openDetails(request)" style="cursor: pointer;"><span [class]="getPriorityClass(request.priorite)">{{ request.priorite }}</span></td>
+        <td (click)="openDetails(request)" style="cursor: pointer;">{{ request.dateOuverture | date:'dd/MM/yyyy' }}</td>
       </tr>
     </tbody>
   </table>
@@ -55,6 +117,6 @@
       <p><strong>Maladies chroniques :</strong> {{ selectedRequest.descriptionMaladie }}</p>
     </div>
 
-    <button (click)="closeDetails()">Fermer</button>
+    <button class="close-button" (click)="closeDetails()">Fermer</button>
   </div>
 </div>

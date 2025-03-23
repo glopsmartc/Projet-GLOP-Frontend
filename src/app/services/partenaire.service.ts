@@ -9,9 +9,11 @@ declare const window: any;
 })
 export class PartenaireService {
   private apiUrl: string;
+  private apiUrlPartenaires: string;
 
   constructor(private authService: AuthService) {
-       this.apiUrl = this.getApiUrl();
+    this.apiUrl = this.getApiUrl();
+    this.apiUrlPartenaires = this.getApiUrlPartenaires();
   }
 
   private getApiUrl(): string {
@@ -22,6 +24,16 @@ export class PartenaireService {
       return '';
     }
   }
+
+  private getApiUrlPartenaires(): string {
+    if (typeof window !== 'undefined' && window?.config?.apiBaseUrl) {
+      return `${window.config.apiBaseUrl}/partenaires`;
+    } else {
+      console.warn('window.config is not available or window is undefined');
+      return '';
+    }
+  }
+
   private getAuthHeaders() {
     const token = this.authService.getToken();
     return {
@@ -29,12 +41,32 @@ export class PartenaireService {
     };
   }
 
-  async getAllPartenaires(): Promise<any[]> {
+  async getAllSousPartenaires(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allSousPartenaires`, { headers: this.getAuthHeaders() });
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des partenaires:', error);
+      throw error;
+    }
+  }
+
+  async getAllPartenaires(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrlPartenaires}/`, { headers: this.getAuthHeaders() });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des partenaires:', error);
+      throw error;
+    }
+  }
+
+  async getPartenaireById(id: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.apiUrlPartenaires}/${id}`, { headers: this.getAuthHeaders() });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération du partenaire:', error);
       throw error;
     }
   }
@@ -65,4 +97,5 @@ export class PartenaireService {
       throw error;
     }
   }
+
 }
