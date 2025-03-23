@@ -11,28 +11,6 @@ declare const window: any;
 })
 export class AssistanceService {
 
-  async getAllRequests(): Promise<any[]> {
-    try {
-      const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
-      return response.data; // Retourne la liste des dossiers
-    } catch (error) {
-      console.error('Erreur lors de la récupération des demandes:', error);
-      throw error;
-    }
-  }
-
-  async getAllRequests_Conseiller_Logisticien(): Promise<any[]> {
-    try {
-      const response = await axios.get(`${this.apiUrl}/allDossiers`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
-      return response.data; // Retourne la liste des dossiers
-    } catch (error) {
-      console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
-      throw error;
-    }
-  }
-
   private apiUrl: string;
 
   constructor(private authService: AuthService) {
@@ -55,6 +33,28 @@ export class AssistanceService {
         Authorization: `Bearer ${token}`,
       },
     };
+  }
+
+  async getAllRequests(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
+      console.log('Données récupérées depuis le backend:', response.data);
+      return response.data; // Retourne la liste des dossiers
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes:', error);
+      throw error;
+    }
+  }
+
+  async getAllRequests_Conseiller_Logisticien(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/allDossiers`, this.getAuthHeaders());
+      console.log('Données récupérées depuis le backend:', response.data);
+      return response.data; // Retourne la liste des dossiers
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
+      throw error;
+    }
   }
 
   async submitDossierWithFiles(formData: FormData): Promise<any> {
@@ -89,4 +89,40 @@ export class AssistanceService {
     }
   }
 
+  async assignPartenaireToRequest(partenaireId: number, requestId: number): Promise<any> {
+    try {
+      const response = await axios.put(`${this.apiUrl}/assigner/${partenaireId}/dossier/${requestId}`, {}, this.getAuthHeaders()
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de l\'assignation du partenaire:', error);
+      throw error;
+    }
+  }
+
+  async removePartenaireFromDossier(requestId: number): Promise<any> {
+    try {
+      const response = await axios.put(`${this.apiUrl}/removePartenaire/dossier/${requestId}`, {}, this.getAuthHeaders());
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la suppression du partenaire:', error);
+      throw error;
+    }
+  }
+  async updateStatut(requestId: number, newStatut: string): Promise<any> {
+    try {
+      const response = await axios.patch(
+        `${this.apiUrl}/updateStatut/${requestId}`,
+        null,
+        {
+          ...this.getAuthHeaders(),
+          params: { statut: newStatut }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut:', error);
+      throw error;
+    }
+  }
 }

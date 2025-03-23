@@ -26,6 +26,7 @@ body {
 
 .wrapper {
     display: flex;
+    position: relative;
 }
 
 .main {
@@ -34,6 +35,7 @@ body {
     overflow: hidden;
     transition: all 0.35s ease-in-out;
     background-color: #fafbfe;
+    margin-left: 70px; /* Initial sidebar width */
 }
 
 #sidebar {
@@ -44,11 +46,20 @@ body {
     background-color: #4A803F;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 #sidebar.expand {
     width: 260px;
     min-width: 260px;
+}
+
+/* Add this to adjust main content when sidebar expands */
+#sidebar.expand + .main {
+    margin-left: 260px;
 }
 
 .toggle-btn {
@@ -97,8 +108,7 @@ a.sidebar-link {
 }
 
 a.sidebar-link:hover {
-    background-color: rgba(255, 255, 255, .075);
-    border-left: 3px solid #cd7425;
+    border-left: 4px solid #e8852e;
     i, span {
         color:  #e8852e;
     }
@@ -127,11 +137,11 @@ a.sidebar-link:hover {
 
 .sidebar-footer {
     position:relative;
-    bottom: 20px; 
+    bottom: 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 }
 
 #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
@@ -153,7 +163,7 @@ a.sidebar-link:hover {
 }
 
 .notification-container {
-    position: relative; 
+    position: relative;
     width: 100%;
     text-align: center;
 }
@@ -164,7 +174,7 @@ a.sidebar-link:hover {
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
-    position: relative; 
+    position: relative;
 }
 
 .badge {
@@ -174,13 +184,13 @@ a.sidebar-link:hover {
     background: red;
     color: white;
     border-radius: 50%;
-    padding: 5px 8px;
+    padding: 3px 6px;
     font-size: 0.8rem;
 }
 
 .notification-dropdown {
     position: absolute;
-    top: -180px;  
+    top: -180px;
     left: 40px;
     background: white;
     color: black;
