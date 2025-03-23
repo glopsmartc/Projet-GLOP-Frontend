@@ -16,7 +16,7 @@ export class ClientListComponent implements OnInit {
   errorMessage: string | null = null;
   searchText: string = '';
 
-  constructor(private contratService: ContratService) {}
+  constructor(private readonly contratService: ContratService) {}
 
   ngOnInit(): void {
     this.loadClients();

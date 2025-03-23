@@ -4,9 +4,9 @@
   font-weight: bold;
 }
 
-.status-en-attente {
-  background-color: #ffc107;
-  color: #343a40;
+.status-ouvert {
+  background-color: #28a745;
+  color: #fff;
 }
 
 .status-en-cours {
@@ -14,13 +14,13 @@
   color: #fff;
 }
 
-.status-ouvert {
-  background-color: #28a745;
+.status-cloturé {
+  background-color: #ffc107;
   color: #fff;
 }
 
-.status-rejeté {
-  background-color: #dc3545;
+.status-annulé {
+  background-color: #939393;
   color: #fff;
 }
 
@@ -59,18 +59,4 @@
 
 .modal-content h3 {
   margin-top: 0;
-}
-
-button {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  margin-top: 10px;
-  border-radius: 5px;
-}
-
-button:hover {
-  background: #45a049;
 }

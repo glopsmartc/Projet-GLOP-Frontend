@@ -8,10 +8,10 @@ declare const window: any;
   providedIn: 'root'
 })
 export class PartenaireService {
-  private apiUrl: string;
-  private apiUrlPartenaires: string;
+  private readonly apiUrl: string;
+  private readonly apiUrlPartenaires: string;
 
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     this.apiUrl = this.getApiUrl();
     this.apiUrlPartenaires = this.getApiUrlPartenaires();
   }

@@ -8,83 +8,49 @@
   <div *ngIf="loading" class="alert alert-info">Chargement des demandes...</div>
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-  <table class="table table-striped table-hover" *ngIf="!loading && !errorMessage">
-    <thead>
-      <tr>
-        <th>Libellé</th>
-        <th>Partenaire</th>
-        <th>Statut</th>
-        <th>Priorité</th>
-        <th>Date de demande</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let request of filterRequests()">
-        <td (click)="openDetails(request)" style="cursor: pointer;">{{ request.typeAssistance }}</td>
-        <td>
-          <!-- Mode affichage partenaire -->
-          <div *ngIf="!editingPartenaire[request.idDossier]">
+  <div class="table-responsive">
+    <table class="table table-striped table-hover" *ngIf="!loading && !errorMessage">
+      <thead>
+        <tr>
+          <th (click)="sortRequests('typeAssistance')" (keydown.enter)="sortRequests('typeAssistance')" style="cursor: pointer;" tabindex="0">
+            Libellé <span *ngIf="sortColumn === 'typeAssistance'">{{ sortAscending ? '△' : '▽' }}</span>
+          </th>
+            <th (click)="sortRequests('partenaire')" (keydown.enter)="sortRequests('partenaire')" style="cursor: pointer;" tabindex="0">
+            Partenaire <span *ngIf="sortColumn === 'partenaire'">{{ sortAscending ? '△' : '▽' }}</span>
+          </th>
+          <th>Statut</th>
+          <th>Priorité</th>
+          <th (click)="sortRequests('dateOuverture')" (keydown.enter)="sortRequests('dateOuverture')" style="cursor: pointer;" tabindex="0">
+          Date de demande <span *ngIf="sortColumn === 'dateOuverture'">{{ sortAscending ? '△' : '▽' }}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of filterRequests()">
+          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
+            {{ request.typeAssistance }}
+          </td>
+          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
             <span *ngIf="request.partenaire && partenaires[request.partenaire]">
-              {{ partenaires[request.partenaire].nomEntreprise }} ({{ partenaires[request.partenaire].zoneGeographique }})
+              {{ partenaires[request.partenaire].nomEntreprise }} ({{ partenaires[request.partenaire].zoneGeographique
+              }})
             </span>
             <span *ngIf="!request.partenaire || !partenaires[request.partenaire]">Non associé</span>
-            <button class="btn btn-sm btn-outline-primary ms-2" (click)="togglePartenaireEdit(request.idDossier)">
-              Modifier
-            </button>
-          </div>
+          </td>
+          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
+            <span [class]="getStatusClass(request.statutDossier)">{{ request.statutDossier }}</span>
+          </td>
+          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
+            <span [class]="getPriorityClass(request.priorite)">{{ request.priorite }}</span>
+          </td>
+          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
+            {{ request.dateOuverture | date:'dd/MM/yyyy' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-          <!-- Mode édition partenaire -->
-          <div *ngIf="editingPartenaire[request.idDossier]">
-            <select [(ngModel)]="selectedPartenaireId" class="form-select form-select-sm" [disabled]="processingAssignment[request.idDossier]">
-              <option [ngValue]="null">-- Aucun partenaire --</option>
-              <option *ngFor="let partenaire of allPartenaires" [ngValue]="partenaire.idUser">
-                {{ partenaire.nomEntreprise }} ({{ partenaire.zoneGeographique }})
-              </option>
-            </select>
-            <div class="mt-1">
-              <button class="btn btn-sm btn-outline-primary me-1" [disabled]="processingAssignment[request.idDossier]" (click)="assignPartenaire(request.idDossier, selectedPartenaireId)">
-                Assigner
-              </button>
-              <button class="btn btn-sm btn-secondary" [disabled]="processingAssignment[request.idDossier]" (click)="togglePartenaireEdit(request.idDossier)">
-                Annuler
-              </button>
-            </div>
-          </div>
-        </td>
-        <td>
-          <!-- Mode affichage statut -->
-          <div *ngIf="!editingStatut[request.idDossier]">
-            <span [class]="getStatusClass(request.statutDossier)" (click)="toggleStatutEdit(request.idDossier)" style="cursor: pointer;">
-              {{ request.statutDossier }}
-            </span>
-            <button class="btn btn-sm btn-outline-primary ms-2" (click)="toggleStatutEdit(request.idDossier)">
-              Modifier
-            </button>
-          </div>
-
-          <!-- Mode édition statut -->
-          <div *ngIf="editingStatut[request.idDossier]">
-            <select [(ngModel)]="selectedStatut" class="form-select form-select-sm" [disabled]="processingStatutUpdate[request.idDossier]">
-              <option value="Ouvert">Ouvert</option>
-              <option value="En-cours">En-cours</option>
-              <option value="Cloturé">Cloturé</option>
-              <option value="Annulé">Annulé</option>
-            </select>
-            <div class="mt-1">
-              <button class="btn btn-sm btn-outline-primary me-1" [disabled]="processingStatutUpdate[request.idDossier]" (click)="updateStatut(request.idDossier, selectedStatut)">
-                Enregistrer
-              </button>
-              <button class="btn btn-sm btn-secondary" [disabled]="processingStatutUpdate[request.idDossier]" (click)="toggleStatutEdit(request.idDossier)">
-                Annuler
-              </button>
-            </div>
-          </div>
-        </td>
-        <td (click)="openDetails(request)" style="cursor: pointer;"><span [class]="getPriorityClass(request.priorite)">{{ request.priorite }}</span></td>
-        <td (click)="openDetails(request)" style="cursor: pointer;">{{ request.dateOuverture | date:'dd/MM/yyyy' }}</td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
 <!-- Modale des détails -->
@@ -93,12 +59,28 @@
     <h3 class="text-center"><strong>Détails de la demande</strong></h3>
     <br>
     <p><strong>Type :</strong> {{ selectedRequest.typeAssistance }}</p>
-    <p><strong>Statut :</strong> {{ selectedRequest.statutDossier }}</p>
+    <p><strong>Statut :</strong>
+      <select [(ngModel)]="selectedStatut" class="form-select form-select-sm">
+        <option value="Ouvert">Ouvert</option>
+        <option value="En-cours">En-cours</option>
+        <option value="Cloturé">Cloturé</option>
+        <option value="Annulé">Annulé</option>
+      </select>
+    </p>
+    <p><strong>Partenaire :</strong>
+      <select [(ngModel)]="selectedPartenaireId" class="form-select form-select-sm">
+        <option [ngValue]="null">-- Aucun partenaire --</option>
+        <option *ngFor="let partenaire of allPartenaires" [ngValue]="partenaire.idUser">
+          {{ partenaire.nomEntreprise }} ({{ partenaire.zoneGeographique }})
+        </option>
+      </select>
+    </p>
     <p><strong>Email :</strong> {{ selectedRequest.email }}</p>
     <p><strong>Téléphone :</strong> {{ selectedRequest.numTel }}</p>
     <p><strong>Priorité :</strong> {{ selectedRequest.priorite }}</p>
     <p><strong>Date de demande :</strong> {{ selectedRequest.dateOuverture | date:'dd/MM/yyyy' }}</p>
-    <p><strong>Date de cloture :</strong> {{ selectedRequest.dateCloture ? (selectedRequest.dateCloture | date:'dd/MM/yyyy') : 'Non clôturé' }}</p>
+    <p><strong>Date de cloture :</strong> {{ selectedRequest.dateCloture ? (selectedRequest.dateCloture |
+      date:'dd/MM/yyyy') : 'Non clôturé' }}</p>
     <p><strong>Description :</strong> {{ selectedRequest.description }}</p>
     <p><strong>Position :</strong> {{ selectedRequest.positionActuelle }}</p>
 
@@ -117,6 +99,9 @@
       <p><strong>Maladies chroniques :</strong> {{ selectedRequest.descriptionMaladie }}</p>
     </div>
 
-    <button class="close-button" (click)="closeDetails()">Fermer</button>
+    <div class="modal-footer">
+      <button class="btn btn-primary close-button" (click)="saveChanges()">Enregistrer</button>
+      <button class="btn btn-secondary" (click)="closeDetails()">Fermer</button>
+    </div>
   </div>
 </div>

@@ -63,19 +63,10 @@
 
 .close-button {
   background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  margin-top: 10px;
-  border-radius: 5px;
+  border-color: #4CAF50;
 }
 
 .close-button:hover {
   background: #45a049;
 }
 
-button{
-  padding:0 0.4em;
-  border-radius: 0.25em;
-}

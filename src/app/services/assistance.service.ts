@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { AuthService } from './auth.service';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+
 declare const window: any;
 
 @Injectable({
@@ -11,9 +9,9 @@ declare const window: any;
 })
 export class AssistanceService {
 
-  private apiUrl: string;
+  private readonly apiUrl: string;
 
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     this.apiUrl = this.getApiUrl();
   }
 
