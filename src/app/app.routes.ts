@@ -24,6 +24,7 @@ import { AssistanceRequestListComponent } from './clientComponents/assistance-re
 import { ClientListComponent } from './conseillerComponents/clients-list/clients-list.component';
 import { PartenairesListComponent } from './conseillerComponents/partenaires-list/partenaires-list.component';
 import { AssistanceRequestsLogisComponent } from './logisticienComponents/assistance-requests-logis/assistance-requests-logis.component';
+import { AssistanceRequestsConsComponent } from './conseillerComponents/assistance-requests-cons/assistance-requests-cons.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -39,9 +40,10 @@ export const routes: Routes = [
   { path: 'error-page', component: ErrorPageComponent },
   { path: 'constat-amiable', component: ConstatAmiableComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'clients-contracts', component: ClientContractsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] } },
-  { path: 'assistance-requests-cli', component: AssistanceRequestListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
   { path: 'clients-list', component: ClientListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] },},
   { path: 'partners-list', component: PartenairesListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER', 'ROLE_LOGISTICIEN'] } },
+  { path: 'assistance-requests-cli', component: AssistanceRequestListComponent, canActivate: [authGuard], data: { roles: ['ROLE_CLIENT'] },},
+  { path: 'assistance-requests-cons', component: AssistanceRequestsConsComponent, canActivate: [authGuard], data: { roles: ['ROLE_CONSEILLER'] },},
   { path: 'assistance-requests-logis', component: AssistanceRequestsLogisComponent, canActivate: [authGuard], data: { roles: ['ROLE_LOGISTICIEN'] } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/error-page' },
