@@ -15,7 +15,7 @@ export class AssistanceRequestsLogisComponent implements OnInit {
   requests: any[] = [];
   loading: boolean = true;
   errorMessage: string | null = null;
-  selectedRequest: any | null = null;
+  selectedRequest: any = null;
   documents: any[] = [];
   searchText: string = '';
   partenaires: { [key: number]: any } = {};
@@ -23,9 +23,19 @@ export class AssistanceRequestsLogisComponent implements OnInit {
   editingPartenaire: { [key: number]: boolean } = {};
   processingAssignment: { [key: number]: boolean } = {};
 
+  selectedPartenaireId: number | null = null;
+
+  // Variables for status editing
+  editingStatut: { [key: number]: boolean } = {};
+  selectedStatut: string = '';
+  processingStatutUpdate: { [key: number]: boolean } = {};
+
+  sortColumn: string = '';
+  sortAscending: boolean = true;
+
   constructor(
-    private assistanceService: AssistanceService,
-    private partenaireService: PartenaireService
+    private readonly assistanceService: AssistanceService,
+    private readonly partenaireService: PartenaireService
   ) {}
 
   ngOnInit() {
@@ -42,6 +52,36 @@ export class AssistanceRequestsLogisComponent implements OnInit {
       this.errorMessage = 'Impossible de charger les demandes d\'assistance.';
       this.loading = false;
     }
+  }
+
+  sortRequests(column: string) {
+    if (this.sortColumn === column) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortColumn = column;
+      this.sortAscending = true;
+    }
+
+    this.requests.sort((a, b) => {
+      let valueA = a[column] || '';
+      let valueB = b[column] || '';
+
+      if (column === 'partenaire') {
+        valueA = this.partenaires[a.partenaire]?.nomEntreprise || '';
+        valueB = this.partenaires[b.partenaire]?.nomEntreprise || '';
+      }
+
+      if (typeof valueA === 'string') valueA = valueA.toLowerCase();
+      if (typeof valueB === 'string') valueB = valueB.toLowerCase();
+
+      let result: number;
+      if (this.sortAscending) {
+        result = valueA > valueB ? 1 : -1;
+      } else {
+        result = valueA < valueB ? 1 : -1;
+      }
+      return result;
+    });
   }
 
   async loadAllPartenaires() {
@@ -74,7 +114,7 @@ export class AssistanceRequestsLogisComponent implements OnInit {
       }
     }
   }
-  selectedPartenaireId: number | null = null;
+
   togglePartenaireEdit(requestId: number) {
     this.editingPartenaire[requestId] = !this.editingPartenaire[requestId];
     const request = this.requests.find(r => r.idDossier === requestId);
@@ -137,7 +177,44 @@ export class AssistanceRequestsLogisComponent implements OnInit {
 
   async openDetails(request: any) {
     this.selectedRequest = request;
+    this.selectedStatut = request.statutDossier;
+    this.selectedPartenaireId = request.partenaire;
     this.documents = await this.assistanceService.getDocumentsForRequest(request.idDossier);
+  }
+  async saveChanges() {
+    if (!this.selectedRequest) return;
+
+    try {
+      // Update statut
+      if (this.selectedRequest.statutDossier !== this.selectedStatut) {
+        await this.assistanceService.updateStatut(this.selectedRequest.idDossier, this.selectedStatut);
+        this.selectedRequest.statutDossier = this.selectedStatut; // Update local state
+      }
+
+      // Update partenaire
+      if (this.selectedRequest.partenaire !== this.selectedPartenaireId) {
+        if (this.selectedPartenaireId === null) {
+          await this.assistanceService.removePartenaireFromDossier(this.selectedRequest.idDossier);
+          this.selectedRequest.partenaire = null; // Update local state
+        } else {
+          await this.assistanceService.assignPartenaireToRequest(this.selectedPartenaireId, this.selectedRequest.idDossier);
+          this.selectedRequest.partenaire = this.selectedPartenaireId; // Update local state
+
+          // Update the partenaires object
+          const partenaireResponse = await this.partenaireService.getPartenaireById(this.selectedPartenaireId);
+          this.partenaires[this.selectedPartenaireId] = {
+            nomEntreprise: partenaireResponse.nomEntreprise,
+            zoneGeographique: partenaireResponse.zoneGeographique
+          };
+        }
+      }
+      this.selectedRequest = null;
+      this.documents = [];
+
+    } catch (error) {
+      console.error('Erreur lors de l\'enregistrement des modifications:', error);
+      alert('Erreur lors de l\'enregistrement des modifications');
+    }
   }
 
   closeDetails() {
@@ -157,10 +234,6 @@ export class AssistanceRequestsLogisComponent implements OnInit {
 
 
 
-  // Variables for status editing
-editingStatut: { [key: number]: boolean } = {};
-selectedStatut: string = '';
-processingStatutUpdate: { [key: number]: boolean } = {};
 
 // Toggle status edit mode
 toggleStatutEdit(requestId: number) {

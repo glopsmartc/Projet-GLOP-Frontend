@@ -16,7 +16,7 @@ export class ClientListComponent implements OnInit {
   errorMessage: string | null = null;
   searchText: string = '';
 
-  constructor(private contratService: ContratService) {}
+  constructor(private readonly contratService: ContratService) {}
 
   ngOnInit(): void {
     this.loadClients();
@@ -34,13 +34,14 @@ export class ClientListComponent implements OnInit {
       this.isLoading = false;
     }
   }
-
   filteredClients() {
     if (!this.searchText) {
       return this.clients;
     }
     return this.clients.filter(client =>
-      (client.nom + ' ' + client.prenom).toLowerCase().includes(this.searchText.toLowerCase())
+      (client.nom + ' ' + client.prenom).toLowerCase().includes(this.searchText.toLowerCase()) ||
+      client.email?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      client.numTel?.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 }
