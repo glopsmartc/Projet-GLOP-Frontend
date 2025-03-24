@@ -15,9 +15,6 @@
           <th (click)="sortRequests('typeAssistance')" (keydown.enter)="sortRequests('typeAssistance')" style="cursor: pointer;" tabindex="0">
             Libellé <span *ngIf="sortColumn === 'typeAssistance'">{{ sortAscending ? '△' : '▽' }}</span>
           </th>
-            <th (click)="sortRequests('partenaire')" (keydown.enter)="sortRequests('partenaire')" style="cursor: pointer;" tabindex="0">
-            Partenaire <span *ngIf="sortColumn === 'partenaire'">{{ sortAscending ? '△' : '▽' }}</span>
-          </th>
           <th>Statut</th>
           <th>Priorité</th>
           <th (click)="sortRequests('dateOuverture')" (keydown.enter)="sortRequests('dateOuverture')" style="cursor: pointer;" tabindex="0">
@@ -29,13 +26,6 @@
         <tr *ngFor="let request of filterRequests()">
           <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
             {{ request.typeAssistance }}
-          </td>
-          <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
-            <span *ngIf="request.partenaire && partenaires[request.partenaire]">
-              {{ partenaires[request.partenaire].nomEntreprise }} ({{ partenaires[request.partenaire].zoneGeographique
-              }})
-            </span>
-            <span *ngIf="!request.partenaire || !partenaires[request.partenaire]">Non associé</span>
           </td>
           <td (click)="openDetails(request)" (keydown.enter)="openDetails(request)" style="cursor: pointer;" tabindex="0">
             <span [class]="getStatusClass(request.statutDossier)">{{ request.statutDossier }}</span>
@@ -59,18 +49,12 @@
     <h3 class="text-center"><strong>Détails de la demande</strong></h3>
     <br>
     <p><strong>Type :</strong> {{ selectedRequest.typeAssistance }}</p>
-    <p><strong>Statut :</strong>
-      <select [(ngModel)]="selectedStatut" class="form-select form-select-sm">
-        <option value="En-cours">En-cours</option>
-        <option value="Cloturé">Cloturé</option>
-        <option value="Annulé">Annulé</option>
-      </select>
-    </p>
-    <p><strong>Partenaire :</strong>
-      <select [(ngModel)]="selectedPartenaireId" class="form-select form-select-sm">
-        <option [ngValue]="null">-- Aucun partenaire --</option>
-        <option *ngFor="let partenaire of allPartenaires" [ngValue]="partenaire.idUser">
-          {{ partenaire.nomEntreprise }} ({{ partenaire.zoneGeographique }})
+    <p><strong>Statut :</strong> {{ selectedRequest.statutDossier }} </p>
+    <p><strong>Sous-Partenaire :</strong>
+      <select [(ngModel)]="selectedSousPartenaireId" class="form-select form-select-sm">
+        <option [ngValue]="null">-- Aucun sous-partenaire --</option>
+        <option *ngFor="let sousPartenaire of allSousPartenaires" [ngValue]="sousPartenaire.id_sous_partenaire">
+          {{ sousPartenaire.prenom }} {{ sousPartenaire.nom }} ({{ sousPartenaire.nomEntreprise }})
         </option>
       </select>
     </p>

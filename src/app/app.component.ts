@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   isClient: boolean = false;
   isLogisticien: boolean = false;
+  isPartenaire: boolean = false;
   private authSubscription: Subscription | undefined;
 
   notifications: any[] = [];
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isAuthenticated = isAuthenticated;
       this.isClient = this.authService.hasRole(['ROLE_CLIENT']);
       this.isLogisticien = this.authService.hasRole(['ROLE_LOGISTICIEN']);
+      this.isPartenaire = this.authService.hasRole(['ROLE_PARTENAIRE']);
     });
 
     if (this.isLogisticien) {
