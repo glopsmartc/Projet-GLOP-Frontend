@@ -120,9 +120,9 @@ export class PartenaireService {
     }
   }
 
-  async removeSousPartenaireFromDossier(requestId: number): Promise<any> {
+  async removeSousPartenaireFromDossier(idSousPartenaire: number, idDossier: number): Promise<any> {
     try {
-      const response = await axios.put(`${this.apiUrl}/removeSousPartenaire/dossier/${requestId}`, {}, { headers: this.getAuthHeaders() });
+      const response = await axios.put(`${this.apiUrl}/removeSousPartenaire/${idSousPartenaire}/dossier/${idDossier}`, {}, { headers: this.getAuthHeaders() });
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la suppression du sous-partenaire:', error);
