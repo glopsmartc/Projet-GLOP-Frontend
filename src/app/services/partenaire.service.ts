@@ -46,7 +46,7 @@ export class PartenaireService {
       const response = await axios.get(`${this.apiUrl}/allSousPartenaires`, { headers: this.getAuthHeaders() });
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la récupération des partenaires:', error);
+      console.error('Erreur lors de la récupération des sous-partenaires:', error);
       throw error;
     }
   }
@@ -75,7 +75,7 @@ export class PartenaireService {
     try {
       await axios.delete(`${this.apiUrl}/deleteSousPartenaire/${id}`, { headers: this.getAuthHeaders() });
     } catch (error) {
-      console.error('Erreur lors de la suppression du partenaire:', error);
+      console.error('Erreur lors de la suppression du sous-partenaire:', error);
       throw error;
     }
   }
@@ -84,7 +84,7 @@ export class PartenaireService {
     try {
       await axios.put(`${this.apiUrl}/updateSousPartenaire/${id}`, partenaireData, { headers: this.getAuthHeaders() });
     } catch (error) {
-      console.error('Erreur lors de la modification du partenaire:', error);
+      console.error('Erreur lors de la modification du sous-partenaire:', error);
       throw error;
     }
   }
@@ -93,7 +93,7 @@ export class PartenaireService {
     try {
       await axios.post(`${this.apiUrl}/createSousPartenaire`, partenaireData, { headers: this.getAuthHeaders() });
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du partenaire:', error);
+      console.error('Erreur lors de l\'ajout du sous-partenaire:', error);
       throw error;
     }
   }

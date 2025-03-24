@@ -139,6 +139,8 @@ export class LoginPageComponent implements OnInit {
         await this.router.navigate(['/clients-contracts']);
       } else if (this.authService.hasRole(['ROLE_LOGISTICIEN'])) {
         await this.router.navigate(['/assistance-requests-logis']);
+      } else if (this.authService.hasRole(['ROLE_PARTENAIRE'])) {
+        await this.router.navigate(['/assistance-requests-part']);
       }
       else {
         // Default navigation or handle other roles

@@ -1,126 +1,165 @@
 <ng-container *ngIf="isAuthenticated; else publicLayout">
 
-    <ng-container *ngIf="isClient; else otherRolesTemplate">
-        <app-header></app-header>
-        <router-outlet></router-outlet>
-    </ng-container>
+  <ng-container *ngIf="isClient; else otherRolesTemplate">
+    <app-header></app-header>
+    <router-outlet></router-outlet>
+  </ng-container>
 
-    <ng-template #otherRolesTemplate>
-        <ng-container *ngIf="isLogisticien; else conseillerTemplate">
-            <div class="wrapper">
+  <ng-template #otherRolesTemplate>
+    <ng-container *ngIf="isLogisticien; else partenaireTemplate">
+      <div class="wrapper">
 
-                <aside id="sidebar" aria-label="Menu de navigation Logisticien">
-                    <div class="d-flex">
-                        <button class="toggle-btn" type="button">
-                            <span class="navbar navbar-toggler-icon"></span>
-                        </button>
-                        <div class="sidebar-logo">
-                            <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;" alt="Logo MobiSureMoinsDeCO2">
-                            <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
-                        </div>
-                    </div>
-                    <ul class="sidebar-nav">
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" routerLink="/assistance-requests-logis">
-                                <i class="fas fa-headset"></i>
-                                <span>Demandes d'assistance</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" routerLink="/partners-list">
-                                <i class="fas fa-handshake"></i>
-                                <span>Partenaires</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="sidebar-footer">
-                        <!-- Notification Button -->
-                        <div class="notification-container">
-                          <button class="notification-btn" (click)="toggleNotifications()">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
-                          </button>
-                          <div class="notification-dropdown" *ngIf="showNotifications">
-                            <p *ngIf="notifications.length === 0">Aucune notification</p>
-                            <ul>
-                              <li *ngFor="let notif of notifications">
-                                {{ notif.message }}
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-
-                        <a href="" class="sidebar-link" (click)="onLogout()">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </a>
-                    </div>
-                </aside>
-
-                <div class="main p-3">
-                    <router-outlet></router-outlet>
-                </div>
-
+        <aside id="sidebar" aria-label="Menu de navigation Logisticien">
+          <div class="d-flex">
+            <button class="toggle-btn" type="button">
+              <span class="navbar navbar-toggler-icon"></span>
+            </button>
+            <div class="sidebar-logo">
+              <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;" alt="Logo MobiSureMoinsDeCO2">
+              <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
             </div>
-        </ng-container>
-    </ng-template>
-
-    <ng-template #conseillerTemplate>
-        <div class="wrapper">
-
-            <aside id="sidebar" aria-label="Menu de navigation Conseiller">
-                <div class="d-flex">
-                    <button class="toggle-btn" type="button">
-                        <span class="navbar navbar-toggler-icon"></span>
-                    </button>
-                    <div class="sidebar-logo">
-                        <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;" alt="Logo MobiSureMoinsDeCO2">
-                        <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
-                    </div>
-                </div>
-                <ul class="sidebar-nav">
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" routerLink="/clients-contracts">
-                            <i class="fas fa-file-contract"></i>
-                            <span>Contrats des clients</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" routerLink="/assistance-requests-cons">
-                            <i class="fas fa-headset"></i>
-                            <span>Demandes d'assistance</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a routerLink="/clients-list" class="sidebar-link">
-                            <i class="fas fa-users"></i>
-                            <span>Liste des clients</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a routerLink="/sub-partners-list" class="sidebar-link">
-                            <i class="fas fa-handshake"></i>
-                            <span>Sous-partenaires</span>
-                        </a>
-                    </li>
+          </div>
+          <ul class="sidebar-nav">
+            <li class="sidebar-item">
+              <a class="sidebar-link" routerLink="/assistance-requests-logis">
+                <i class="fas fa-headset"></i>
+                <span>Demandes d'assistance</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" routerLink="/partners-list">
+                <i class="fas fa-handshake"></i>
+                <span>Partenaires</span>
+              </a>
+            </li>
+          </ul>
+          <div class="sidebar-footer">
+            <!-- Notification Button -->
+            <div class="notification-container">
+              <button class="notification-btn" (click)="toggleNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
+              </button>
+              <div class="notification-dropdown" *ngIf="showNotifications">
+                <p *ngIf="notifications.length === 0">Aucune notification</p>
+                <ul>
+                  <li *ngFor="let notif of notifications">
+                    {{ notif.message }}
+                  </li>
                 </ul>
-                <div class="sidebar-footer">
-                    <a href="" class="sidebar-link" (click)="onLogout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </a>
-                </div>
-            </aside>
-
-            <div class="main p-3">
-                <router-outlet></router-outlet>
+              </div>
             </div>
 
+            <a href="" class="sidebar-link" (click)="onLogout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </aside>
+
+        <div class="main p-3">
+          <router-outlet></router-outlet>
         </div>
-    </ng-template>
+
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #partenaireTemplate>
+    <ng-container *ngIf="isPartenaire; else conseillerTemplate">
+      <div class="wrapper">
+
+        <aside id="sidebar" aria-label="Menu de navigation Conseiller">
+          <div class="d-flex">
+            <button class="toggle-btn" type="button">
+              <span class="navbar navbar-toggler-icon"></span>
+            </button>
+            <div class="sidebar-logo">
+              <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;" alt="Logo MobiSureMoinsDeCO2">
+              <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
+            </div>
+          </div>
+          <ul class="sidebar-nav">
+            <li class="sidebar-item">
+              <a routerLink="/assistance-requests-part" class="sidebar-link">
+                <i class="fas fa-handshake"></i>
+                <span>Demandes d'assistance</span>
+              </a>
+            </li>
+          </ul>
+          <div class="sidebar-footer">
+            <a href="" class="sidebar-link" (click)="onLogout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </aside>
+
+        <div class="main p-3">
+          <router-outlet></router-outlet>
+        </div>
+
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #conseillerTemplate>
+    <div class="wrapper">
+
+      <aside id="sidebar" aria-label="Menu de navigation Conseiller">
+        <div class="d-flex">
+          <button class="toggle-btn" type="button">
+            <span class="navbar navbar-toggler-icon"></span>
+          </button>
+          <div class="sidebar-logo">
+            <img class="mt-4" src="assets/img/logo-img.png" style="height: 30px;" alt="Logo MobiSureMoinsDeCO2">
+            <a style="color: #ea8b3e;">MobiSureMoinsDeCO2</a>
+          </div>
+        </div>
+        <ul class="sidebar-nav">
+          <li class="sidebar-item">
+            <a class="sidebar-link" routerLink="/clients-contracts">
+              <i class="fas fa-file-contract"></i>
+              <span>Contrats des clients</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" routerLink="/assistance-requests-cons">
+              <i class="fas fa-headset"></i>
+              <span>Demandes d'assistance</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a routerLink="/clients-list" class="sidebar-link">
+              <i class="fas fa-users"></i>
+              <span>Liste des clients</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a routerLink="/sub-partners-list" class="sidebar-link">
+              <i class="fas fa-handshake"></i>
+              <span>Sous-partenaires</span>
+            </a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <a href="" class="sidebar-link" (click)="onLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="main p-3">
+        <router-outlet></router-outlet>
+      </div>
+
+    </div>
+  </ng-template>
+
 </ng-container>
 
 <ng-template #publicLayout>
-    <app-header></app-header>
-    <router-outlet></router-outlet>
+  <app-header></app-header>
+  <router-outlet></router-outlet>
 </ng-template>

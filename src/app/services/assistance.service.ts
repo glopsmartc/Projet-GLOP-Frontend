@@ -36,7 +36,7 @@ export class AssistanceService {
   async getAllRequests(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
+      console.log('Données récupérées depuis le backend allDossiersClient:', response.data);
       return response.data; // Retourne la liste des dossiers
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes:', error);
@@ -47,7 +47,7 @@ export class AssistanceService {
   async getAllRequests_Conseiller_Logisticien(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allDossiers`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
+      console.log('Données récupérées depuis le backend allDossiers:', response.data);
       return response.data; // Retourne la liste des dossiers
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
