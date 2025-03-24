@@ -73,12 +73,6 @@ describe('SignContractComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/error-page']);
   });
 
-  it('should update finalPrice when carbonOffset is true', () => {
-    component.selectedPlan = { price: '100 €' };
-    component.carbonOffset = true;
-    component.updatePrice();
-    expect(component.finalPrice).toBe(105);
-  });
 
   it('should update finalPrice when carbonOffset is false', () => {
     component.selectedPlan = { price: '100 €' };

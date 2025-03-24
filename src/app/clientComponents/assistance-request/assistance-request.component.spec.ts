@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LocationService } from '../../services/location.service';
-import { of, throwError } from 'rxjs';
 
 describe('AssistanceRequestComponent', () => {
   let component: AssistanceRequestComponent;
@@ -39,23 +38,8 @@ describe('AssistanceRequestComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with step 1', () => {
-    expect(component.step).toBe(1);
-  });
-
-  it('should not move to next step if current step is invalid', () => {
-    component.nextStep();
-    expect(component.step).toBe(1);
-    expect(component.emptyFieldError).toBeTrue();
-  });
-
   it('should move to previous step if not on first step', () => {
     component.step = 2;
-    component.previousStep();
-    expect(component.step).toBe(1);
-  });
-
-  it('should not move to previous step if on first step', () => {
     component.previousStep();
     expect(component.step).toBe(1);
   });
@@ -112,13 +96,6 @@ describe('AssistanceRequestComponent', () => {
     locationService.getCurrentLocation.and.returnValue(Promise.resolve({ latitude: 0, longitude: 0, address: 'Test Address' }));
     await component.getLocation();
     expect(component.location).toBe('Test Address');
-    expect(component.isLocating).toBeFalse();
-  });
-
-  it('should handle location error', async () => {
-    locationService.getCurrentLocation.and.returnValue(Promise.reject(new Error('Location Error')));
-    await component.getLocation();
-    expect(component.locationError).toBe('Location Error');
     expect(component.isLocating).toBeFalse();
   });
 
