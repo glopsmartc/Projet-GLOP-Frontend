@@ -151,8 +151,17 @@ export class AssistanceRequestsPartComponent implements OnInit {
 
     try {
       if (id_sous_partenaire === null) {
-        // Call API to remove sous_partenaire assignment
-        await this.partenaireService.removeSousPartenaireFromDossier(requestId);
+        // Get the current sous_partenaire ID from the request
+        const request = this.requests.find(r => r.idDossier === requestId);
+        const currentSousPartenaireId = request?.sous_partenaire;
+
+        if (currentSousPartenaireId) {
+          // Call API with both IDs
+          await this.partenaireService.removeSousPartenaireFromDossier(
+            currentSousPartenaireId,
+            requestId
+          );
+        }
 
         // Update local data
         const updatedRequest = this.requests.find(r => r.idDossier === requestId);
@@ -219,7 +228,14 @@ export class AssistanceRequestsPartComponent implements OnInit {
       // Update sous_partenaire
       if (this.selectedRequest.sous_partenaire !== this.selectedSousPartenaireId) {
         if (this.selectedSousPartenaireId === null) {
-          await this.partenaireService.removeSousPartenaireFromDossier(this.selectedRequest.idDossier);
+          // Fix: Pass both the sous_partenaire ID and the dossier ID
+          const currentSousPartenaireId = this.selectedRequest.sous_partenaire;
+          if (currentSousPartenaireId) {
+            await this.partenaireService.removeSousPartenaireFromDossier(
+              currentSousPartenaireId,
+              this.selectedRequest.idDossier
+            );
+          }
           this.selectedRequest.sous_partenaire = null; // Update local state
         } else {
           await this.assistanceService.assignPartenaireToRequest(this.selectedSousPartenaireId, this.selectedRequest.idDossier);
