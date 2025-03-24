@@ -4,8 +4,8 @@
   font-weight: bold;
 }
 
-.status-ouvert {
-  background-color: #28a745;
+.status-en-attente {
+  background-color: #7b7b7b;
   color: #fff;
 }
 

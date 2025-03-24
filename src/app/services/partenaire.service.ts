@@ -98,4 +98,36 @@ export class PartenaireService {
     }
   }
 
+
+  async obtenirSousPartenaireParId(id: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/detailsSousPartenaire/${id}`, { headers: this.getAuthHeaders() });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération du sous-partenaire:', error);
+      throw error;
+    }
+  }
+
+  async assignSousPartenaireToRequest(idSousPartenaire: number, requestId: number): Promise<any> {
+    try {
+      const response = await axios.put(`${this.apiUrl}/assigner/${idSousPartenaire}/dossier/${requestId}`, {}, { headers: this.getAuthHeaders() });
+      console.log('Sous-partenaire assigné avec succès:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de l\'assignation du partenaire:', error);
+      throw error;
+    }
+  }
+
+  async removeSousPartenaireFromDossier(requestId: number): Promise<any> {
+    try {
+      const response = await axios.put(`${this.apiUrl}/removeSousPartenaire/dossier/${requestId}`, {}, { headers: this.getAuthHeaders() });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la suppression du sous-partenaire:', error);
+      throw error;
+    }
+  }
+
 }

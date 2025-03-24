@@ -123,4 +123,16 @@ export class AssistanceService {
       throw error;
     }
   }
+
+
+  async getAllRequests_Partenaire(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/allDossiersPartenaire`, this.getAuthHeaders());
+      console.log('Données récupérées depuis le backend:', response.data);
+      return response.data; // Retourne la liste des dossiers
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
+      throw error;
+    }
+  }
 }
