@@ -72,7 +72,7 @@ export class AssistanceService {
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la création de la demande ou de l\'upload du fichier :', error);
-      throw error; // Re-throw the error for further handling
+      throw error;
     }
   }
 
@@ -83,7 +83,7 @@ export class AssistanceService {
       return response.data; // Retourne la liste des documents liés à la demande
     } catch (error) {
       console.error("Erreur lors de la récupération des documents:", error);
-      return []; // Retourne un tableau vide en cas d'erreur
+      return [];
     }
   }
 
@@ -124,6 +124,21 @@ export class AssistanceService {
     }
   }
 
+  async downloadDocument(filePath: string): Promise<Blob> {
+    try {
+      const response = await axios.get(
+        `${this.apiUrl}/getFile?filePath=${encodeURIComponent(filePath)}`,
+        {
+          ...this.getAuthHeaders(),
+          responseType: 'blob',
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors du téléchargement du fichier :', error);
+      throw error;
+    }
+  }
 
   async getAllRequests_Partenaire(): Promise<any[]> {
     try {
