@@ -1,8 +1,10 @@
 /* ========== BADGES DE STATUT ========== */
 .badge {
-  padding: 0.5em;
-  border-radius: 0.25em;
-  font-weight: bold;
+  padding: 0.4em 0.8em;
+  border-radius: 0.4em;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-transform: capitalize;
 }
 
 .status-en-attente {
@@ -101,7 +103,6 @@
 }
 
 /* ========== SECTIONS ========== */
-
 .section-title {
   font-size: 1.2rem;
   font-weight: 600;
