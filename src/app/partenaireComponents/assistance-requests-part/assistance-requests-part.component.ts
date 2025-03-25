@@ -234,4 +234,25 @@ export class AssistanceRequestsPartComponent implements OnInit {
       }
     });
   }
+
+  async downloadDocument(path: string) {
+    try {
+      const blob = await this.assistanceService.downloadDocument(path);
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+
+
+    } catch (err) {
+      console.error('Erreur de téléchargement :', err);
+    }
+  }
+
+  // New method to extract filename from path
+  getFileNameFromPath(filePath: string): string {
+    if (!filePath) return '';
+    // Split by both \ and /, filter out empty segments, and take the last one
+    const segments = filePath.split(/[\\/]/).filter(segment => segment);
+    return segments[segments.length - 1];
+  }
 }

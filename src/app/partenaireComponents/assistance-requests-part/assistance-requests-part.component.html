@@ -127,14 +127,16 @@
       <p><strong>Description :</strong> {{ selectedRequest.description }}</p>
       <p><strong>Position :</strong> {{ selectedRequest.positionActuelle }}</p>
 
-      <div *ngIf="documents.length > 0">
-        <h4>Fichiers joints :</h4>
-        <ul>
-          <li *ngFor="let doc of documents">
-            <a [href]="doc.documents" target="_blank">{{ doc.documents.split('/').pop() }}</a>
-          </li>
-        </ul>
-      </div>
+    <!-- Fichiers joints -->
+    <div *ngIf="selectedRequest.documents?.length > 0" class="section">
+      <p><strong></strong>Fichiers joints :</p>
+      <ul class="documents-list">
+        <li *ngFor="let doc of selectedRequest.documents">
+          <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
+          <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
+        </li>
+      </ul>
+    </div>
 
       <div *ngIf="selectedRequest.maladieChronique">
         <h4>Informations médicales :</h4>
@@ -142,7 +144,7 @@
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-4">
-        <button class="btn btn-success" (click)="saveChanges()">Enregistrer</button>
+        <button class="btn btn-primary" style="background-color: #4A803F; border-color: #4A803F; transition: all 0.2s;" (click)="saveChanges()" onmouseover="this.style.backgroundColor='#3D6A33'; this.style.borderColor='#3D6A33';" onmouseout="this.style.backgroundColor='#4A803F'; this.style.borderColor='#4A803F';">Enregistrer</button>
         <button class="btn btn-secondary" (click)="closeDetails()">Retour</button>
       </div>
     </div>

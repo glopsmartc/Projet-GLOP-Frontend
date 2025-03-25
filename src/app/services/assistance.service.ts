@@ -133,6 +133,7 @@ export class AssistanceService {
           responseType: 'blob',
         }
       );
+      console.log('endpoint', `${this.apiUrl}/getFile?filePath=${encodeURIComponent(filePath)}`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors du téléchargement du fichier :', error);

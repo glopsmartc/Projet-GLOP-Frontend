@@ -8,22 +8,22 @@
 }
 
 .status-en-attente {
-  background-color: #28a745;
+  background-color: #797979;
   color: #fff;
 }
 
 .status-en-cours {
-  background-color: #17a2b8;
+  background-color: #1c94a7;
   color: #fff;
 }
 
 .status-cloturé {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #428e54;
+  color: #ffffff;
 }
 
 .status-annulé {
-  background-color: #939393;
+  background-color: #428e54;
   color: #fff;
 }
 
@@ -34,8 +34,8 @@
 }
 
 .priority-non-urgent {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #e9c046;
+  color: #554005;
 }
 
 /* ========== MODALE ========== */
@@ -86,7 +86,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .details-grid p {
@@ -103,10 +103,6 @@
 }
 
 /* ========== SECTIONS ========== */
-.section {
-  margin-top: 30px;
-}
-
 .section-title {
   font-size: 1.2rem;
   font-weight: 600;
@@ -127,10 +123,11 @@
   align-items: center;
   background-color: #f1f1f1;
   border: 1px solid #ddd;
-  padding: 12px 18px;
+  padding: 5px 15px;
   border-radius: 6px;
   margin-bottom: 12px;
   transition: box-shadow 0.2s;
+  margin-top: 8px;
 }
 
 .documents-list li:hover {
@@ -148,7 +145,6 @@
 /* ========== BOUTONS ========== */
 .btn-download {
   background-color: #4A803F;
-  ;
   color: #fff;
   border: none;
   padding: 6px 14px;
@@ -160,7 +156,7 @@
 }
 
 .btn-download:hover {
-  background-color: #0056b3;
+  background-color: #416a3a;
 }
 
 .btn-close {

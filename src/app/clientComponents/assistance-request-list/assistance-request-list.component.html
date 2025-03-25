@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let request of requests" (click)="openDetails(request)" style="cursor: pointer;">
+        <tr *ngFor="let request of requests" (click)="openDetails(request)" (keydown.enter)="openDetails(request)" tabindex="0" style="cursor: pointer;">
           <td>{{ request.typeAssistance }}</td>
           <td><span [class]="getStatusClass(request.statutDossier)">{{ request.statutDossier }}</span></td>
           <td><span [class]="getPriorityClass(request.priorite)">{{ request.priorite }}</span></td>
@@ -48,7 +48,7 @@
       <span class="label">Fichiers joints :</span>
       <ul class="documents-list">
         <li *ngFor="let doc of selectedRequest.documents">
-          <span class="doc-name">{{ doc.split('/').pop() }}</span>
+          <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
           <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
         </li>
       </ul>
