@@ -1,3 +1,4 @@
+/* ========== BADGES DE STATUT ========== */
 .badge {
   padding: 0.5em;
   border-radius: 0.25em;
@@ -5,68 +6,172 @@
 }
 
 .status-en-attente {
-  background-color: #7b7b7b;
+  background-color: #797979;
   color: #fff;
 }
 
 .status-en-cours {
-  background-color: #17a2b8;
+  background-color: #1c94a7;
   color: #fff;
 }
 
 .status-cloturé {
-  background-color: #ffc107;
-  color: #fff;
+  background-color: #428e54;
+  color: #ffffff;
 }
 
 .status-annulé {
-  background-color: #939393;
+  background-color: #428e54;
   color: #fff;
 }
 
-/* Priorités */
+/* ========== PRIORITÉS ========== */
 .priority-urgent {
   background-color: #dc3545;
   color: #fff;
 }
 
 .priority-non-urgent {
-  background-color: #ffc107;
-  color: #343a40;
+  background-color: #e9c046;
+  color: #554005;
 }
 
-/* Styles pour la boîte de dialogue */
+/* ========== MODALE ========== */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 50%;
-  max-width: 600px;
-  text-align: left;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 720px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeIn 0.25s ease-in-out;
 }
 
-.modal-content h3 {
-  margin-top: 0;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.close-button {
-  background: #4CAF50;
-  border-color: #4CAF50;
+/* ========== TITRE ========== */
+.modal-title {
+  font-size: 1.7em;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e4e4e4;
+  padding-bottom: 12px;
 }
 
-.close-button:hover {
-  background: #45a049;
+/* ========== INFOS DÉTAILS ========== */
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
+.details-grid p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.label {
+  font-weight: 600;
+  color: #000;
+  margin-right: 5px;
+}
+
+/* ========== SECTIONS ========== */
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+/* ========== LISTE DOCUMENTS ========== */
+.documents-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.documents-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  padding: 5px 15px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+  margin-top: 8px;
+}
+
+.documents-list li:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.doc-name {
+  font-size: 0.95em;
+  font-weight: 500;
+  color: #333;
+  word-break: break-word;
+  max-width: 70%;
+}
+
+/* ========== BOUTONS ========== */
+.btn-download {
+  background-color: #4A803F;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-download:hover {
+  background-color: #416a3a;
+}
+
+.btn-close {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin: 40px auto 0;
+}
+
+.btn-close:hover {
+  background-color: #545b62;
+}

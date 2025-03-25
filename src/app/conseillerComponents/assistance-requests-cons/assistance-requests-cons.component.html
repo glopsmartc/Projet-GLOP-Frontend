@@ -42,11 +42,12 @@
     <p><strong>Adresse :</strong> {{ selectedRequest.positionActuelle }}</p>
 
     <!-- Fichiers joints -->
-    <div *ngIf="documents.length > 0">
-      <h4>Fichiers joints :</h4>
-      <ul>
-        <li *ngFor="let doc of documents">
-          <a [href]="doc.documents" target="_blank">{{ doc.documents.split('/').pop() }}</a>
+    <div *ngIf="selectedRequest.documents?.length > 0" class="section">
+      <p><strong>Fichiers joints :</strong></p>
+      <ul class="documents-list">
+        <li *ngFor="let doc of selectedRequest.documents">
+          <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
+          <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
         </li>
       </ul>
     </div>

@@ -82,7 +82,7 @@ body {
 }
 
 .sidebar-logo {
-    margin: auto 0;
+  margin: auto 0;
   display: flex;
   align-items: center;
   justify-content: center; /* Center horizontally */
@@ -91,6 +91,11 @@ body {
 
 .sidebar-logo img:hover {
   transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.sidebar-logo img {
+  height: 2.5rem;
+  max-width: 100%;
 }
 
 .sidebar-logo a {
@@ -157,7 +162,6 @@ a.sidebar-link:hover {
 }
 
 .sidebar-footer {
-    position:relative;
     bottom: 20px;
     width: 100%;
     display: flex;
