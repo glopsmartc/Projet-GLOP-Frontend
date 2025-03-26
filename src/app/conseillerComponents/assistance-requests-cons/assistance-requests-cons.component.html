@@ -56,7 +56,7 @@
       <h4>Informations médicales :</h4>
       <p><strong>Maladies chroniques :</strong> {{ selectedRequest.descriptionMaladie }}</p>
     </div>
-
+    <button *ngIf="!selectedRequest.dateCloture" class="btn btn-danger mt-3" (click)="cloturerRequest()">Clôturer</button>
     <button class="btn btn-secondary mt-3" (click)="closeDetails()">Fermer</button>
 
   </div>

@@ -4,7 +4,7 @@
 
   <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="text-center">
-    <div class="spinner-border text-primary" role="status">
+    <div class="spinner-border text-success" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
     <p>Chargement des contrats en cours...</p>
@@ -27,8 +27,8 @@
   <div *ngIf="!isLoading && groupedClients.length > 0">
     <div *ngFor="let client of filteredClients()" class="card mb-3">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Client : {{ client.nom }} {{ client.prenom }}</strong>
-        <button class="btn btn-link" (click)="client.showContracts = !client.showContracts">
+        <strong>{{ client.nom }} {{ client.prenom }}</strong>
+        <button class="btn btn-success" (click)="client.showContracts = !client.showContracts">
           {{ client.showContracts ? 'Masquer' : 'Voir les contrats' }}
         </button>
       </div>
@@ -46,7 +46,7 @@
             <tr *ngFor="let contract of client.contrats">
                 <td>{{ contract.statut === 'actif' ? 'Actif' : contract.statut === 'terminé' ? 'Terminé' : contract.statut }}</td>
               <td>
-                <button class="btn btn-primary" style="padding: 3px 15px;" (click)="onDownloadContract(contract.id)">
+                <button class="btn btn-success" style="padding: 3px 15px;" (click)="onDownloadContract(contract.id)">
                   Télécharger le PDF
                 </button>
               </td>

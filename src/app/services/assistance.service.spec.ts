@@ -89,7 +89,7 @@ describe('AssistanceService', () => {
       headers: { Authorization: 'Bearer mock-token' }
     });
     expect(result).toEqual([{ id: 1, type: 'test' }]);
-    expect(console.log).toHaveBeenCalledWith('Données récupérées depuis le backend:', [{ id: 1, type: 'test' }]);
+    expect(console.log).toHaveBeenCalledWith('Données récupérées depuis le backend allDossiersClient:', [{ id: 1, type: 'test' }]);
   });
 
   it('should throw error on getAllRequests failure', async () => {
@@ -106,7 +106,7 @@ describe('AssistanceService', () => {
       headers: { Authorization: 'Bearer mock-token' }
     });
     expect(result).toEqual([{ id: 2, type: 'logistics' }]);
-    expect(console.log).toHaveBeenCalledWith('Données récupérées depuis le backend:', [{ id: 2, type: 'logistics' }]);
+    expect(console.log).toHaveBeenCalledWith('Données récupérées depuis le backend allDossiers:', [{ id: 2, type: 'logistics' }]);
   });
 
   it('should throw error on getAllRequests_Conseiller_Logisticien failure', async () => {

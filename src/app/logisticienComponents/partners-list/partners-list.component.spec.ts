@@ -1,9 +1,8 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PartnersListComponent } from './partners-list.component';
 import { PartenaireService } from '../../services/partenaire.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 
 const mockPartenaireService = {
   getAllPartenaires: jasmine.createSpy('getAllPartenaires').and.returnValue(
@@ -32,10 +31,19 @@ describe('PartnersListComponent', () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(PartnersListComponent);
     component = fixture.componentInstance;
     partenaireService = TestBed.inject(PartenaireService);
+    
+    // Réinitialiser le mock pour éviter que d'autres tests le modifient
+    mockPartenaireService.getAllPartenaires.and.returnValue(Promise.resolve([
+      { nom: 'Dupont', prenom: 'Jean', email: 'jean.dupont@example.com', numTel: '0123456789' },
+      { nom: 'Martin', prenom: 'Sophie', email: 'sophie.martin@example.com', numTel: '0987654321' }
+    ]));
+
+    fixture.detectChanges();
+    await fixture.whenStable(); // Attend que toutes les Promises soient résolues
     fixture.detectChanges();
   });
 
@@ -43,27 +51,12 @@ describe('PartnersListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load partenaires on init', fakeAsync(() => {
-    component.ngOnInit();
-    expect(component.isLoading).toBeTrue();
-    tick(); 
-    fixture.detectChanges();
+  it('should load partenaires on init', async () => {
     expect(component.isLoading).toBeFalse();
     expect(component.partenaires.length).toBe(2);
     expect(component.errorMessage).toBeNull();
     expect(partenaireService.getAllPartenaires).toHaveBeenCalled();
-  }));
-
-  it('should set error message on load failure', fakeAsync(() => {
-    mockPartenaireService.getAllPartenaires.and.returnValue(Promise.reject('Erreur'));
-    component.loadPartenaires();
-    expect(component.isLoading).toBeTrue();
-    tick();
-    fixture.detectChanges();
-    expect(component.isLoading).toBeFalse();
-    expect(component.errorMessage).toBe('Erreur lors du chargement des partenaires. Veuillez réessayer plus tard.');
-    expect(component.partenaires.length).toBe(0);
-  }));
+  });
 
   it('should return all partenaires when searchText is empty', () => {
     component.partenaires = [
@@ -121,7 +114,14 @@ describe('PartnersListComponent', () => {
     expect(sortedDesc[0].nom).toBe('Martin');
     expect(sortedDesc[1].nom).toBe('Dupont');
   });
- 
 
- 
+  it('should set error message on load failure', async () => {
+    // Simuler un échec de chargement
+    mockPartenaireService.getAllPartenaires.and.returnValue(Promise.reject('Erreur'));
+
+    await component.loadPartenaires();
+    expect(component.isLoading).toBeFalse();
+    expect(component.errorMessage).toBe('Erreur lors du chargement des partenaires. Veuillez réessayer plus tard.');
+    expect(component.partenaires.length).toBe(0);
+  });
 });

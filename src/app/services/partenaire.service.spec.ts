@@ -106,7 +106,7 @@ describe('PartenaireService', () => {
     const error = new Error('Network error');
     mockAxios.get.and.returnValue(Promise.reject(error));
     await expectAsync(service.getAllSousPartenaires()).toBeRejectedWith(error);
-    expect(console.error).toHaveBeenCalledWith('Erreur lors de la récupération des partenaires:', error);
+    expect(console.error).toHaveBeenCalledWith('Erreur lors de la récupération des sous-partenaires:', error);
   });
 
   it('should fetch all partenaires successfully', async () => {
@@ -153,7 +153,7 @@ describe('PartenaireService', () => {
     const error = new Error('Delete error');
     mockAxios.delete.and.returnValue(Promise.reject(error));
     await expectAsync(service.deletePartenaire(1)).toBeRejectedWith(error);
-    expect(console.error).toHaveBeenCalledWith('Erreur lors de la suppression du partenaire:', error);
+    expect(console.error).toHaveBeenCalledWith('Erreur lors de la suppression du sous-partenaire:', error);
   });
 
   it('should update partenaire successfully', async () => {
@@ -172,7 +172,7 @@ describe('PartenaireService', () => {
     const error = new Error('Update error');
     mockAxios.put.and.returnValue(Promise.reject(error));
     await expectAsync(service.updatePartenaire(1, partenaireData)).toBeRejectedWith(error);
-    expect(console.error).toHaveBeenCalledWith('Erreur lors de la modification du partenaire:', error);
+    expect(console.error).toHaveBeenCalledWith('Erreur lors de la modification du sous-partenaire:', error);
   });
 
   it('should add partenaire successfully', async () => {
@@ -191,6 +191,6 @@ describe('PartenaireService', () => {
     const error = new Error('Add error');
     mockAxios.post.and.returnValue(Promise.reject(error));
     await expectAsync(service.addPartenaire(partenaireData)).toBeRejectedWith(error);
-    expect(console.error).toHaveBeenCalledWith('Erreur lors de l\'ajout du partenaire:', error);
+    expect(console.error).toHaveBeenCalledWith('Erreur lors de l\'ajout du sous-partenaire:', error);
   });
 });

@@ -72,4 +72,17 @@ export class AssistanceRequestsConsComponent implements OnInit {
     const segments = filePath.split(/[\\/]/).filter(segment => segment);
     return segments[segments.length - 1];
   }
+
+  async cloturerRequest() {
+    if (this.selectedRequest) {
+      try {
+        await this.assistanceService.updateStatut(this.selectedRequest.idDossier, 'Cloturé');
+        this.selectedRequest.statutDossier = 'Cloturé';
+        alert('Le dossier a été clôturé avec succès.');
+      } catch (error) {
+        console.error('Erreur lors de la clôture du dossier:', error);
+        alert('Une erreur est survenue lors de la clôture du dossier.');
+      }
+    }
+  }
 }
