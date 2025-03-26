@@ -36,7 +36,7 @@ export class AssistanceRequestsLogisComponent implements OnInit {
   constructor(
     private readonly assistanceService: AssistanceService,
     private readonly partenaireService: PartenaireService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadRequests();
@@ -235,32 +235,54 @@ export class AssistanceRequestsLogisComponent implements OnInit {
 
 
 
-// Toggle status edit mode
-toggleStatutEdit(requestId: number) {
-  this.editingStatut[requestId] = !this.editingStatut[requestId];
-  const request = this.requests.find(r => r.idDossier === requestId);
-  this.selectedStatut = request?.statutDossier || '';
-}
-
-// Update status
-async updateStatut(requestId: number, newStatut: string) {
-  this.processingStatutUpdate[requestId] = true;
-
-  try {
-    // Call API to update status
-    await this.assistanceService.updateStatut(requestId, newStatut);
-
-    // Update local data
-    const updatedRequest = this.requests.find(r => r.idDossier === requestId);
-    if (updatedRequest) {
-      updatedRequest.statutDossier = newStatut; // Update the local state
-    }
-
-    this.editingStatut[requestId] = false;
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour du statut:', error);
-  } finally {
-    this.processingStatutUpdate[requestId] = false;
+  // Toggle status edit mode
+  toggleStatutEdit(requestId: number) {
+    this.editingStatut[requestId] = !this.editingStatut[requestId];
+    const request = this.requests.find(r => r.idDossier === requestId);
+    this.selectedStatut = request?.statutDossier || '';
   }
-}
+
+  // Update status
+  async updateStatut(requestId: number, newStatut: string) {
+    this.processingStatutUpdate[requestId] = true;
+
+    try {
+      // Call API to update status
+      await this.assistanceService.updateStatut(requestId, newStatut);
+
+      // Update local data
+      const updatedRequest = this.requests.find(r => r.idDossier === requestId);
+      if (updatedRequest) {
+        updatedRequest.statutDossier = newStatut; // Update the local state
+      }
+
+      this.editingStatut[requestId] = false;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut:', error);
+    } finally {
+      this.processingStatutUpdate[requestId] = false;
+    }
+  }
+
+
+  async downloadDocument(path: string) {
+    try {
+      const blob = await this.assistanceService.downloadDocument(path);
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+
+
+    } catch (err) {
+      console.error('Erreur de téléchargement :', err);
+    }
+  }
+
+  // New method to extract filename from path
+  getFileNameFromPath(filePath: string): string {
+    if (!filePath) return '';
+    // Split by both \ and /, filter out empty segments, and take the last one
+    const segments = filePath.split(/[\\/]/).filter(segment => segment);
+    return segments[segments.length - 1];
+  }
 }

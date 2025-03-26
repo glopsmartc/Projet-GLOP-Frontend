@@ -61,7 +61,7 @@
     <p><strong>Type :</strong> {{ selectedRequest.typeAssistance }}</p>
     <p><strong>Statut :</strong>
       <select [(ngModel)]="selectedStatut" class="form-select form-select-sm">
-        <option value="Ouvert">Ouvert</option>
+        <option value="En-attente" disabled>En-attente</option>
         <option value="En-cours">En-cours</option>
         <option value="Cloturé">Cloturé</option>
         <option value="Annulé">Annulé</option>
@@ -85,11 +85,12 @@
     <p><strong>Position :</strong> {{ selectedRequest.positionActuelle }}</p>
 
     <!-- Fichiers joints -->
-    <div *ngIf="documents.length > 0">
-      <h4>Fichiers joints :</h4>
-      <ul>
-        <li *ngFor="let doc of documents">
-          <a [href]="doc.documents" target="_blank">{{ doc.documents.split('/').pop() }}</a>
+    <div *ngIf="selectedRequest.documents?.length > 0" class="section">
+      <p><strong>Fichiers joints :</strong></p>
+      <ul class="documents-list">
+        <li *ngFor="let doc of selectedRequest.documents">
+          <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
+          <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
         </li>
       </ul>
     </div>
@@ -100,7 +101,7 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-primary close-button" (click)="saveChanges()">Enregistrer</button>
+      <button class="btn btn-primary" style="background-color: #4A803F; border-color: #4A803F; transition: all 0.2s;" (click)="saveChanges()" onmouseover="this.style.backgroundColor='#3D6A33'; this.style.borderColor='#3D6A33';" onmouseout="this.style.backgroundColor='#4A803F'; this.style.borderColor='#4A803F';">Enregistrer</button>
       <button class="btn btn-secondary" (click)="closeDetails()">Fermer</button>
     </div>
   </div>

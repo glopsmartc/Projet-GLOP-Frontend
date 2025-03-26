@@ -16,7 +16,7 @@ export class AssistanceRequestsConsComponent implements OnInit {
   selectedRequest: any | null = null; // Stocke la demande sélectionnée
   documents: any[] = []; // Liste des fichiers joints
 
-  constructor(private assistanceService: AssistanceService) {}
+  constructor(private assistanceService: AssistanceService) { }
 
   ngOnInit() {
     this.loadRequests();
@@ -50,5 +50,26 @@ export class AssistanceRequestsConsComponent implements OnInit {
   getPriorityClass(priorite: string): string {
     if (!priorite) return '';
     return `badge priority-${priorite.toLowerCase().replace(/\s+/g, '-')}`;
+  }
+
+  async downloadDocument(path: string) {
+    try {
+      const blob = await this.assistanceService.downloadDocument(path);
+      const url = window.URL.createObjectURL(blob);
+
+      window.open(url);
+
+
+    } catch (err) {
+      console.error('Erreur de téléchargement :', err);
+    }
+  }
+
+  // New method to extract filename from path
+  getFileNameFromPath(filePath: string): string {
+    if (!filePath) return '';
+    // Split by both \ and /, filter out empty segments, and take the last one
+    const segments = filePath.split(/[\\/]/).filter(segment => segment);
+    return segments[segments.length - 1];
   }
 }

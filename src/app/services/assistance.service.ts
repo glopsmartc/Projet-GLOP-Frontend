@@ -36,7 +36,7 @@ export class AssistanceService {
   async getAllRequests(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allDossiersClient`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
+      console.log('Données récupérées depuis le backend allDossiersClient:', response.data);
       return response.data; // Retourne la liste des dossiers
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes:', error);
@@ -47,7 +47,7 @@ export class AssistanceService {
   async getAllRequests_Conseiller_Logisticien(): Promise<any[]> {
     try {
       const response = await axios.get(`${this.apiUrl}/allDossiers`, this.getAuthHeaders());
-      console.log('Données récupérées depuis le backend:', response.data);
+      console.log('Données récupérées depuis le backend allDossiers:', response.data);
       return response.data; // Retourne la liste des dossiers
     } catch (error) {
       console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
@@ -72,7 +72,7 @@ export class AssistanceService {
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la création de la demande ou de l\'upload du fichier :', error);
-      throw error; // Re-throw the error for further handling
+      throw error;
     }
   }
 
@@ -83,7 +83,7 @@ export class AssistanceService {
       return response.data; // Retourne la liste des documents liés à la demande
     } catch (error) {
       console.error("Erreur lors de la récupération des documents:", error);
-      return []; // Retourne un tableau vide en cas d'erreur
+      return [];
     }
   }
 
@@ -120,6 +120,34 @@ export class AssistanceService {
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut:', error);
+      throw error;
+    }
+  }
+
+  async downloadDocument(filePath: string): Promise<Blob> {
+    try {
+      const response = await axios.get(
+        `${this.apiUrl}/getFile?filePath=${encodeURIComponent(filePath)}`,
+        {
+          ...this.getAuthHeaders(),
+          responseType: 'blob',
+        }
+      );
+      console.log('endpoint', `${this.apiUrl}/getFile?filePath=${encodeURIComponent(filePath)}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors du téléchargement du fichier :', error);
+      throw error;
+    }
+  }
+
+  async getAllRequests_Partenaire(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.apiUrl}/allDossiersPartenaire`, this.getAuthHeaders());
+      console.log('Données récupérées depuis le backend:', response.data);
+      return response.data; // Retourne la liste des dossiers
+    } catch (error) {
+      console.error('Erreur lors de la récupération des demandes pour Conseiller_Logisticien :', error);
       throw error;
     }
   }
