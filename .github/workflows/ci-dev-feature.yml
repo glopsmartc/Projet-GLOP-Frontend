@@ -22,14 +22,11 @@ jobs:
         with:
           node-version: '20'
 
-      # Install frontend dependencies
-      #- name: Install Frontend Dependencies
-      #  working-directory: .
-      #  run: npm install
 
-      # Run Cypress tests
-      #- name: Run Cypress Tests
-      #  working-directory: .
-      #  run: |
-      #    npm run test  
-      #    npm run cypress:run  
+      # Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Run Jasmine tests (via Angular CLI)
+      - name: Run Jasmine Tests
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
