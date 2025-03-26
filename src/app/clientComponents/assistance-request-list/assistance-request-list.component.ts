@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssistanceService } from '../../services/assistance.service';
-import path from 'path';
 
 @Component({
   selector: 'app-assistance-request-list',
