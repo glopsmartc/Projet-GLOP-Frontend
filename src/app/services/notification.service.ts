@@ -29,16 +29,34 @@
 //     }
 //   }*/
 
-//   private connect() : void {
-//     // Connect to the WebSocket endpoint
-//     const socket = new SockJS('http://localhost:8083/ws'); 
-//     this.stompClient = Stomp.over(socket);
+//   private connect(): void {
+//     try {
+//       // Connect to the WebSocket endpoint
+//       const socket = new SockJS('http://localhost:8083/ws');
+//       this.stompClient = Stomp.over(socket);
 
-//     // Connect and subscribe to the notification topic
-//     this.stompClient.connect({}, () => {
-//       this.stompClient.subscribe('/topic/notifications', (message: any) => {
-//         this.notification$.next(message.body);
+//       // Connect and subscribe to the notification topic
+//       this.stompClient.connect({}, () => {
+//         console.log('WebSocket connected');
+//         // Subscribe to logisticien notifications
+//         this.stompClient.subscribe('/topic/logisticien', (message: any) => {
+//           this.notification$.next(message.body);
+//         });
+//       }, (error: any) => {
+//         console.error('WebSocket connection error:', error);
 //       });
-//     });
+//     } catch (error) {
+//       console.error('WebSocket connection failed:', error);
+//     }
+//   }
+
+//   disconnect(): void {
+//     if (this.stompClient) {
+//       try {
+//         this.stompClient.disconnect();
+//       } catch (error) {
+//         console.error('WebSocket disconnection error:', error);
+//       }
+//     }
 //   }
 // }

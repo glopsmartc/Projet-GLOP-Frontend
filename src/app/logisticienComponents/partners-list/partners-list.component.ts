@@ -27,10 +27,12 @@ export class PartnersListComponent implements OnInit {
   async loadPartenaires() {
     this.isLoading = true;
     this.errorMessage = null;
+    this.partenaires = []; 
     try {
       this.partenaires = await this.partenaireService.getAllPartenaires();
       console.log('Partenaires chargés:', this.partenaires);
     } catch (error) {
+      this.partenaires = []; 
       this.errorMessage = 'Erreur lors du chargement des partenaires. Veuillez réessayer plus tard.';
     } finally {
       this.isLoading = false;

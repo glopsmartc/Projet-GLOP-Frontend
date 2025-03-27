@@ -81,8 +81,12 @@ export class PartenaireService {
   }
 
   async updatePartenaire(id: number, partenaireData: any): Promise<void> {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.authService.getToken()}`
+    };
     try {
-      await axios.put(`${this.apiUrl}/updateSousPartenaire/${id}`, partenaireData, { headers: this.getAuthHeaders() });
+      await axios.put(`${this.apiUrl}/updateSousPartenaire/${id}`, partenaireData, { headers});
     } catch (error) {
       console.error('Erreur lors de la modification du sous-partenaire:', error);
       throw error;
@@ -90,8 +94,12 @@ export class PartenaireService {
   }
 
   async addPartenaire(partenaireData: any): Promise<void> {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.authService.getToken()}`
+    };
     try {
-      await axios.post(`${this.apiUrl}/createSousPartenaire`, partenaireData, { headers: this.getAuthHeaders() });
+      await axios.post(`${this.apiUrl}/createSousPartenaire`, partenaireData, { headers});
     } catch (error) {
       console.error('Erreur lors de l\'ajout du sous-partenaire:', error);
       throw error;
