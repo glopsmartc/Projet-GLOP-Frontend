@@ -1,0 +1,50 @@
+<div class="container my-4">
+  <h2 class="text-center"><strong>Liste des partenaires</strong></h2>
+  <br>
+
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un partenaire...">
+
+  <div *ngIf="isLoading" class="text-center">
+    <output class="spinner-border text-primary d-block">
+      <span class="visually-hidden">Chargement...</span>
+    </output>
+    <p>Chargement des partenaires...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <div class="table-responsive">
+    <table *ngIf="!isLoading && filteredPartenaires().length > 0" class="table table-striped mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th (click)="sortBy('nom')" (keydown.enter)="sortBy('nom')" (keydown.space)="sortBy('nom')" style="cursor: pointer;" tabindex="0">Nom {{ sortColumn === 'nom' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('prenom')" (keydown.enter)="sortBy('prenom')" (keydown.space)="sortBy('prenom')" style="cursor: pointer;" tabindex="0">Prénom {{ sortColumn === 'prenom' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('email')" (keydown.enter)="sortBy('email')" (keydown.space)="sortBy('email')" style="cursor: pointer;" tabindex="0">Email {{ sortColumn === 'email' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('nomEntreprise')" (keydown.enter)="sortBy('nomEntreprise')" (keydown.space)="sortBy('nomEntreprise')" style="cursor: pointer;" tabindex="0">Nom d'entreprise {{ sortColumn === 'nomEntreprise' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('zoneGeographique')" (keydown.enter)="sortBy('zoneGeographique')" (keydown.space)="sortBy('zoneGeographique')" style="cursor: pointer;" tabindex="0">Zone {{ sortColumn === 'zoneGeographique' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('sexe')" (keydown.enter)="sortBy('sexe')" (keydown.space)="sortBy('sexe')" style="cursor: pointer;" tabindex="0">Sexe {{ sortColumn === 'sexe' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('adresse')" (keydown.enter)="sortBy('adresse')" (keydown.space)="sortBy('adresse')" style="cursor: pointer;" tabindex="0">Adresse {{ sortColumn === 'adresse' ? (sortAscending ? '△' : '▽') : '' }}</th>
+          <th (click)="sortBy('numTel')" (keydown.enter)="sortBy('numTel')" (keydown.space)="sortBy('numTel')" style="cursor: pointer;" tabindex="0">Téléphone {{ sortColumn === 'numTel' ? (sortAscending ? '△' : '▽') : '' }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let partenaire of sortedPartenaires()">
+          <td>{{ partenaire.nom }}</td>
+          <td>{{ partenaire.prenom }}</td>
+          <td>{{ partenaire.email }}</td>
+          <td>{{ partenaire.nomEntreprise }}</td>
+          <td>{{ partenaire.zoneGeographique }}</td>
+          <td>{{ partenaire.sexe }}</td>
+          <td>{{ partenaire.adresse }}</td>
+          <td>{{ partenaire.numTel }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!isLoading && filteredPartenaires().length === 0" class="alert alert-info" role="alert">
+    Aucun partenaire trouvé.
+  </div>
+</div>

@@ -1,35 +1,45 @@
 <div class="assistance-request mt-4">
   <div *ngIf="!submitted">
     <h1>Soumettre une demande d’assistance</h1>
-    <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande
-      rapidement.</p>
+    <p class="mb-5">Remplissez ce formulaire pour nous informer de votre problème. Nous traiterons votre demande rapidement.</p>
   </div>
 
-  <!-- Step 1: Type of Assistance -->
-  <div class="mb-5" *ngIf="step === 1">
-    <h2 style="display: inline-block;">Type d’assistance</h2>
-    <select [(ngModel)]="assistanceType" style="display: inline-block;">
-      <option value="">Sélectionnez le type d’assistance</option>
-      <option value="Medicale">Assistance médicale</option>
-      <option value="Autre">Autre</option>
+<!-- Step 0: Contract Selection -->
+<div class="mb-5" *ngIf="step === 0">
+  <div *ngIf="contractErrorMsg" class="error-message">
+    {{ contractErrorMsg }}
+  </div>
+  <h2 *ngIf="!contractErrorMsg">Sélectionnez un contrat actif</h2>
+  <div *ngIf="hasActiveContracts()">
+    <select [(ngModel)]="selectedContract" (change)="onContractSelect(selectedContract?.id)">
+      <option [ngValue]="null">Sélectionnez un contrat</option>
+      <option *ngFor="let contract of activeContracts" [ngValue]="contract"> {{ contract.name }} ({{ contract.id }})</option>
     </select>
+  </div>
+</div>
 
-    <div *ngIf="assistanceType === 'Autre'">
-      <input type="text" [(ngModel)]="otherType" placeholder="Veuillez préciser votre demande" maxlength="62">
+<!-- Step 1: Type of Assistance -->
+<div class="mb-5" *ngIf="step === 1">
+  <h2>Type d’assistance</h2>
+  <select [(ngModel)]="assistanceType" style="display: inline-block;">
+    <option value="">Sélectionnez le type d’assistance</option>
+    <option *ngFor="let service of services" [value]="service">{{ service }}</option>
+  </select>
 
-      <h2 class="mt-3">Avez-vous besoin d'une assistance médicale ?</h2>
-      <label>
-        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Oui"> Oui
-      </label>
-      <label>
-        <input type="radio" [(ngModel)]="medicalAssistance" name="medicalAssistance" value="Non"> Non
-      </label>
-    </div>
+  <div *ngIf="assistanceType === 'Conseils médicaux' || assistanceType === 'Pris en charge des frais médicaux' || assistanceType === 'Orientation vers des hôpitaux référencés'">
+    <h2 class="mt-3">Avez-vous des maladies chroniques ?</h2>
+    <label>
+      <input type="radio" [(ngModel)]="maladieChronique" name="maladieChronique" [value]="true"> Oui
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="maladieChronique" name="maladieChronique" [value]="false"> Non
+    </label>
+  </div>
 
-    <div *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'">
-      <h2>Informations médicales à transmettre au médecin :</h2>
-      <textarea [(ngModel)]="medicalInfo" placeholder="Décrivez les informations médicales pertinentes"></textarea>
-    </div>
+   <div *ngIf="maladieChronique">
+  <h2>Maladies chroniques :</h2>
+  <textarea [(ngModel)]="descriptionMaladie" placeholder="Décrivez vos maladies chroniques"></textarea>
+</div>
 
     <h2 class="mt-3">Urgence</h2>
     <label>
@@ -42,8 +52,9 @@
     <h2>Déscription</h2>
     <textarea [(ngModel)]="description" placeholder="Décrivez votre problème en détail"></textarea>
 
-    <h2>Joindre un document</h2>
-    <p>Veuillez télécharger PDFs ou images relatifs à votre demande.</p>
+    <h2>Joindre les documents</h2>
+    <p>Veuillez télécharger les PDFs ou images relatifs à votre demande.</p>
+    <p><strong>Note :</strong> Si votre demande concerne un <strong>accident</strong>, veuillez également joindre le <strong>constat amiable</strong>. Vous pouvez télécharger un modèle de constat amiable en cliquant <a href="/constat-amiable" target="_blank">ici</a>.</p>
 
     <!-- Section fichiers -->
     <div class="file-uploads">
@@ -83,7 +94,7 @@
   <!-- Step 2: Location -->
   <div class="mb-5" *ngIf="step === 2">
     <div class="location-section">
-      <h2>Localisation</h2>
+      <h2 class="mb-3">Localisation</h2>
 
       <div *ngIf="isLocating" class="loading">
         Récupération de ma position...
@@ -97,11 +108,12 @@
         <p>📍 {{ location }}</p>
       </div>
 
-      <button (click)="getLocation()" [disabled]="isLocating" class="location-button bg-transparent"
-        style="color: green;"> Obtenir ma position </button>
+      <button (click)="getLocation()" [disabled]="isLocating" class="location-button bg-transparent" style="color: green; padding:0; margin: 10px; text-decoration: underline;">
+        Obtenir ma position
+      </button>
 
       <div class="manual-input">
-        <input type="text" [(ngModel)]="manualLocation" placeholder="Où avez-vous besoin d’assistance ?">
+        <input type="text" [(ngModel)]="manualLocation" placeholder="Où avez-vous besoin d'assistance ?" />
       </div>
     </div>
   </div>
@@ -109,15 +121,15 @@
   <!-- Step 4: Contact Information -->
   <div class="mb-5" *ngIf="step === 3">
     <h2>Informations de contact</h2>
-    <input type="tel" [(ngModel)]="phone" placeholder="Téléphone">
-    <input type="email" [(ngModel)]="email" placeholder="Email">
+    <input type="tel" placeholder="Tel (+33)" [(ngModel)]="phone" name="phone" required />
+    <input type="email" [(ngModel)]="email" placeholder="Email" required>
   </div>
 
   <!-- Navigation Buttons -->
   <div class="navigation">
     <div *ngIf="emptyFieldError" class="error-message">{{ errorMessage }}</div>
-    <button *ngIf="step > 1 && step < 4" (click)="previousStep()">Précédent</button>
-    <button *ngIf="step < 3" (click)="nextStep()">Suivant</button>
+    <button *ngIf="step > 0 && step < 4" (click)="previousStep()">Précédent</button>
+    <button *ngIf="step < 3 && !contractErrorMsg" (click)="nextStep()">Suivant</button>
     <button *ngIf="step === 3" (click)="validateAndSubmit()">Soumettre</button>
   </div>
 </div>
@@ -127,13 +139,13 @@
   <h1 class="mb-4">Votre demande a été soumise avec succès !</h1>
   <p><strong>Type d’assistance:</strong> {{ assistanceType }}<span *ngIf="assistanceType === 'Autre'"> : {{
       otherType }}</span></p>
-  <p *ngIf="medicalAssistance === 'Oui' || assistanceType === 'Medicale'"><strong>Informations médicales:</strong> {{
-    medicalInfo }} </p>
+  <p *ngIf="maladieChronique === true"><strong>Informations médicales:</strong> {{
+   description }} </p>
   <p><strong>Description:</strong> {{ description }}</p>
   <p><strong>Urgence:</strong> {{ urgency }}</p>
-  <p><strong>Localisation:</strong> {{ location }}</p>
+  <p><strong>Localisation:</strong> {{ manualLocation }}</p>
   <p><strong>Numéro de Téléphone:</strong> {{ phone }}</p>
   <p><strong>Email:</strong> {{ email }}</p>
   <p class="mt-3">Notre équipe vous contactera sous peu. Merci de votre patience.</p>
-  <button class="mb-5" (click)="goHome()">Retour à l’accueil</button>
+  <a class="my-5" style="color: #4a803f;" routerLink="/assistance-request">Retour à l’accueil</a>
 </div>

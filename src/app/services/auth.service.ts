@@ -14,7 +14,7 @@ export class AuthService {
   private roles: string[] = [];
 
   constructor() {
-    this.apiUrl = this.getApiUrl(); // safe method to get apiUrl
+    this.apiUrl = this.getApiUrl(); 
     this.isAuthenticatedSubject.next(this.isTokenValid(this.getToken()));
     this.extractRoles();
   }
@@ -25,8 +25,9 @@ export class AuthService {
       return `${window.config.apiBaseUrl}/auth`; // only access window.config if window is available
     }
     console.warn('window.config is not available');
-    return ''; 
+    return '';
   }
+
 
   public extractRoles(): void {
     const token = this.getToken();
@@ -52,7 +53,7 @@ export class AuthService {
       console.log('User role:', this.roles);
     }
   }
-
+  
   async signIn(credentials: any): Promise<any> {
     try {
       const response = await axios.post(`${this.apiUrl}/login`, credentials);

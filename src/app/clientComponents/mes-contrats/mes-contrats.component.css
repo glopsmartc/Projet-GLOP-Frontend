@@ -143,7 +143,7 @@ h1 {
 
 /* Boutons de la pagination */
 .pagination button {
-    padding: 10px 20px;
+    padding: 5px 20px;
     margin: 0 5px;
     font-size: 16px;
     background-color: #3f6f35;
@@ -156,7 +156,7 @@ h1 {
 
 /* Apparence du bouton au survol */
 .pagination button:hover {
-    background-color: #6b8856; 
+    background-color: #6b8856;
     border-color: #6b8856;
 }
 

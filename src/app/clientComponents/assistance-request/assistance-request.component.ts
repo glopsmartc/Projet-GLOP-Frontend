@@ -1,22 +1,25 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LocationService } from '../../services/location.service';
+import { ContratService } from '../../services/contrat.service'; // Import ContratService
+import { AssistanceService } from '../../services/assistance.service';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-assistance-request',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './assistance-request.component.html',
   styleUrl: './assistance-request.component.css',
 })
 export class AssistanceRequestComponent {
-  step: number = 1;
+  step: number = 0;
   assistanceType: string = '';
-  medicalAssistance: string = '';
-  medicalInfo: string = '';
+  maladieChronique: boolean = false;
+  descriptionMaladie: string = '';
   urgency: string = '';
   location: string = '';
   useCurrentLocation: boolean = false;
@@ -30,6 +33,7 @@ export class AssistanceRequestComponent {
   emptyFieldError: boolean = false;
 
   errorMessage: string = 'Veuillez remplir tous les champs du formulaire.';
+  contractErrorMsg: string = '';
 
   isLocating: boolean = false;
   geoError: string = '';
@@ -45,25 +49,111 @@ export class AssistanceRequestComponent {
 
   MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  constructor(private readonly http: HttpClient, private readonly sanitizer: DomSanitizer, private readonly locationService: LocationService) { }
+  contracts: any[] = [];
+  activeContracts: any[] = [];
+  selectedContract: any = null;
+  services: string[] = [];
+
+  constructor(
+    private readonly sanitizer: DomSanitizer,
+    private readonly locationService: LocationService,
+    private readonly contratService: ContratService,
+    private readonly assistanceService: AssistanceService,
+  ) { }
+
+  async ngOnInit() {
+    await this.loadContracts();
+  }
+
+  hasActiveContracts(): boolean {
+    return this.contracts.some(contract => contract.statut === 'actif');
+  }
+
+  async loadContracts() {
+    try {
+      this.contracts = await this.contratService.getUserContracts();
+      console.log('Contracts loaded:', this.contracts);
+
+      this.activeContracts = this.contracts.filter(contract => contract.statut === 'actif');
+      if (this.activeContracts.length === 0) {
+        this.contractErrorMsg = 'Vous n’avez aucun contrat actif. Veuillez souscrire à un contrat pour demander une assistance.';
+        this.emptyFieldError = false;
+      } else {
+        this.contractErrorMsg = '';
+        this.emptyFieldError = false;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats:', error);
+      this.contractErrorMsg = 'Vous n’avez aucun contrat actif. Veuillez souscrire à un contrat pour demander une assistance.';
+      this.emptyFieldError = false;
+    }
+  }
+
+  async onContractSelect(contractId: number) {
+    try {
+      this.selectedContract = this.contracts.find(contract => contract.id === contractId);
+      if (this.selectedContract && this.selectedContract.statut !== 'actif') {
+        this.contractErrorMsg = 'Ce contrat n’est pas actif. Veuillez sélectionner un contrat actif.';
+        this.selectedContract = null;
+        return;
+      }
+      if (this.selectedContract) {
+        const servicesString = await this.contratService.getContractServices(contractId);
+        if (Array.isArray(servicesString) && servicesString.length > 0) {
+          const cleanString = servicesString[0].replace(/\\n/g, '\n');
+          this.services = cleanString.split('\n');
+          this.contractErrorMsg = '';
+        } else {
+          this.services = [];
+          console.error('Invalid services string format');
+        }
+        console.log('Services array:', this.services);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la sélection du contrat:', error);
+      this.contractErrorMsg = 'Erreur lors de la récupération des services du contrat. Veuillez réessayer plus tard.';
+      this.emptyFieldError = true;
+    }
+  }
 
   async getLocation() {
     this.isLocating = true;
     this.locationError = '';
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simule un délai de chargement
       const result = await this.locationService.getCurrentLocation();
       this.location = result.address;
+      this.manualLocation = this.location; // Update manualLocation with the obtained location
     } catch (error) {
-      this.locationError = error instanceof Error ? error.message : 'Erreur de localisation';
+      if (error instanceof GeolocationPositionError) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            this.locationError = 'La localisation a été refusée. Veuillez autoriser l’accès à votre position.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            this.locationError = 'La localisation est indisponible. Veuillez vérifier votre connexion.';
+            break;
+          case error.TIMEOUT:
+            this.locationError = 'Le délai de localisation a expiré. Veuillez réessayer.';
+            break;
+          default:
+            this.locationError = 'Erreur de localisation inconnue.';
+        }
+      } else {
+        this.locationError = 'Erreur de localisation. Veuillez réessayer.';
+      }
     } finally {
       this.isLocating = false;
     }
   }
 
-
   nextStep() {
+  if (this.step === 0 && !this.selectedContract) {
+    this.errorMessage = 'Veuillez sélectionner un contrat pour continuer.';
+    this.emptyFieldError = true;
+    return;
+  }
     if (this.validateStep()) {
       this.emptyFieldError = false;
       if (this.step < 3) {
@@ -75,41 +165,67 @@ export class AssistanceRequestComponent {
   }
 
   previousStep() {
-    if (this.step > 1) this.step--;
+    if (this.step > 0) this.step--;
+    this.contractErrorMsg = '';
+    this.emptyFieldError = false;
   }
 
-  validateAndSubmit() {
+  async validateAndSubmit() {
     if (this.validateStep()) {
       this.emptyFieldError = false;
-      this.submitRequest();
+      try {
+        await this.submitRequestWithFiles(); // Make sure this returns a Promise
+        this.step = 4;
+        this.submitted = true;
+      } catch (error) {
+        console.error('Error submitting request:', error);
+        this.errorMessage = 'Une erreur est survenue lors de la soumission. Veuillez réessayer.';
+        this.emptyFieldError = true;
+      }
     } else {
       this.emptyFieldError = true;
     }
   }
 
-  submitRequest() {
-    const requestData = {
-      assistanceType: this.assistanceType,
-      urgency: this.urgency,
-      location: this.location,
+
+  submitRequestWithFiles(): Promise<any> {
+    const formData = new FormData();
+
+    this.pdfFiles.forEach((pdf) => {
+      formData.append('pdfFiles', pdf.file, pdf.name);
+    });
+
+    this.imageFiles.forEach((image) => {
+      formData.append('imageFiles', image.file, image.name);
+    });
+
+    const dossierData = {
       description: this.description,
-      medicalAssistance: this.medicalAssistance,
-      medicalInfo: this.medicalInfo,
-      phone: this.phone,
+      type: this.assistanceType,
+      idContrat: this.selectedContract?.id,
+      maladieChronique: this.maladieChronique,
+      descriptionMaladie: this.descriptionMaladie,
+      positionActuelle: this.location || this.manualLocation,
+      priorite: this.urgency,
+      numTel: this.phone,
       email: this.email,
-      otherType: this.assistanceType === 'Autre' ? this.otherType : null,
-      pdfFile: this.pdfFile,
     };
-    console.log('Request Submitted:', requestData);
-    this.submitted = true;
-    this.step++;
-  }
 
-  goHome() {
-    this.step = 1;
-    this.submitted = false;
-  }
+    formData.append(
+      'dossierData',
+      new Blob([JSON.stringify(dossierData)], { type: 'application/json' })
+    );
 
+    return this.assistanceService.submitDossierWithFiles(formData)
+      .then((response) => {
+        console.log('Dossier soumis avec succès avec fichiers:', response);
+        return response;
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la soumission avec fichiers :', error);
+        throw error;
+      });
+  }
 
   onFileUpload(event: any) {
     const files = event.target.files;
@@ -139,6 +255,8 @@ export class AssistanceRequestComponent {
           this.showImage.push(false);
         };
         reader.readAsDataURL(file);
+      } else {
+        alert(`Le fichier ${file.name} n'est pas un PDF ou une image valide.`);
       }
     }
     console.log('Uploaded Files:', files);
@@ -172,23 +290,38 @@ export class AssistanceRequestComponent {
     return regex.test(email);
   }
 
+
   validateStep(): boolean {
     switch (this.step) {
+      case 0:
+        if (!this.selectedContract) {
+          this.errorMessage = 'Veuillez sélectionner un contrat pour continuer.';
+          return false;
+        }
+        return true;
       case 1:
-        return (
-          !!this.assistanceType &&
-          !!this.urgency &&
-          !!this.description &&
-          (this.assistanceType !== 'Autre' || !!this.otherType) &&
-          (this.assistanceType !== 'Autre' || !!this.medicalAssistance) &&
-          (this.medicalAssistance !== 'Oui' || !!this.medicalInfo) &&
-          (this.assistanceType !== 'Medicale' || !!this.medicalInfo)
-        );
+        if (!this.assistanceType || !this.urgency || !this.description) {
+          this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
+          return false;
+        }
+        if (this.assistanceType === 'Autre' && !this.otherType) {
+          this.errorMessage = 'Veuillez spécifier le type d’assistance.';
+          return false;
+        }
+        if (this.maladieChronique && !this.descriptionMaladie) {
+          this.errorMessage = 'Veuillez décrire vos maladies chroniques.';
+          return false;
+        }
+        return true;
       case 2:
-        return !!this.location;
+        if (!this.location && !this.manualLocation) {
+          this.errorMessage = 'Veuillez fournir une localisation.';
+          return false;
+        }
+        return true;
       case 3:
         if (!this.phone) {
-          this.errorMessage = 'Veuillez entrer un numéro de téléphone.';
+          this.errorMessage = 'Veuillez entrer un numéro de téléphone valide.';
           return false;
         }
         if (!this.email || !this.validateEmail(this.email)) {

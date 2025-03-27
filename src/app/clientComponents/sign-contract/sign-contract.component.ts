@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import * as jsPDF from 'jspdf';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component'; 
+import { PaymentDialogComponent } from '../../modalDialogs/payment-dialog/payment-dialog.component';
 import { ContratService } from '../../services/contrat.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ReforestationDialogComponent } from '../../modalDialogs/reforestation-dialog/reforestation-dialog.component'; 
 
 @Component({
   selector: 'app-sign-contract',
@@ -22,6 +21,8 @@ export class SignContractComponent implements OnInit {
   acceptTerms: boolean = false;
   currentUserName: string = 'Non spécifié';
   carbonOffset = false;
+  storedEmissions: number = 0;
+  emissionsValue: number = 0;
   finalPrice = 0;
   offsetPercentage = 0.05;
 
@@ -30,6 +31,20 @@ export class SignContractComponent implements OnInit {
   constructor(private router: Router, private dialog: MatDialog, private activatedRoute: ActivatedRoute, private contratService: ContratService) { }
 
   ngOnInit(): void {
+    const storedOffset = localStorage.getItem('carbonOffset');
+    this.carbonOffset = storedOffset === 'true';
+    console.log('this is the checkboxresult',localStorage.getItem('carbonOffset'));
+
+      // Récupérer les émissions de CO2 depuis le localStorage
+    const storedEmissions = localStorage.getItem('carbonEmissions');
+    if (storedEmissions) {
+      // Si des émissions sont stockées dans localStorage, on les parse et on les utilise
+      this.emissionsValue = JSON.parse(storedEmissions);
+      console.log('Emissions récupérées depuis le localStorage:', this.emissionsValue);
+    } else {
+      console.warn('Aucune donnée d\'émissions trouvée dans le localStorage');
+    }
+
     // Récupérer le nom de l'utilisateur actuel
     this.contratService.getCurrentUser().then(
       (user) => {
@@ -73,12 +88,6 @@ export class SignContractComponent implements OnInit {
     });
   }
 
-  openReforestationDialog(): void {
-    this.dialog.open(ReforestationDialogComponent, {
-      width: '80%',
-      height: '60%',
-    });
-  }
 
   finalizeContract() {
     const dialogRef = this.dialog.open(PaymentDialogComponent, {
@@ -93,25 +102,28 @@ export class SignContractComponent implements OnInit {
     });
   }
 
+
   updatePrice() {
-    if (this.selectedPlan && this.selectedPlan.price) {
-      // Remove the currency symbol and convert to a number
-      const priceValue = parseFloat(this.selectedPlan.price.replace('€', '').trim());
-      
-      if (isNaN(priceValue)) {
-        console.warn('Invalid price value');
-        this.finalPrice = 0;
+    const priceValue = parseFloat(this.selectedPlan.price.replace('€', '').trim());
+    if (this.carbonOffset) {
+      const emissionsInKg = this.emissionsValue; // utilise la valeur stockée dans cette variable
+      console.log('------emission:', emissionsInKg)
+      if (emissionsInKg > 0) {
+        // converti les émissions en tonnes (1000 kg = 1 tonne)
+        const emissionsInTonnes = emissionsInKg / 1000;
+
+        // calcule le prix basé sur 70€ par tonne
+        this.finalPrice = priceValue + emissionsInTonnes * 70;
       } else {
-        this.finalPrice = this.carbonOffset
-          ? priceValue * (1 + this.offsetPercentage)
-          : priceValue;
+        console.warn('Les émissions de CO2 sont invalides ou non disponibles');
+        this.finalPrice = priceValue;
       }
     } else {
-      console.warn('selectedPlan or its price is undefined');
-      this.finalPrice = 0; 
+      // Si l'option de compensation n'est pas cochée, ne pas appliquer de prix
+      this.finalPrice = priceValue;
+      console.log('checkbox not checked')
     }
-  } 
-  
+  }
 
   async generateAndSaveContract() {
     try {
@@ -119,13 +131,13 @@ export class SignContractComponent implements OnInit {
       const pdfBlob = this.generatePDF();
 
       // Sauvegarde locale pour tester le fichier PDF généré
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'contract_test.pdf';
-      a.click();
+      //const url = window.URL.createObjectURL(pdfBlob);
+      //const a = document.createElement('a');
+      //a.href = url;
+      //a.download = 'contract_test.pdf';
+      //a.click();
 
-      console.log('PDF sauvegardé localement pour test.');
+      //console.log('PDF sauvegardé localement pour test.');
 
 
       // Sauvegarder les données du contrat via l'API
@@ -144,9 +156,6 @@ export class SignContractComponent implements OnInit {
 
       console.log('Contrat et PDF sauvegardés avec succès.');
 
-       // Afficher le message de succès
-       alert('Votre contrat a été généré et sauvegardé avec succès !'); 
-
       // Redirection vers /mescontrats après succès
       this.router.navigate(['/mes-contrats']);
     } catch (error) {
@@ -154,36 +163,36 @@ export class SignContractComponent implements OnInit {
     }
   }
 
-  
+
   generatePDF(): Blob {
     const doc = new jsPDF.default();
     const pageHeight = doc.internal.pageSize.height;
     let cursorY = 18;
-  
+
     // Ajouter le logo au début du PDF
     const logoUrl = 'assets/img/logo-mobi.png'; // Chemin de ton logo
     doc.addImage(logoUrl, 'PNG', 20, cursorY, 40, 15); // Le logo sera de 40x15 mm
     cursorY += 20;  // Décalage après le logo
-  
+
     // Titre du contrat avec couleur
     doc.setFontSize(20);
-    doc.setTextColor(56, 142, 60); 
+    doc.setTextColor(56, 142, 60);
     doc.setFont('helvetica', 'bold');
     doc.text('MobiSureMoinsDeCO2 Assurance', 105, cursorY, { align: 'center' });
     cursorY += 10;
-  
+
     doc.setFontSize(14);
     doc.text('Contrat d\'assurance', 105, cursorY, { align: 'center' });
     cursorY += 10;
     doc.line(10, cursorY, 200, cursorY); // Ligne sous le titre
     cursorY += 10;
-  
+
     // Informations personnelles (titre en gras et couleur)
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0); // Noir pour les titres
     doc.text('Vos Informations :', 10, cursorY);
     cursorY += 10;
-  
+
     // Fonction pour ajouter une ligne de données
     const addLine = (label: string, value: string | undefined, color: string = 'black') => {
       if (value) {
@@ -196,7 +205,7 @@ export class SignContractComponent implements OnInit {
         cursorY += 7;
       }
     };
-  
+
     // Informations
     addLine('Durée du Contrat', this.formData.dureeContrat); // Couleur verte
     addLine('Date de Début', this.formData.debutContrat);
@@ -205,11 +214,11 @@ export class SignContractComponent implements OnInit {
     addLine('Date Retour', this.formData.dateRetour);
     addLine('Date de Naissance du Souscripteur', this.formData.dateNaissanceSouscripteur);
     addLine('Téléphone', this.formData.numeroTelephone);
-  
+
     if (this.formData.assurerTransport === 'true') {
       addLine('Transport Assuré', 'Oui');
     }
-  
+
     const transportTypes: string[] = [];
     if (this.formData.voiture === 'true') transportTypes.push('Voiture');
     if (this.formData.trotinette === 'true') transportTypes.push('Trotinette');
@@ -217,7 +226,7 @@ export class SignContractComponent implements OnInit {
     if (transportTypes.length) {
       addLine('Type de Transport', transportTypes.join(' & '), '#388e3c'); // Couleur verte
     }
-  
+
      // Add Insured Persons
      if (this.formData.nombrePersonnes > 0) {
       addLine('Personnes Assurées', `${this.formData.nombrePersonnes, '#388e3c'}`);
@@ -241,7 +250,7 @@ export class SignContractComponent implements OnInit {
 
     doc.line(10, cursorY, 200, cursorY);
     cursorY += 10;
-  
+
     // Caractéristiques de l'offre (titre en gras et couleur)
     if (cursorY + 30 > pageHeight) {
       doc.addPage();
@@ -261,18 +270,18 @@ export class SignContractComponent implements OnInit {
       doc.text(`- ${feature}`, 20, cursorY);
       cursorY += 7;
     });
-  
+
     // Ajouter la signature
     if (cursorY + 70 > pageHeight) {
       doc.addPage();
       cursorY = 20;
     }
     const signatureStartY = pageHeight - 60;
-  
+
     doc.setDrawColor(0);
     const frameWidth = 70;
     const frameHeight = 42;
-  
+
     // Signature de l'entreprise
     doc.rect(20, signatureStartY, frameWidth, frameHeight);
     doc.setFont('helvetica', 'bold');
@@ -282,7 +291,7 @@ export class SignContractComponent implements OnInit {
     doc.setFont('helvetica', 'bold');
     const formattedDate = new Date().toLocaleDateString('fr-FR');
     doc.text(`Date : ${formattedDate}`, 25, signatureStartY + 35);
-  
+
     // Signature du client
     doc.rect(120, signatureStartY, frameWidth, frameHeight);
     doc.setFont('helvetica', 'bold');
@@ -291,10 +300,10 @@ export class SignContractComponent implements OnInit {
     doc.text(this.currentUserName || 'Non spécifié', 135, signatureStartY + 20);
     doc.setFont('helvetica', 'bold');
     doc.text(`Date : ${formattedDate}`, 125, signatureStartY + 35);
-  
+
     // Convertir le document en Blob pour téléchargement
     return doc.output('blob');
-  } 
+  }
 
 }
 
@@ -361,7 +370,7 @@ export class SignContractComponent implements OnInit {
       }
 
       .logo {
-        max-width: 150px; 
+        max-width: 150px;
         margin: 0 auto;
       }
 

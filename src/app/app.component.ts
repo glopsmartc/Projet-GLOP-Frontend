@@ -18,7 +18,13 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'MobiSureMoinsDeCO2';
   isAuthenticated: boolean = false;
   isClient: boolean = false;
+  isLogisticien: boolean = false;
+  isPartenaire: boolean = false;
   private authSubscription: Subscription | undefined;
+
+  notifications: any[] = [];
+  unreadNotifications: number = 0;
+  showNotifications: boolean = false;
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2, public authService: AuthService, private router: Router) { }
 
@@ -26,7 +32,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuthenticated => {
       this.isAuthenticated = isAuthenticated;
       this.isClient = this.authService.hasRole(['ROLE_CLIENT']);
+      this.isLogisticien = this.authService.hasRole(['ROLE_LOGISTICIEN']);
+      this.isPartenaire = this.authService.hasRole(['ROLE_PARTENAIRE']);
     });
+
+    if (this.isLogisticien) {
+      this.fetchNotifications();
+    }
   }
 
   ngOnDestroy(): void {
@@ -55,5 +67,18 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  fetchNotifications() {
+    // Simuler un appel pour récupérer les notifications
+    this.notifications = [
+      { message: "Nouvelle demande d’assistance reçue" },
+      { message: "Un sous-partenaire a mis à jour ses informations" }
+    ];
+    this.unreadNotifications = this.notifications.length;
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
   }
 }

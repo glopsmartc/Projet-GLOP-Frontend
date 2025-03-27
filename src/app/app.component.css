@@ -26,6 +26,7 @@ body {
 
 .wrapper {
     display: flex;
+    position: relative;
 }
 
 .main {
@@ -34,6 +35,7 @@ body {
     overflow: hidden;
     transition: all 0.35s ease-in-out;
     background-color: #fafbfe;
+    margin-left: 70px; /* Initial sidebar width */
 }
 
 #sidebar {
@@ -44,33 +46,68 @@ body {
     background-color: #4A803F;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#sidebar.expand + .main {
+  margin-left: 250px;
 }
 
 #sidebar.expand {
-    width: 260px;
-    min-width: 260px;
+    min-width: 250px;
 }
 
 .toggle-btn {
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 1rem 1.5rem;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  padding: 0; /* Remove padding to control size explicitly */
+  height: 3.5rem; /* Fixed height for consistency */
+  width: 3.5rem; /* Fixed width for consistency */
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-top: 35px;
+  justify-content: center;
 }
 
-.toggle-btn i {
-    font-size: 1.5rem;
-    color: #FFF;
+.toggle-btn .navbar-toggler-icon {
+  font-size: 1.5rem;
+  color: #FFF; /* White color */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='3' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Thicker lines for boldness */
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .sidebar-logo {
-    margin: auto 0;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+  padding: 1rem 0; /* Add padding for breathing room */
+}
+
+.sidebar-logo img:hover {
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.sidebar-logo img {
+  height: 2.5rem;
+  max-width: 100%;
 }
 
 .sidebar-logo a {
-    color: #FFF;
-    font-weight: 600;
+  color: #ea8b3e;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds readability */
+  font-weight: 600;
 }
+#sidebar.expand .sidebar-logo {
+  flex-direction: column; /* Stack vertically when expanded */
+  text-align: center;
+}
+
 
 #sidebar:not(.expand) .sidebar-logo,
 #sidebar:not(.expand) a.sidebar-link span {
@@ -97,8 +134,7 @@ a.sidebar-link {
 }
 
 a.sidebar-link:hover {
-    background-color: rgba(255, 255, 255, .075);
-    border-left: 3px solid #cd7425;
+    border-left: 4px solid #e8852e;
     i, span {
         color:  #e8852e;
     }
@@ -125,20 +161,65 @@ a.sidebar-link:hover {
     opacity: 1;
 }
 
-#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
-    border: solid;
-    border-width: 0 .075rem .075rem 0;
-    content: "";
-    display: inline-block;
-    padding: 2px;
-    position: absolute;
-    right: 1.5rem;
-    top: 1.4rem;
-    transform: rotate(-135deg);
-    transition: all .2s ease-out;
+.sidebar-footer {
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
 }
 
-#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
-    transform: rotate(45deg);
-    transition: all .2s ease-out;
+.notification-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 6px;
+    font-size: 0.8rem;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: -180px;
+    left: 40px;
+    background: white;
+    color: black;
+    width: 250px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 9999;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notification-dropdown li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
 }
