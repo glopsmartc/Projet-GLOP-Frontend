@@ -5,11 +5,11 @@
   <!-- Button to add a new partner -->
   <button (click)="startAdding()" class="btn btn-outline-success mt-4 mb-3"
     style="float: right; background-color: #4A803F; color: white;">
-    <i class="fas fa-plus-circle"></i> Ajouter un partenaire
+    <i class="fas fa-plus-circle"></i> Ajouter un sous partenaire
   </button>
 
   <!-- Search field -->
-  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un partenaire...">
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un sous partenaire...">
 
   <!-- Loading spinner -->
   <div *ngIf="isLoading" class="text-center">
@@ -61,7 +61,7 @@
 
   <!-- Message if no partners found -->
   <div *ngIf="!isLoading && filteredPartenaires.length === 0" class="alert alert-info" role="alert">
-    Aucun partenaire trouvé.
+    Aucun sous partenaire trouvé.
   </div>
 
   <div class="modal" [class.show]="isAdding || isEditing" [style.display]="(isAdding || isEditing) ? 'block' : 'none'">
