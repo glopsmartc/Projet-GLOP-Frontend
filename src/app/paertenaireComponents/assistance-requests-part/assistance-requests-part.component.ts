@@ -27,6 +27,11 @@ export class AssistanceRequestsPartComponent implements OnInit {
   sortColumn: string = '';
   sortAscending: boolean = true;
 
+  actions: { name: string; cost: number }[] = [];
+  totalFrais: number = 0;
+
+  selectedFiles: File[] = [];
+
   constructor(
     private readonly assistanceService: AssistanceService,
     private readonly partenaireService: PartenaireService
@@ -255,5 +260,33 @@ export class AssistanceRequestsPartComponent implements OnInit {
     return segments[segments.length - 1];
   }
 
+
+  addAction() {
+    this.actions.push({ name: '', cost: 0 });
+    this.getTotalCost();
+  }
+
+  removeAction(index: number) {
+    this.actions.splice(index, 1);
+    this.getTotalCost();
+  }
+
+  getTotalCost() {
+    this.totalFrais = this.actions.reduce((acc, action) => acc + (action.cost || 0), 0);
+  }
+
+  onFilesSelected(event: any) {
+    const files: FileList = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type === 'application/pdf') {
+        this.selectedFiles.push(files[i]);
+      } else {
+        alert(`Le fichier ${files[i].name} n'est pas un PDF.`);
+      }
+    }
+
+    event.target.value = ""; //mm fichier
+  }
 
 }
