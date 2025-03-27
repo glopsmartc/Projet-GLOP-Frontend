@@ -163,7 +163,7 @@ describe('PartenaireService', () => {
     expect(mockAxios.put).toHaveBeenCalledWith(
       'http://mock-assistance-api.com/api/sousPartenaires/updateSousPartenaire/1',
       partenaireData,
-      { headers: { Authorization: 'Bearer mock-token' } }
+      { headers: {'Content-Type': 'application/json',Authorization: 'Bearer mock-token' } }
     );
   });
 
@@ -182,7 +182,7 @@ describe('PartenaireService', () => {
     expect(mockAxios.post).toHaveBeenCalledWith(
       'http://mock-assistance-api.com/api/sousPartenaires/createSousPartenaire',
       partenaireData,
-      { headers: { Authorization: 'Bearer mock-token' } }
+      { headers: { 'Content-Type': 'application/json', Authorization: 'Bearer mock-token' } }
     );
   });
 
