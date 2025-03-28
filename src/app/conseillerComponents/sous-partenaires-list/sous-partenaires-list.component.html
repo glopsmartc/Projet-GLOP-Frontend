@@ -16,7 +16,7 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Chargement...</span>
     </div>
-    <p>Chargement des partenaires...</p>
+    <p>Chargement des sous-partenaires...</p>
   </div>
 
   <!-- Error message -->
@@ -61,14 +61,14 @@
 
   <!-- Message if no partners found -->
   <div *ngIf="!isLoading && filteredPartenaires.length === 0" class="alert alert-info" role="alert">
-    Aucun sous partenaire trouvé.
+    Aucun sous-partenaire trouvé.
   </div>
 
   <div class="modal" [class.show]="isAdding || isEditing" [style.display]="(isAdding || isEditing) ? 'block' : 'none'">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ isAdding ? 'Ajouter un partenaire' : 'Modifier un partenaire' }}</h5>
+          <h5 class="modal-title">{{ isAdding ? 'Ajouter un sous-partenaire' : 'Modifier un sous-partenaire' }}</h5>
           <button type="button" class="btn-close" (click)="isAdding ? cancelAdd() : cancelEdit()"></button>
         </div>
 
