@@ -155,14 +155,22 @@ export class AssistanceService {
 
   //partie partenaire dans demande assistance :
   //actions réalisées
+  async deleteAction(idDossier: number, action: string): Promise<any> {
+    // Encoder l'action complète (nom,cout)
+    const encodedAction = encodeURIComponent(action);
 
-  /*async deleteAction(idDossier: number, action: string) {
-    return this.http
-      .delete(`/api/dossier/${idDossier}/action`, { params: { action } })
-      .toPromise();
+    return this.http.delete(
+      `${this.apiUrl}/dossier/${idDossier}/action`,
+      {
+        params: { action: encodedAction },
+        headers: {
+          'Content-Type': 'application/json',
+          ...this.getAuthHeaders().headers
+        }
+      }
+    ).toPromise();
   }
-
-  async getActions(idDossier: number) {
+  /*async getActions(idDossier: number) {
     return this.http.get<string[]>(`/api/dossier/${idDossier}/actions`).toPromise();
   }*/
     async saveActions(
@@ -195,8 +203,6 @@ export class AssistanceService {
         throw error;
       }
     }
-
-
 
 
   //Factures:

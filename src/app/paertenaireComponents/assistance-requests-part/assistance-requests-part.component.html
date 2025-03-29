@@ -166,11 +166,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let action of existingActions">
+            <tr *ngFor="let action of existingActions; let i = index">
               <td>{{ action.name }}</td>
               <td>{{ action.cost }} €</td>
               <td>
-                <button class="btn btn-danger btn-sm">Supprimer</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteAction(i)">Supprimer</button>
               </td>
             </tr>
             <tr>

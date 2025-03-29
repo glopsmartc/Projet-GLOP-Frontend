@@ -342,6 +342,29 @@ removeExistingAction(index: number) {
     // Ici je peut aussi appeler une API pour supprimer l'action de la base de données
 }
 
+async deleteAction(index: number) {
+  if (!this.selectedRequest || !this.existingActions[index]) return;
+
+  const actionToDelete = this.existingActions[index];
+  // Envoyer le format exact "nom,cout" comme dans la BD
+  const actionForBackend = `${actionToDelete.name},${actionToDelete.cost.toFixed(1)}`;
+
+  try {
+    await this.assistanceService.deleteAction(
+      this.selectedRequest.idDossier,
+      actionForBackend
+    );
+
+    // Mise à jour locale
+    this.existingActions.splice(index, 1);
+    this.existingTotal = this.existingActions.reduce((sum, a) => sum + (a.cost || 0), 0);
+
+    console.log('Action supprimée avec succès');
+  } catch (error) {
+    console.error('Échec de la suppression:', error);
+  }
+}
+
   onFilesSelected(event: any) {
     const files: FileList = event.target.files;
 
