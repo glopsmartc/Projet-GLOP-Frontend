@@ -30,6 +30,13 @@ export class AssistanceRequestsPartComponent implements OnInit {
   actions: { name: string; cost: number }[] = [];
   totalFrais: number = 0;
 
+  existingActions: any[] = [];
+  existingTotal: number = 0;
+  newAction: any = { name: '', cost: 0 };
+
+  newActions: any[] = [];
+  newTotal: number = 0;
+
   selectedFiles: File[] = [];
 
   constructor(
@@ -130,6 +137,23 @@ export class AssistanceRequestsPartComponent implements OnInit {
     this.selectedRequest = request;
     this.selectedSousPartenaireIds = request.sous_partenaire ? [...request.sous_partenaire] : [];
     this.documents = await this.assistanceService.getDocumentsForRequest(request.idDossier);
+
+    // Réinitialiser
+    this.newAction = { name: '', cost: 0 };
+    this.newActions = [];
+    this.existingActions = [];
+    this.existingTotal = 0;
+    this.newTotal = 0;
+
+    // Charger les actions existantes dans un tableau en lecture seule
+    if (request.actionsRealisees) {
+      request.actionsRealisees.forEach((actionStr: string) => {
+        const [name, cost] = actionStr.split(',');
+        const actionCost = parseFloat(cost) || 0;
+        this.existingActions.push({ name, cost: actionCost });
+        this.existingTotal += actionCost;
+      });
+    }
   }
 
   async saveChanges() {
@@ -156,6 +180,20 @@ export class AssistanceRequestsPartComponent implements OnInit {
       }
 
       this.selectedRequest.sous_partenaire = [...newSousPartenaireIds];
+
+     /* // Enregistrer seulement les NOUVELLES actions
+      if (this.newActions.length > 0) {
+        await this.assistanceService.saveActions(
+            this.selectedRequest.idDossier,
+            this.newActions,
+            this.newTotal
+        );
+      }*/
+      //Uploader des factures
+      if (this.selectedFiles.length > 0) {
+        await this.assistanceService.uploadFactures(this.selectedRequest.idDossier, this.selectedFiles);
+      }
+
       this.closeDetails();
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement:', error);
@@ -261,19 +299,48 @@ export class AssistanceRequestsPartComponent implements OnInit {
   }
 
 
-  addAction() {
-    this.actions.push({ name: '', cost: 0 });
-    this.getTotalCost();
+  async addAction() {
+    if (this.newAction.name && this.newAction.cost) {
+      try {
+        // 1. Créer une copie de la nouvelle action
+        const actionToAdd = {
+          name: this.newAction.name,
+          cost: parseFloat(this.newAction.cost) || 0
+        };
+
+        // 2. Sauvegarder les nouvelles actions
+        await this.assistanceService.saveActions(
+          this.selectedRequest.idDossier,
+          [actionToAdd], // Envoyer uniquement la nouvelle action
+          actionToAdd.cost
+        );
+
+        // 3. Mettre à jour l'affichage localement
+        this.existingActions.push(actionToAdd);
+        this.existingTotal += actionToAdd.cost;
+
+        // 4. Réinitialiser le formulaire
+        this.newAction = { name: '', cost: 0 };
+        this.newActions = [];
+        this.newTotal = 0;
+
+      } catch (error) {
+        console.error("Erreur lors de l'ajout de l'action", error);
+        // Optionnel : Afficher un message d'erreur à l'utilisateur
+      }
+    }
   }
 
-  removeAction(index: number) {
-    this.actions.splice(index, 1);
-    this.getTotalCost();
-  }
+  removeNewAction(index: number) {
+    const removedAction = this.newActions.splice(index, 1)[0];
+    this.newTotal -= parseFloat(removedAction.cost) || 0;
+}
 
-  getTotalCost() {
-    this.totalFrais = this.actions.reduce((acc, action) => acc + (action.cost || 0), 0);
-  }
+removeExistingAction(index: number) {
+    const removedAction = this.existingActions.splice(index, 1)[0];
+    this.existingTotal -= parseFloat(removedAction.cost) || 0;
+    // Ici je peut aussi appeler une API pour supprimer l'action de la base de données
+}
 
   onFilesSelected(event: any) {
     const files: FileList = event.target.files;
@@ -287,6 +354,21 @@ export class AssistanceRequestsPartComponent implements OnInit {
     }
 
     event.target.value = ""; //mm fichier
+  }
+
+  async uploadFiles() {
+    if (!this.selectedRequest || !this.selectedFiles || this.selectedFiles.length === 0) {
+      console.warn("Aucun fichier sélectionné pour l'upload.");
+      return;
+    }
+
+    try {
+      await this.assistanceService.uploadFactures(this.selectedRequest.idDossier, this.selectedFiles);
+      console.log('Factures uploadées avec succès !');
+      this.selectedFiles = []; // Vider la liste après upload
+    } catch (error) {
+      console.error('Erreur lors de l\'upload des factures:', error);
+    }
   }
 
 }
