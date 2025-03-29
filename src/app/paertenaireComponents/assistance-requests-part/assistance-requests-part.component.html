@@ -152,37 +152,47 @@
       <br>
 
       <!-- Actions Réalisées -->
+
+      <!-- Affichage des actions existantes en lecture seule -->
       <h5><strong>Actions Réalisées pour ce dossier d'assistance</strong></h5>
+      <div *ngIf="existingActions && existingActions.length > 0" class="mb-3">
 
-      <table class="table table-bordered mt-3">
-        <thead>
-          <tr>
-            <th>Action Réalisée</th>
-            <th>Frais (€)</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let action of actions; let i = index">
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="action.name" placeholder="Nom de l'action">
-            </td>
-            <td>
-              <input type="number" class="form-control" [(ngModel)]="action.cost" (change)="getTotalCost()">
-            </td>
-            <td>
-              <button class="btn btn-danger btn-sm" (click)="removeAction(i)">Supprimer</button>
-            </td>
-          </tr>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Action Réalisée</th>
+              <th>Frais (€)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let action of existingActions">
+              <td>{{ action.name }}</td>
+              <td>{{ action.cost }} €</td>
+              <td>
+                <button class="btn btn-danger btn-sm">Supprimer</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>{{ existingTotal }} €</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <!-- Ligne du total -->
-          <tr>
-            <td><strong>Total</strong></td>
-            <td><strong>{{  totalFrais  }} €</strong></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- form pour ajouter de nouvelles actions -->
+      <h6 *ngIf="actions.length > 0">Nouvelles actions à ajouter:</h6>
+<div class="row g-3 align-items-center mb-3">
+  <div class="col-md-5">
+    <label for="newActionName" class="col-form-label">Nouvelle action</label>
+    <input type="text" id="newActionName" class="form-control" [(ngModel)]="newAction.name" placeholder="Nom de l'action">
+  </div>
+  <div class="col-md-3">
+    <label for="newActionCost" class="col-form-label">Frais (€)</label>
+    <input type="number" id="newActionCost" class="form-control" [(ngModel)]="newAction.cost" placeholder="0.00">
+  </div>
+</div>
     <div class="container">
       <button class="btn btn-primary" (click)="addAction()">Ajouter une Action</button>
     </div>

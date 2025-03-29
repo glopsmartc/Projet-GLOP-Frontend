@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { AuthService } from './auth.service';
 
@@ -10,8 +11,7 @@ declare const window: any;
 export class AssistanceService {
 
   private readonly apiUrl: string;
-
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthService, private readonly http: HttpClient) {
     this.apiUrl = this.getApiUrl();
   }
 
@@ -28,7 +28,7 @@ export class AssistanceService {
     const token = this.authService.getToken();
     return {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     };
   }
@@ -151,4 +151,79 @@ export class AssistanceService {
       throw error;
     }
   }
+
+
+  //partie partenaire dans demande assistance :
+  //actions réalisées
+
+  /*async deleteAction(idDossier: number, action: string) {
+    return this.http
+      .delete(`/api/dossier/${idDossier}/action`, { params: { action } })
+      .toPromise();
+  }
+
+  async getActions(idDossier: number) {
+    return this.http.get<string[]>(`/api/dossier/${idDossier}/actions`).toPromise();
+  }*/
+    async saveActions(
+      dossierId: number,
+      actions: { name: string; cost: number }[],
+      totalCost: number
+    ): Promise<any> {
+      try {
+        const response = await axios.post(
+          `${this.apiUrl}/dossier/${dossierId}/action`,
+          {
+            actions: actions.map(a => ({
+              name: a.name,
+              cost: a.cost
+            })),
+            totalCost: totalCost
+          },
+
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                ...this.getAuthHeaders().headers
+              }
+            }
+
+        );
+        return response.data;
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde des actions:', error);
+        throw error;
+      }
+    }
+
+
+
+
+  //Factures:
+  /*async getFactures(idDossier: number) {
+    return this.http.get<string[]>(`/api/dossier/${idDossier}/factures`).toPromise();
+  }*/
+    async uploadFactures(dossierId: number, factureFiles: File[]): Promise<any> {
+      try {
+        const formData = new FormData();
+        factureFiles.forEach(file => {
+          formData.append('factureFiles', file); // kima @RequestParam("factureFiles")
+        });
+
+        const response = await axios.put(
+          `${this.apiUrl}/addFactures/${dossierId}`,
+          formData,
+          {
+            headers: {
+              ...this.getAuthHeaders().headers,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        console.error('Erreur lors de l\'upload des factures:', error);
+        throw error;
+      }
+    }
 }
