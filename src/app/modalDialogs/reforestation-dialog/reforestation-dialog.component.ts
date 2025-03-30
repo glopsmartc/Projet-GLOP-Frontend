@@ -5,69 +5,85 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-reforestation-dialog',
   template: `
   <div class="dialog-container">
-    <h1 class="dialog-header">Soutenez Reforest'Action</h1>
+    <h1 class="dialog-header">Compensez vos émissions de CO2 avec Reforest'Action</h1>
     <div class="dialog-content">
       <p>
-        Nous sommes fiers de soutenir <strong>Reforest'Action</strong>, une association dédiée à la
-        reforestation mondiale. En ajoutant un supplément pour la compensation de vos émissions de
-        carbone, vous contribuez directement à leurs projets de plantation d'arbres.
+          Nous sommes fiers de soutenir <strong>Reforest'Action</strong>, une association dédiée à la
+          reforestation mondiale. En ajoutant un supplément pour la compensation de vos émissions de
+          carbone, vous contribuez directement à leurs projets de plantation d'arbres et à la préservation des écosystèmes.
+          Chaque don que vous réalisez a un impact direct sur la lutte contre le changement climatique en permettant la plantation
+          d'arbres dans des zones stratégiques.
       </p>
       <img src="assets/img/download.png" alt="Logo de Reforest'Action" class="logo">
       <p><strong>Pourquoi ce projet ?</strong></p>
       <p>
-        Chaque arbre planté a un impact significatif sur l'absorption du CO2, et nous nous engageons à
-        réduire notre empreinte carbone pour un avenir plus vert.
+          La reforestation est l'une des solutions les plus efficaces pour compenser les émissions de CO2 et limiter le réchauffement climatique.
+          Chaque arbre planté joue un rôle essentiel dans l'absorption du CO2, tout en relâchant de l'oxygène et en contribuant à la préservation
+          de la biodiversité. En soutenant <strong>Reforest'Action</strong>, vous aidez à restaurer des écosystèmes vitaux pour notre planète, tout en
+          soutenant des initiatives locales qui bénéficient directement aux communautés.
+      </p>
+      <p>
+          Nous nous engageons, à travers ce projet, à réduire notre empreinte carbone et à contribuer à un avenir plus vert et plus durable pour
+          les générations futures. Votre soutien fait la différence !
       </p>
     </div>
-    <button mat-button (click)="close()" class="close-btn">Fermer</button>
+    <div class="dialog-actions">
+      <p style="text-align: center; font-size: 14px; color: #4A803F; font-family: 'Roboto', sans-serif;">Pour plus d'informations, visitez le site de Reforest'Action : <a href="https://www.reforestaction.com/" target="_blank">reforestaction.com</a></p>
+      <button mat-button (click)="close()" class="close-btn">Fermer</button>
+    </div>
   </div>
   `,
   styles: [
     `
       .dialog-container {
-        text-align: center;
         padding: 30px;
-        background-color: #e8f5e9; /* Light green background */
+        background-color: #fff; /* Light green background */
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
 
       .dialog-header {
-        font-size: 28px;
-        color: #388e3c; /* Dark green */
-        margin-bottom: 20px;
+        font-size: 25px;
+        color: #4a803f; /* Dark green */
+        margin-bottom: 30px;
         font-family: 'Roboto', sans-serif;
         font-weight: bold;
       }
 
       .dialog-content {
-        font-size: 18px;
-        color: #4caf50; /* Green color for the text */
+        font-size: 17px;
+        color: #333; /* Green color for the text */
         line-height: 1.6;
         margin-bottom: 30px;
         font-family: 'Roboto', sans-serif;
       }
 
       .logo {
-        max-width: 120px;
-        margin: 20px auto;
+        max-width: 170px;
+        margin: 0px auto;
         display: block;
       }
 
-      .close-btn {
-        background-color: #4caf50; /* Main green */
-        color: white;
-        padding: 12px 25px;
-        border-radius: 30px;
-        font-size: 16px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+      .dialog-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers the button horizontally */
+        justify-content: center; /* Centers the content vertically (if needed) */
+        text-align: center;
       }
 
-      .close-btn:hover {
-        background-color: #388e3c; /* Darker green on hover */
+      .close-btn {
+        border-radius: 20px;
+        border: 1px solid #4A803F;
+        background-color: #39652f;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+        margin-top: 20px;
       }
 
       .close-btn:focus {

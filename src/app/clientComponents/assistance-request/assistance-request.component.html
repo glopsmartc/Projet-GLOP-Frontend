@@ -13,7 +13,7 @@
   <div *ngIf="hasActiveContracts()">
     <select [(ngModel)]="selectedContract" (change)="onContractSelect(selectedContract?.id)">
       <option [ngValue]="null">Sélectionnez un contrat</option>
-      <option *ngFor="let contract of activeContracts" [ngValue]="contract"> {{ contract.name }} ({{ contract.id }})</option>
+      <option *ngFor="let contract of activeContracts" [ngValue]="contract"> Contrat {{ contract.name }} ({{ contract.id }})</option>
     </select>
   </div>
 </div>
