@@ -135,15 +135,20 @@
       <p><strong>Position :</strong> {{ selectedRequest.positionActuelle }}</p>
 
       <!-- Fichiers joints -->
-      <div *ngIf="selectedRequest.documents?.length > 0" class="section">
-        <p><strong></strong>Fichiers joints :</p>
-        <ul class="documents-list">
-          <li *ngFor="let doc of selectedRequest.documents">
-            <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
-            <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
-          </li>
-        </ul>
+    <div class="section">
+      <div *ngIf="selectedRequest.documents?.length > 0; else noDocuments">
+      <span class="label">Fichiers joints :</span>
+      <ul class="documents-list">
+        <li *ngFor="let doc of selectedRequest.documents">
+        <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
+        <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
+        </li>
+      </ul>
       </div>
+      <ng-template #noDocuments>
+      <p><span class="label">Fichiers joints :</span> Aucun fichier joint</p>
+      </ng-template>
+    </div>
 
       <div *ngIf="selectedRequest.maladieChronique">
         <h4>Informations médicales :</h4>
