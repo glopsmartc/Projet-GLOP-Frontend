@@ -73,27 +73,33 @@
                   <input type="checkbox" (change)="toggleAllSousPartenaires($event)"
                     [checked]="allSousPartenaires.length > 0 && selectedSousPartenaireIds.length === filteredSousPartenaires().length">
                 </th>
-                <th (click)="sortSousPartenaires('prenom')" (keydown.enter)="sortSousPartenaires('prenom')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('prenom')" (keydown.enter)="sortSousPartenaires('prenom')"
+                  style="cursor: pointer;" tabindex="0">
                   Prénom <span *ngIf="sousPartenaireSortColumn === 'prenom'">{{ sousPartenaireSortAscending ? '△' : '▽'
                     }}</span>
                 </th>
-                <th (click)="sortSousPartenaires('nom')" (keydown.enter)="sortSousPartenaires('nom')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('nom')" (keydown.enter)="sortSousPartenaires('nom')"
+                  style="cursor: pointer;" tabindex="0">
                   Nom <span *ngIf="sousPartenaireSortColumn === 'nom'">{{ sousPartenaireSortAscending ? '△' : '▽'
                     }}</span>
                 </th>
-                <th (click)="sortSousPartenaires('nomEntreprise')" (keydown.enter)="sortSousPartenaires('nomEntreprise')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('nomEntreprise')"
+                  (keydown.enter)="sortSousPartenaires('nomEntreprise')" style="cursor: pointer;" tabindex="0">
                   Entreprise <span *ngIf="sousPartenaireSortColumn === 'nomEntreprise'">{{ sousPartenaireSortAscending ?
                     '△' : '▽' }}</span>
                 </th>
-                <th (click)="sortSousPartenaires('zoneGeographique')" (keydown.enter)="sortSousPartenaires('zoneGeographique')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('zoneGeographique')"
+                  (keydown.enter)="sortSousPartenaires('zoneGeographique')" style="cursor: pointer;" tabindex="0">
                   Zone <span *ngIf="sousPartenaireSortColumn === 'zoneGeographique'">{{ sousPartenaireSortAscending ?
                     '△' : '▽' }}</span>
                 </th>
-                <th (click)="sortSousPartenaires('numTel')" (keydown.enter)="sortSousPartenaires('numTel')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('numTel')" (keydown.enter)="sortSousPartenaires('numTel')"
+                  style="cursor: pointer;" tabindex="0">
                   Téléphone <span *ngIf="sousPartenaireSortColumn === 'numTel'">{{ sousPartenaireSortAscending ? '△' :
                     '▽' }}</span>
                 </th>
-                <th (click)="sortSousPartenaires('servicesProposes')" (keydown.enter)="sortSousPartenaires('servicesProposes')" style="cursor: pointer;" tabindex="0">
+                <th (click)="sortSousPartenaires('servicesProposes')"
+                  (keydown.enter)="sortSousPartenaires('servicesProposes')" style="cursor: pointer;" tabindex="0">
                   Services proposés <span *ngIf="sousPartenaireSortColumn === 'servicesProposes'">{{
                     sousPartenaireSortAscending ? '△' : '▽' }}</span>
                 </th>
@@ -128,16 +134,16 @@
       <p><strong>Description :</strong> {{ selectedRequest.description }}</p>
       <p><strong>Position :</strong> {{ selectedRequest.positionActuelle }}</p>
 
-    <!-- Fichiers joints -->
-    <div *ngIf="selectedRequest.documents?.length > 0" class="section">
-      <p><strong></strong>Fichiers joints :</p>
-      <ul class="documents-list">
-        <li *ngFor="let doc of selectedRequest.documents">
-          <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
-          <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
-        </li>
-      </ul>
-    </div>
+      <!-- Fichiers joints -->
+      <div *ngIf="selectedRequest.documents?.length > 0" class="section">
+        <p><strong></strong>Fichiers joints :</p>
+        <ul class="documents-list">
+          <li *ngFor="let doc of selectedRequest.documents">
+            <span class="doc-name">{{ getFileNameFromPath(doc) }}</span>
+            <button class="btn-download" (click)="downloadDocument(doc)">Visualiser</button>
+          </li>
+        </ul>
+      </div>
 
       <div *ngIf="selectedRequest.maladieChronique">
         <h4>Informations médicales :</h4>
@@ -147,7 +153,7 @@
 
     <br>
     <br>
-      <div class="card p-4">
+    <div class="card p-4">
       <h3 class="text-center"><strong>Partie Partenaire</strong></h3>
       <br>
 
@@ -183,35 +189,37 @@
 
       <!-- form pour ajouter de nouvelles actions -->
       <h6 *ngIf="actions.length > 0">Nouvelles actions à ajouter:</h6>
-<div class="row g-3 align-items-center mb-3">
-  <div class="col-md-5">
-    <label for="newActionName" class="col-form-label">Nouvelle action</label>
-    <input type="text" id="newActionName" class="form-control" [(ngModel)]="newAction.name" placeholder="Nom de l'action">
-  </div>
-  <div class="col-md-3">
-    <label for="newActionCost" class="col-form-label">Frais (€)</label>
-    <input type="number" id="newActionCost" class="form-control" [(ngModel)]="newAction.cost" placeholder="0.00">
-  </div>
-</div>
-    <div class="container">
-      <button class="btn btn-primary" (click)="addAction()">Ajouter une Action</button>
-    </div>
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-5">
+          <label for="newActionName" class="col-form-label">Nouvelle action</label>
+          <input type="text" id="newActionName" class="form-control" [(ngModel)]="newAction.name"
+            placeholder="Libellé de l'action">
+        </div>
+        <div class="col-md-3">
+          <label for="newActionCost" class="col-form-label">Frais (€)</label>
+          <input type="number" id="newActionCost" class="form-control" [(ngModel)]="newAction.cost" placeholder="0.00">
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button class="btn btn-primary btn-sm" style="margin-top:39px; height: 35px; border: solid 1px;" (click)="addAction()">Ajouter une Action</button>
+        </div>
+      </div>
 
-    <!-- Champ pour joindre un fichier PDF -->
-    <div class="mt-3">
-      <h5><strong>Factures</strong></h5>
-      <input type="file" class="form-control" (change)="onFilesSelected($event)" accept=".pdf" multiple>
-      <ul class="mt-2">
-        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
-      </ul>
-    </div>
+      <!-- Champ pour joindre un fichier PDF -->
+      <div class="mt-3">
+        <h5><strong>Factures</strong></h5>
+        <input type="file" class="form-control" (change)="onFilesSelected($event)" accept=".pdf" multiple>
+        <ul class="mt-2">
+          <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+        </ul>
+      </div>
 
 
       <div class="d-flex justify-content-end gap-2 mt-4">
-        <button class="btn btn-primary" style="background-color: #4A803F; border-color: #4A803F; transition: all 0.2s;" (click)="saveChanges()" onmouseover="this.style.backgroundColor='#3D6A33'; this.style.borderColor='#3D6A33';" onmouseout="this.style.backgroundColor='#4A803F'; this.style.borderColor='#4A803F';">Enregistrer</button>
+        <button class="btn btn-primary" style="background-color: #4A803F; border-color: #4A803F; transition: all 0.2s;"
+          (click)="saveChanges()" onmouseover="this.style.backgroundColor='#3D6A33'; this.style.borderColor='#3D6A33';"
+          onmouseout="this.style.backgroundColor='#4A803F'; this.style.borderColor='#4A803F';">Enregistrer</button>
         <button class="btn btn-secondary" (click)="closeDetails()">Retour</button>
       </div>
     </div>
   </ng-container>
 </div>
-
