@@ -5,18 +5,18 @@
   <!-- Button to add a new partner -->
   <button (click)="startAdding()" class="btn btn-outline-success mt-4 mb-3"
     style="float: right; background-color: #4A803F; color: white;">
-    <i class="fas fa-plus-circle"></i> Ajouter un partenaire
+    <i class="fas fa-plus-circle"></i> Ajouter un sous partenaire
   </button>
 
   <!-- Search field -->
-  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un partenaire...">
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un sous partenaire...">
 
   <!-- Loading spinner -->
   <div *ngIf="isLoading" class="text-center">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Chargement...</span>
     </div>
-    <p>Chargement des partenaires...</p>
+    <p>Chargement des sous-partenaires...</p>
   </div>
 
   <!-- Error message -->
@@ -61,14 +61,14 @@
 
   <!-- Message if no partners found -->
   <div *ngIf="!isLoading && filteredPartenaires.length === 0" class="alert alert-info" role="alert">
-    Aucun partenaire trouvé.
+    Aucun sous-partenaire trouvé.
   </div>
 
   <div class="modal" [class.show]="isAdding || isEditing" [style.display]="(isAdding || isEditing) ? 'block' : 'none'">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ isAdding ? 'Ajouter un partenaire' : 'Modifier un partenaire' }}</h5>
+          <h5 class="modal-title">{{ isAdding ? 'Ajouter un sous-partenaire' : 'Modifier un sous-partenaire' }}</h5>
           <button type="button" class="btn-close" (click)="isAdding ? cancelAdd() : cancelEdit()"></button>
         </div>
 
@@ -84,8 +84,9 @@
           <label>Téléphone :</label>
           <input type="text" class="form-control" [(ngModel)]="newPartenaire.numTel">
 
+          <!--
           <label>Email :</label>
-          <input type="email" class="form-control" [(ngModel)]="newPartenaire.email">
+          <input type="email" class="form-control" [(ngModel)]="newPartenaire.email"> -->
 
           <label>Adresse :</label>
           <input type="text" class="form-control" [(ngModel)]="newPartenaire.adresse">
@@ -112,8 +113,9 @@
           <label>Téléphone :</label>
           <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.numTel">
 
+          <!--
           <label>Email :</label>
-          <input type="email" class="form-control" [(ngModel)]="partenaireEnCours.email">
+          <input type="email" class="form-control" [(ngModel)]="partenaireEnCours.email"> -->
 
           <label>Adresse :</label>
           <input type="text" class="form-control" [(ngModel)]="partenaireEnCours.adresse">

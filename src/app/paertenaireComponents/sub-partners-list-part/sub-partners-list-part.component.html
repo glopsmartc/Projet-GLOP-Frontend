@@ -1,1 +1,54 @@
-<p>sub-partners-list-part works!</p>
+<div class="container my-4">
+  <h2 class="text-center"><strong>Liste des sous-partenaires</strong></h2>
+  <br>
+
+  <!-- Search field -->
+  <input type="text" class="form-control my-3" [(ngModel)]="searchText" placeholder="Rechercher un sous partenaire...">
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p>Chargement des sous-partenaires...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Partners table -->
+  <div class="table-responsive">
+    <table *ngIf="!isLoading && filteredPartenaires.length > 0" class="table table-striped mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Téléphone</th>
+          <th>Adresse</th>
+          <th>Zone</th>
+          <th>Nom d'entreprise</th>
+          <th>Services</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let partenaire of filteredPartenaires">
+          <td>{{ partenaire.nom }}</td>
+          <td>{{ partenaire.prenom }}</td>
+          <td>{{ partenaire.numTel }}</td>
+          <td>{{ partenaire.adresse }}</td>
+          <td>{{ partenaire.zoneGeographique }}</td>
+          <td>{{ partenaire.nomEntreprise }}</td>
+          <td>{{ partenaire.servicesProposes }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Message if no partners found -->
+  <div *ngIf="!isLoading && filteredPartenaires.length === 0" class="alert alert-info" role="alert">
+    Aucun sous-partenaire trouvé.
+  </div>
+
+</div>

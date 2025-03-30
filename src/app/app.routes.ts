@@ -26,8 +26,8 @@ import { SousPartenairesListComponent } from './conseillerComponents/sous-parten
 import { AssistanceRequestsLogisComponent } from './logisticienComponents/assistance-requests-logis/assistance-requests-logis.component';
 import { AssistanceRequestsConsComponent } from './conseillerComponents/assistance-requests-cons/assistance-requests-cons.component';
 import { PartnersListComponent } from './logisticienComponents/partners-list/partners-list.component';
-import { SubPartnersListPartComponent } from './partenaireComponents/sub-partners-list-part/sub-partners-list-part.component';
-import { AssistanceRequestsPartComponent } from './partenaireComponents/assistance-requests-part/assistance-requests-part.component';
+import { AssistanceRequestsPartComponent } from './paertenaireComponents/assistance-requests-part/assistance-requests-part.component';
+import { SubPartnersListPartComponent } from './paertenaireComponents/sub-partners-list-part/sub-partners-list-part.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },

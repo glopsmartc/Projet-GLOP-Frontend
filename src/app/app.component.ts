@@ -73,7 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
     // Simuler un appel pour récupérer les notifications
     this.notifications = [
       { message: "Nouvelle demande d’assistance reçue" },
-      { message: "Un sous-partenaire a mis à jour ses informations" }
     ];
     this.unreadNotifications = this.notifications.length;
   }

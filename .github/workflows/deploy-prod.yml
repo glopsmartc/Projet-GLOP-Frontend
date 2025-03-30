@@ -36,12 +36,9 @@ jobs:
         working-directory: .
         run: npm install
 
-      # Run Cypress tests
-      #- name: Run Cypress Tests
-      # working-directory: .
-      #  run: |
-      #    npm run test  
-      #    npm run cypress:run  
+      # Run Jasmine tests (via Angular CLI)
+      - name: Run Jasmine Tests
+        run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
       # Docker configuration
       - name: Set up Docker Buildx
