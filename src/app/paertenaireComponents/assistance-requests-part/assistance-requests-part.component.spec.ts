@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssistanceRequestsPartComponent } from './assistance-requests-part.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
 
 describe('AssistanceRequestsPartComponent', () => {
   let component: AssistanceRequestsPartComponent;
@@ -8,7 +9,7 @@ describe('AssistanceRequestsPartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AssistanceRequestsPartComponent]
+      imports: [AssistanceRequestsPartComponent, HttpClientTestingModule]
     })
     .compileComponents();
 
