@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AssistanceService } from './assistance.service';
 import { AuthService } from './auth.service';
 import axios from 'axios';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
 
 const mockAuthService = {
   getToken: jasmine.createSpy('getToken').and.returnValue('mock-token')
@@ -26,6 +27,7 @@ describe('AssistanceService', () => {
     });
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         AssistanceService,
         { provide: AuthService, useValue: mockAuthService }
